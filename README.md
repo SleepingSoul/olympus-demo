@@ -2,7 +2,7 @@
 Engine for augumented reality.
 
 ## Build status
-TBD
+[![Build status](https://ci.appveyor.com/api/projects/status/8g60bsb1gl7i1va5?svg=true)](https://ci.appveyor.com/project/SleepingSoul/olympus) Visual Studio 2019 Release x64
 
 ## How to install and run
 1) git clone --recursive https://github.com/SleepingSoul/olympus
