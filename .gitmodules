@@ -1,3 +1,6 @@
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/Microsoft/vcpkg.git
+[submodule "extra_std"]
+	path = olympus/code/extra_std
+	url = https://github.com/SleepingSoul/extra_std
