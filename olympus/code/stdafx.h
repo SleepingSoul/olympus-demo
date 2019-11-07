@@ -21,4 +21,8 @@
 #include <queue>
 #include <stack>
 
+// estd
+#include <compile_time_magic.h>
+#include <extra_algorithm.h>
+
 #include <engine/types.h>

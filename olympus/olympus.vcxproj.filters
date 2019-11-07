@@ -26,10 +26,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\stdafx.h">
+    <ClInclude Include="code\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="code\types.h">
+    <ClInclude Include="code\stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
