@@ -30,9 +30,9 @@ install:
     vcpkg.exe install nlohmann-json:x64-windows
 
     vcpkg.exe install imgui:x64-windows
-clone_script:
-- cmd: git clone --recursive https://github.com/SleepingSoul/olympus c:\projects\olympus
+
+    cd ..
 build:
-  project: olympus.sln
+  project: olympus/olympus.sln
   parallel: true
   verbosity: normal
