@@ -31,7 +31,7 @@ install:
 
     vcpkg.exe install imgui:x64-windows
 clone_script:
-- cmd: git clone --recursive https://github.com/SleepingSoul/olympus
+- cmd: git clone --recursive https://github.com/SleepingSoul/olympus c:\projects\olympus
 build:
   project: olympus/olympus.sln
   parallel: true
