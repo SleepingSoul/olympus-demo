@@ -21,8 +21,12 @@
 #include <queue>
 #include <stack>
 
+#include <Logger.h>
+
 // estd
 #include <compile_time_magic.h>
 #include <extra_algorithm.h>
 
 #include <engine/types.h>
+#include <engine/macro_utils.h>
+#include <engine/Engine.h>
