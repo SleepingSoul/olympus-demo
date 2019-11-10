@@ -35,6 +35,6 @@ install:
 clone_script:
 - cmd: git clone --recursive https://github.com/SleepingSoul/olympus
 build:
-  project: olympus/olympus.sln
+  project: olympus/olympus/olympus.sln
   parallel: true
   verbosity: normal
