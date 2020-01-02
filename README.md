@@ -1,5 +1,6 @@
 # olympus
 Engine for augumented reality.
+Currently is supported for Windows x64
 
 ## Build status
 [![Build status](https://ci.appveyor.com/api/projects/status/vfe7dx3e23hv36u3?svg=true)](https://ci.appveyor.com/project/SleepingSoul/olympus-9hnvw) | Visual Studio 2019 Debug x64\
