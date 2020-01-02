@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstdint>
 #include <Windows.h>
 
 #undef min
