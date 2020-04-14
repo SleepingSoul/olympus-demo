@@ -1,7 +1,4 @@
 version: 1.0.{build}
-branches:
-  only:
-  - master
 image: Visual Studio 2019
 configuration: Debug
 platform: x64
@@ -13,28 +10,12 @@ install:
 
     call bootstrap-vcpkg.bat
 
-    vcpkg.exe integrate install
-
-    vcpkg.exe install opengl:x64-windows
-
-    vcpkg.exe install glfw3:x64-windows
-
-    vcpkg.exe install glm:x64-windows
-
-    vcpkg.exe install glad:x64-windows
-
-    vcpkg.exe install stb:x64-windows
-
-    vcpkg.exe install spdlog:x64-windows
-
-    vcpkg.exe install nlohmann-json:x64-windows
-
-    vcpkg.exe install imgui:x64-windows
+    vcpkg.exe install boost-asio:x64-windows nlohmann-json:x64-windows
 
     cd ..
 clone_script:
-- cmd: git clone --recursive https://github.com/SleepingSoul/olympus
+- cmd: git clone --recursive https://github.com/SleepingSoul/Remote-Gamepad
 build:
-  project: olympus/olympus/olympus.sln
+  project: Remote-Gamepad/RemoteGamepad/RemoteGamepad.sln
   parallel: true
   verbosity: normal
