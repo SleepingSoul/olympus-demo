@@ -4,18 +4,15 @@ configuration: Debug
 platform: x64
 install:
 - cmd: >-
-    git clone https://github.com/microsoft/vcpkg
-
-    cd vcpkg
-
+    cd olympus/vcpkg
     call bootstrap-vcpkg.bat
-
+    vcpkg.exe install cxxopts:x64-windows glad:x64-windows glfw3:x64-windows glm:x64-windows imgui:x64-windows
+    vcpkg.exe install nlohmann-json:x64-windows opengl:x64-windows spdlog:x64-windows stb:x64-windows
     vcpkg.exe install boost-asio:x64-windows nlohmann-json:x64-windows
-
-    cd ..
+    cd ..\..
 clone_script:
-- cmd: git clone --recursive https://github.com/SleepingSoul/Remote-Gamepad
+- cmd: git clone --recursive https://github.com/SleepingSoul/olympus
 build:
-  project: Remote-Gamepad/RemoteGamepad/RemoteGamepad.sln
+  project: olympus/olympus/olympus.sln
   parallel: true
   verbosity: normal
