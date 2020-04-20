@@ -1,3 +1,9 @@
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/Microsoft/vcpkg.git
+[submodule "olympus/common/external/extra_std"]
+	path = olympus/common/external/extra_std
+	url = https://github.com/SleepingSoul/extra_std
+[submodule "olympus/common/external/easy_profiler"]
+	path = olympus/common/external/easy_profiler
+	url = https://github.com/yse/easy_profiler
