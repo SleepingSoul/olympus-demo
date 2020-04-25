@@ -4,14 +4,7 @@ configuration: Debug
 platform: x64
 install:
 - cmd: >-
-    cd olympus/vcpkg
-
-    call bootstrap-vcpkg.bat
-
-    vcpkg.exe install docopt:x64-windows glad:x64-windows glfw3:x64-windows glm:x64-windows imgui:x64-windows 
-    nlohmann-json:x64-windows opengl:x64-windows spdlog:x64-windows stb:x64-windows
-
-    cd ..\..
+    call olympus/install_dependencies.bat
 clone_script:
 - cmd: git clone --recursive https://github.com/SleepingSoul/olympus
 build:
