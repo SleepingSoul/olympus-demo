@@ -1,24 +1,23 @@
 #pragma once
 
 #include <filesystem>
-
-#include <glad/glad.h>
-
 #include <string_view>
 #include <fstream>
 #include <array>
 
+#include <glad/glad.h>
 #include <glm/glm.hpp>
 
+#include <utils/macros.h>
 #include <utils.h>
 
-namespace rdr
+namespace oly
 {
     DeclareInfoException(ShaderNotCompiled);
 
     class ShaderProgram
     {
-        NonCopyable(ShaderProgram)
+        OlyNonCopyable(ShaderProgram)
     public:
         using ErrorInfoBuffer = std::array<char, 1024>;
 

@@ -7,7 +7,7 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
-#include <string_utils.h>
+#include <extra_std/extra_std.h>
 
 
 namespace
@@ -31,7 +31,7 @@ namespace
     }
 }
 
-rdr::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
+oly::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     : m_title(initParams.windowTitle)
     , m_options()
 {
@@ -89,7 +89,7 @@ rdr::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     });
 }
 
-rdr::OpenGLGLFWContext::~OpenGLGLFWContext()
+oly::OpenGLGLFWContext::~OpenGLGLFWContext()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -98,12 +98,12 @@ rdr::OpenGLGLFWContext::~OpenGLGLFWContext()
     glfwTerminate();
 }
 
-bool rdr::OpenGLGLFWContext::windowShoudNotClose() const noexcept(true)
+bool oly::OpenGLGLFWContext::windowShoudNotClose() const noexcept(true)
 {
     return !glfwWindowShouldClose(m_window);
 }
 
-glm::ivec2 rdr::OpenGLGLFWContext::getWindowSize() const noexcept(true)
+glm::ivec2 oly::OpenGLGLFWContext::getWindowSize() const noexcept(true)
 {
     glm::ivec2 result;
 
@@ -112,19 +112,19 @@ glm::ivec2 rdr::OpenGLGLFWContext::getWindowSize() const noexcept(true)
     return result;
 }
 
-void rdr::OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback)
+void oly::OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback)
 {
     m_keysMapping.emplace(glfwKeyCode, std::move(keyCallback));
 }
 
-void rdr::OpenGLGLFWContext::onFrameStart()
+void oly::OpenGLGLFWContext::onFrameStart()
 {
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
-void rdr::OpenGLGLFWContext::onFrameEnd()
+void oly::OpenGLGLFWContext::onFrameEnd()
 {
     const double frameEndTimeStamp = glfwGetTime();
     m_FPS = static_cast<unsigned>(1. / (frameEndTimeStamp - m_lastTimeStamp));
@@ -134,7 +134,6 @@ void rdr::OpenGLGLFWContext::onFrameEnd()
     {
         ImGui::Text("FPS: %u", m_FPS);
     }
-
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

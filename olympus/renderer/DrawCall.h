@@ -1,6 +1,6 @@
 #pragma once
 
-namespace rdr
+namespace oly
 {
     struct VoxelDrawCall
     {

@@ -5,19 +5,20 @@
 #include <string_view>
 #include <mutex>
 #include <functional>
-#include <utils.h>
 #include <glm/glm.hpp>
+#include <utils/macros.h>
+#include <utils.h>
 
 struct GLFWwindow;
 
-namespace rdr
+namespace oly
 {
     DeclareInfoException(WindowCreationFailed);
     DeclareInfoException(OpenGLDynamicSymbolsBindingError);
 
     class OpenGLGLFWContext
     {
-        NonCopyableMovable(OpenGLGLFWContext)
+        OlyNonCopyableMovable(OpenGLGLFWContext)
     public:
         using GLFWKeyCallback = std::function<void(int, int, int)>;
 

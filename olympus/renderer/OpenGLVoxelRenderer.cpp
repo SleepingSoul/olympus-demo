@@ -1,11 +1,10 @@
-#include <glad/glad.h>
 #include "OpenGLVoxelRenderer.h"
 #include <string_view>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#ifdef RDR_PROFILE
+#ifdef oly_PROFILE
 #include <easy/profiler.h>
 #endif
 
@@ -81,7 +80,7 @@ namespace Debug
     }
 }
 
-rdr::OpenGLVoxelRenderer::OpenGLVoxelRenderer()
+oly::OpenGLVoxelRenderer::OpenGLVoxelRenderer()
     : m_debugShader(Debug::VSPath, Debug::FSPath)
     , m_debugRender(false)
     , m_cameraPos(0.f, 0.f, 0.f)
@@ -103,12 +102,12 @@ rdr::OpenGLVoxelRenderer::OpenGLVoxelRenderer()
     glEnableVertexAttribArray(0);
 }
 
-void rdr::OpenGLVoxelRenderer::setClearColor(const glm::vec4& rgbaColor)
+void oly::OpenGLVoxelRenderer::setClearColor(const glm::vec4& rgbaColor)
 {
     glClearColor(rgbaColor.r, rgbaColor.g, rgbaColor.b, rgbaColor.a);
 }
 
-void rdr::OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
+void oly::OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -148,7 +147,7 @@ void rdr::OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
     }
 }
 
-void rdr::OpenGLVoxelRenderer::debugRenderVoxel()
+void oly::OpenGLVoxelRenderer::debugRenderVoxel()
 {
     for (GLuint i = 0; i < Voxel::NumVertices; i += 3)
     {

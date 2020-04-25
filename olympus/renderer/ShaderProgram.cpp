@@ -2,7 +2,7 @@
 #include <iterator>
 
 
-rdr::ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath)
+oly::ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath)
 {
     if (!std::filesystem::exists(vertexShaderPath) || !std::filesystem::exists(fragmentShaderPath))
     {
@@ -42,7 +42,7 @@ rdr::ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath,
     glDeleteShader(fragmentID);
 }
 
-void rdr::ShaderProgram::validateShader(GLuint ID)
+void oly::ShaderProgram::validateShader(GLuint ID)
 {
     GLint success = 0;
 
@@ -55,7 +55,7 @@ void rdr::ShaderProgram::validateShader(GLuint ID)
     }
 }
 
-void rdr::ShaderProgram::validateShaderProgram(GLuint ID)
+void oly::ShaderProgram::validateShaderProgram(GLuint ID)
 {
     GLint success = 0;
 
@@ -68,7 +68,7 @@ void rdr::ShaderProgram::validateShaderProgram(GLuint ID)
     }
 }
 
-void rdr::ShaderProgram::writeErrorInfoAndThrow(const rdr::ShaderProgram::ErrorInfoBuffer& source)
+void oly::ShaderProgram::writeErrorInfoAndThrow(const oly::ShaderProgram::ErrorInfoBuffer& source)
 {
     if (source.front() == '\0')
     {

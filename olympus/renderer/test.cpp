@@ -5,7 +5,7 @@
 #include <thread>
 #include <future>
 
-#ifdef RDR_PROFILE
+#ifdef oly_PROFILE
 #include <easy/profiler.h>
 #endif
 
@@ -17,7 +17,7 @@ int main(int argc, char** argv)
     auto retVal = std::async(std::launch::async, []
     {
         // Creating and initializing OpenGL context (should be always initialized before anything else opengl-ish).
-        rdr::OpenGLGLFWContext::InitParameters params;
+        oly::OpenGLGLFWContext::InitParameters params;
         params.verMajor = 3;
         params.verMinor = 3;
         params.windowWidth = 800;
@@ -27,13 +27,13 @@ int main(int argc, char** argv)
 
         try
         {
-            rdr::OpenGLGLFWContext context(params);
+            oly::OpenGLGLFWContext context(params);
 
             // After context is initialized, we can create an OpenGL Renderer to render using the existing context. Only 1 contexts exists
             // and renderer will render into this context.
-            rdr::OpenGLVoxelRenderer renderer;
+            oly::OpenGLVoxelRenderer renderer;
 
-            std::vector<rdr::VoxelDrawCall> rdc(5);
+            std::vector<oly::VoxelDrawCall> rdc(5);
 
             for (size_t i = 0; i < rdc.size(); ++i)
             {
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 
             return 0;
         }
-        catch (const rdr::InfoException& err)
+        catch (const oly::InfoException& err)
         {
             std::puts(err.what());
             return -1;

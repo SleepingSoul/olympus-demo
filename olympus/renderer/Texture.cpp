@@ -35,7 +35,7 @@
 //    }
 //}
 //
-//rdr::CubeMap::CubeMap(const std::filesystem::path& cubeMapTextures)
+//oly::CubeMap::CubeMap(const std::filesystem::path& cubeMapTextures)
 //{
 //    glCreateTextures(GL_TEXTURE_CUBE_MAP, 1, &m_id);
 //

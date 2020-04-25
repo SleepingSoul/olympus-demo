@@ -7,3 +7,6 @@
 [submodule "olympus/common/external/easy_profiler"]
 	path = olympus/common/external/easy_profiler
 	url = https://github.com/yse/easy_profiler
+[submodule "olympus/external_projects/imgui/imgui"]
+	path = olympus/external_projects/imgui/imgui
+	url = https://github.com/ocornut/imgui
