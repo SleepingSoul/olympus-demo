@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="DrawCall.h" />
     <ClInclude Include="OpenGLGLFWContext.h" />
     <ClInclude Include="OpenGLVoxelRenderer.h" />

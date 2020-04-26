@@ -7,6 +7,16 @@
 
 namespace oly
 {
+    namespace CommandLineOptions
+    {
+        namespace
+        {
+            const char* const Width = "--width";
+            const char* const Height = "--height";
+            const char* const SaveProfile = "--saveprofile";
+        }
+    }
+
     class CommandLineManager
     {
         OlyNonCopyableMovable(CommandLineManager)
