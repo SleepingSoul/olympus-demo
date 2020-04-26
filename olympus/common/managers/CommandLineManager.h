@@ -16,7 +16,9 @@ namespace oly
         void initialize(int argc, char** argv);
 
         std::optional<long> getLong(std::string_view name) const noexcept(true);
+
         std::optional<bool> getBool(std::string_view name) const noexcept(true);
+
         std::optional<std::string> getString(std::string_view name) const noexcept(true);
         std::optional<std::vector<std::string>> getStringList(std::string_view name) const noexcept(true);
 

@@ -7,6 +7,8 @@
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
 
+#include <easy/profiler.h>
+
 #include <extra_std/extra_std.h>
 
 
@@ -14,11 +16,15 @@ namespace
 {
     void framebufferSizeCallback(GLFWwindow* window, int width, int height)
     {
+        EASY_FUNCTION();
+
         glViewport(0, 0, width, height);
     }
 
     void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
     {
+        EASY_FUNCTION();
+
         const auto& mapping = *static_cast<std::multimap<int, std::function<void(int, int, int)>>*>(glfwGetWindowUserPointer(window));
 
         auto [cbBegin, cbEnd] = mapping.equal_range(key);
@@ -34,6 +40,7 @@ namespace
 oly::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     : m_title(initParams.windowTitle)
     , m_options()
+    , m_latestFPS(60)
 {
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, initParams.verMajor);
@@ -119,25 +126,41 @@ void oly::OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallbac
 
 void oly::OpenGLGLFWContext::onFrameStart()
 {
+    EASY_FUNCTION();
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 
-void oly::OpenGLGLFWContext::onFrameEnd()
+void oly::OpenGLGLFWContext::updateFPS()
 {
     const double frameEndTimeStamp = glfwGetTime();
-    m_FPS = static_cast<unsigned>(1. / (frameEndTimeStamp - m_lastTimeStamp));
+    m_latestFPS.push_back(static_cast<unsigned>(1. / (frameEndTimeStamp - m_lastTimeStamp)));
     m_lastTimeStamp = frameEndTimeStamp;
+}
+
+void oly::OpenGLGLFWContext::onFrameEnd()
+{
+    EASY_FUNCTION();
+
+    updateFPS();
 
     if (m_options.showFPS)
     {
-        ImGui::Text("FPS: %u", m_FPS);
+        ImGui::Text("FPS: %u", calculateNormalizedFPS());
     }
 
+    EASY_BLOCK("ImGUI prosessing");
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    EASY_END_BLOCK;
 
+    EASY_BLOCK("GLFW swap buffers");
     glfwSwapBuffers(m_window);
+    EASY_END_BLOCK;
+
+    EASY_BLOCK("GLFW poll events");
     glfwPollEvents();
+    EASY_END_BLOCK;
 }

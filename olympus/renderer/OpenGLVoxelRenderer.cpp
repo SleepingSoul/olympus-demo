@@ -3,11 +3,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-#ifdef oly_PROFILE
 #include <easy/profiler.h>
-#endif
-
 
 
 namespace Shader
@@ -104,11 +100,15 @@ oly::OpenGLVoxelRenderer::OpenGLVoxelRenderer()
 
 void oly::OpenGLVoxelRenderer::setClearColor(const glm::vec4& rgbaColor)
 {
+    EASY_FUNCTION();
+
     glClearColor(rgbaColor.r, rgbaColor.g, rgbaColor.b, rgbaColor.a);
 }
 
 void oly::OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
 {
+    EASY_FUNCTION(profiler::colors::Red);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     ShaderProgram& shader = m_debugRender ? m_debugShader : m_voxelShader;
@@ -125,9 +125,12 @@ void oly::OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
             , m_nearDistance, m_farDistance);
         shader.setMatrix4f(Shader::Projection, glm::value_ptr(projection));
     }
-
+    
+    EASY_BLOCK("Render draw calls", profiler::colors::Red100);
     for (const auto& voxel : voxels)
     {
+        EASY_BLOCK("Render single voxel", profiler::colors::Yellow);
+
         auto model = glm::identity<glm::mat4>();
         model = glm::translate(model, voxel.position);
         model = glm::rotate(model, voxel.angle, voxel.rotationVec);

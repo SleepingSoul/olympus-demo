@@ -5,7 +5,12 @@
 #include <string_view>
 #include <mutex>
 #include <functional>
+#include <numeric>
+
+#include <boost/circular_buffer.hpp>
+
 #include <glm/glm.hpp>
+
 #include <utils/macros.h>
 #include <utils.h>
 
@@ -44,6 +49,9 @@ namespace oly
         void onFrameEnd();
 
     private:
+        void updateFPS();
+        unsigned calculateNormalizedFPS() const { return std::accumulate(m_latestFPS.begin(), m_latestFPS.end(), 0u) / static_cast<unsigned>(m_latestFPS.size()); }
+
         struct Options
         {
             bool showFPS;
@@ -55,8 +63,12 @@ namespace oly
 
         GLFWwindow* m_window;
         std::string m_title;
+
         double m_lastTimeStamp{ 0. };
-        unsigned m_FPS{ 0 };
+
+        // Last N fps values are stored here to avoid spikes and provide consistent value
+        boost::circular_buffer<unsigned> m_latestFPS;
+
         std::function<void(int, int)> onResize;
     };
 }

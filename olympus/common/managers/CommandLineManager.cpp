@@ -11,11 +11,12 @@ namespace
     auto Usage =
         R"(olympus
 Usage:
-    core.exe [--width=w --height=h]
+    core.exe [--width=w --height=h --saveprofile=filename]
 Options:
-    -h, --help            Show this screen.
-    --width=<px>          Screen width in pixels [default: 800].
-    --height=<px>         Screen height in pixels [default: 600].
+    -h, --help                Show this screen.
+    --width=<px>              Screen width in pixels [default: 800].
+    --height=<px>             Screen height in pixels [default: 600].
+    --saveprofile=<filename>  This option works only if program is build in PROFILE configuration. If specified, profiled data will be collected and saved to the file.
         )";
 }
 

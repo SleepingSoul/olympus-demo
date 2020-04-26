@@ -38,5 +38,11 @@ namespace oly
         {
             spdlog::log(format, std::forward<TArgs>(args)...);
         }
+
+        template <class ...TArgs>
+        void warning(const char* format, TArgs&&... args)
+        {
+            spdlog::warn(format, std::forward<TArgs>(args)...);
+        }
     }
 }
