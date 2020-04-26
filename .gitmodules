@@ -1,6 +1,3 @@
-[submodule "vcpkg"]
-	path = vcpkg
-	url = https://github.com/Microsoft/vcpkg.git
 [submodule "olympus/common/external/extra_std"]
 	path = olympus/common/external/extra_std
 	url = https://github.com/SleepingSoul/extra_std
@@ -10,3 +7,6 @@
 [submodule "olympus/external_projects/imgui/imgui"]
 	path = olympus/external_projects/imgui/imgui
 	url = https://github.com/ocornut/imgui
+[submodule "vcpkg"]
+	path = vcpkg
+	url = https://github.com/microsoft/vcpkg
