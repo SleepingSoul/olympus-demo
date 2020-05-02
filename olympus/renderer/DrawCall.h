@@ -1,12 +1,15 @@
 #pragma once
 
-namespace oly
+#include <utils/macros.h>
+
+BeginNamespaceOlympus
+
+struct VoxelDrawCall
 {
-    struct VoxelDrawCall
-    {
-        glm::vec4 color;
-        glm::vec3 position;
-        glm::vec3 rotationVec;
-        float angle;
-    };
-}
+    glm::vec4 color;
+    glm::vec3 position;
+    glm::vec3 rotationVec;
+    float angle;
+};
+
+EndNamespaceOlympus

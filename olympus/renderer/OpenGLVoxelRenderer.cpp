@@ -5,6 +5,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <easy/profiler.h>
 
+BeginNamespaceOlympus
 
 namespace Shader
 {
@@ -76,7 +77,7 @@ namespace Debug
     }
 }
 
-oly::OpenGLVoxelRenderer::OpenGLVoxelRenderer()
+OpenGLVoxelRenderer::OpenGLVoxelRenderer()
     : m_debugShader(Debug::VSPath, Debug::FSPath)
     , m_debugRender(false)
     , m_cameraPos(0.f, 0.f, 0.f)
@@ -98,14 +99,14 @@ oly::OpenGLVoxelRenderer::OpenGLVoxelRenderer()
     glEnableVertexAttribArray(0);
 }
 
-void oly::OpenGLVoxelRenderer::setClearColor(const glm::vec4& rgbaColor)
+void OpenGLVoxelRenderer::setClearColor(const glm::vec4& rgbaColor)
 {
     EASY_FUNCTION();
 
     glClearColor(rgbaColor.r, rgbaColor.g, rgbaColor.b, rgbaColor.a);
 }
 
-void oly::OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
+void OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
 {
     EASY_FUNCTION(profiler::colors::Red);
 
@@ -150,7 +151,7 @@ void oly::OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
     }
 }
 
-void oly::OpenGLVoxelRenderer::debugRenderVoxel()
+void OpenGLVoxelRenderer::debugRenderVoxel()
 {
     for (GLuint i = 0; i < Voxel::NumVertices; i += 3)
     {
@@ -160,3 +161,5 @@ void oly::OpenGLVoxelRenderer::debugRenderVoxel()
     glPointSize(5.f);
     glDrawArrays(GL_POINTS, 0, Voxel::NumVertices);
 }
+
+EndNamespaceOlympus

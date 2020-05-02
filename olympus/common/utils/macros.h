@@ -9,3 +9,6 @@ classname(classname&&) = delete;\
 classname& operator =(classname&&) = delete;\
 
 #define OlyNonCopyableMovable(classname) OlyNonCopyable(classname)OlyNonMovable(classname)
+
+#define BeginNamespaceOlympus namespace oly {
+#define EndNamespaceOlympus }

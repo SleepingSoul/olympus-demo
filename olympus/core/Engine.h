@@ -1,31 +1,28 @@
 #pragma once
 
-#include <memory>
+BeginNamespaceOlympus
 
-#include <utils/macros.h>
+class EngineImpl;
 
-namespace oly
+class Engine
 {
-    class EngineImpl;
+    OlyNonCopyableMovable(Engine)
+public:
+    static Engine& instance();
 
-    class Engine
-    {
-        OlyNonCopyableMovable(Engine)
-    public:
-        static Engine& instance();
+    void initialize();
 
-        void initialize();
+    bool initializedSuccessfuly() const;
 
-        bool initializedSuccessfuly() const;
+    int run();
 
-        int run();
+private:
+    Engine() = default;
 
-    private:
-        Engine() = default;
+    std::unique_ptr<EngineImpl> m_impl;
+};
 
-        std::unique_ptr<EngineImpl> m_impl;
-    };
-}
+EndNamespaceOlympus
 
 #define olyEngine oly::Engine::instance()
 

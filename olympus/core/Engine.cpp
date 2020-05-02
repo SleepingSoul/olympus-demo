@@ -1,24 +1,28 @@
+#include <pch.h>
 #include "Engine.h"
 #include <EngineImpl.h>
 
+BeginNamespaceOlympus
 
-oly::Engine& oly::Engine::instance()
+Engine& Engine::instance()
 {
     static Engine engine{};
     return engine;
 }
 
-void oly::Engine::initialize()
+void Engine::initialize()
 {
     m_impl = std::make_unique<EngineImpl>();
 }
 
-bool oly::Engine::initializedSuccessfuly() const
+bool Engine::initializedSuccessfuly() const
 {
     return m_impl->initializedSuccessfuly();
 }
 
-int oly::Engine::run()
+int Engine::run()
 {
     return m_impl->run();
 }
+
+EndNamespaceOlympus

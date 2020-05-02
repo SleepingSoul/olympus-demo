@@ -5,10 +5,10 @@
 
 #define olyError(format, ...)\
 oly::logging::error(format, __VA_ARGS__);\
-_CrtDbgBreak();\
+_CrtDbgBreak()\
 
 #else
 
-#define olyError(format, ...) oly::logging::error(format, __VA_ARGS__);
+#define olyError(format, ...) oly::logging::error(format, __VA_ARGS__)
 
 #endif

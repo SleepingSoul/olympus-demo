@@ -1,8 +1,9 @@
 #include "ShaderProgram.h"
 #include <iterator>
 
+BeginNamespaceOlympus
 
-oly::ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath)
+ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath)
 {
     if (!std::filesystem::exists(vertexShaderPath) || !std::filesystem::exists(fragmentShaderPath))
     {
@@ -42,7 +43,7 @@ oly::ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath,
     glDeleteShader(fragmentID);
 }
 
-void oly::ShaderProgram::validateShader(GLuint ID)
+void ShaderProgram::validateShader(GLuint ID)
 {
     GLint success = 0;
 
@@ -55,7 +56,7 @@ void oly::ShaderProgram::validateShader(GLuint ID)
     }
 }
 
-void oly::ShaderProgram::validateShaderProgram(GLuint ID)
+void ShaderProgram::validateShaderProgram(GLuint ID)
 {
     GLint success = 0;
 
@@ -68,7 +69,7 @@ void oly::ShaderProgram::validateShaderProgram(GLuint ID)
     }
 }
 
-void oly::ShaderProgram::writeErrorInfoAndThrow(const oly::ShaderProgram::ErrorInfoBuffer& source)
+void ShaderProgram::writeErrorInfoAndThrow(const oly::ShaderProgram::ErrorInfoBuffer& source)
 {
     if (source.front() == '\0')
     {
@@ -84,3 +85,5 @@ void oly::ShaderProgram::writeErrorInfoAndThrow(const oly::ShaderProgram::ErrorI
 
     throw ShaderNotCompiled(m_errorInfo);
 }
+
+EndNamespaceOlympus

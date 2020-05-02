@@ -1,17 +1,16 @@
+#include <pch.h>
 #include "EngineImpl.h"
 
-#include <easy/profiler.h>
-
 #include <managers/CommandLineManager.h>
-#include <logging/logging.h>
-#include <utils/olyerror.h>
 
-oly::EngineImpl::EngineImpl()
+BeginNamespaceOlympus
+
+EngineImpl::EngineImpl()
 {
     m_profilerFile = olyCommandLineManager.getString(oly::CommandLineOptions::SaveProfile);
 
 #ifndef BUILD_WITH_EASY_PROFILER
-    if (profilerFile)
+    if (m_profilerFile)
     {
         oly::logging::warning("Option '--saveprofile' will be ignored because it is not a profile build.");
     }
@@ -52,7 +51,7 @@ oly::EngineImpl::EngineImpl()
     m_successfulInitialization = true;
 }
 
-int oly::EngineImpl::run()
+int EngineImpl::run()
 {
     std::vector<oly::VoxelDrawCall> rdc(1);
 
@@ -117,4 +116,8 @@ int oly::EngineImpl::run()
             olyError("Profiler captured 0 frames.");
         }
     }
+
+    return 0;
 }
+
+EndNamespaceOlympus

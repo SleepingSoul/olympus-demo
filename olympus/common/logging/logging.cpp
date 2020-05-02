@@ -3,6 +3,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/sinks/basic_file_sink.h>
 
+BeginNamespaceOlympus
+
 namespace
 {
     auto LogFileName = "last_launch_logs.txt";
@@ -10,7 +12,7 @@ namespace
     const bool FlushOldLogger = true;
 }
 
-void oly::logging::initialize()
+void logging::initialize()
 {
     const std::vector<spdlog::sink_ptr> sinks = {
 #ifdef _DEBUG
@@ -28,3 +30,5 @@ void oly::logging::initialize()
     spdlog::set_level(spdlog::level::info);
 #endif
 }
+
+EndNamespaceOlympus

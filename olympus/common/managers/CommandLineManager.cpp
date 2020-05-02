@@ -4,6 +4,8 @@
 #include <logging/logging.h>
 #include <utils/olyerror.h>
 
+BeginNamespaceOlympus
+
 namespace
 {
     const bool ShowHelp = true;
@@ -20,20 +22,20 @@ Options:
         )";
 }
 
-oly::CommandLineManager& oly::CommandLineManager::instance()
+CommandLineManager& CommandLineManager::instance()
 {
     static oly::CommandLineManager cmdManager{};
     return cmdManager;
 }
 
-void oly::CommandLineManager::initialize(int argc, char** argv)
+void CommandLineManager::initialize(int argc, char** argv)
 {
     auto args = docopt::docopt(Usage, { std::next(argv), std::next(argv, argc) }, ShowHelp, "debug version");
 
     m_args.insert(std::make_move_iterator(args.begin()), std::make_move_iterator(args.end()));
 }
 
-std::optional<long> oly::CommandLineManager::getLong(std::string_view name) const noexcept(true)
+std::optional<long> CommandLineManager::getLong(std::string_view name) const noexcept(true)
 {
     const auto [found, it] = estd::find(m_args, name);
 
@@ -47,7 +49,7 @@ std::optional<long> oly::CommandLineManager::getLong(std::string_view name) cons
     }
 }
 
-std::optional<bool> oly::CommandLineManager::getBool(std::string_view name) const noexcept(true)
+std::optional<bool> CommandLineManager::getBool(std::string_view name) const noexcept(true)
 {
     const auto [found, it] = estd::find(m_args, name);
 
@@ -61,9 +63,11 @@ std::optional<bool> oly::CommandLineManager::getBool(std::string_view name) cons
     }
 }
 
-std::optional<std::string> oly::CommandLineManager::getString(std::string_view name) const noexcept(true)
+std::optional<std::string> CommandLineManager::getString(std::string_view name) const noexcept(true)
 {
     const auto [found, it] = estd::find(m_args, name);
 
     return found && it->second.isString() ? std::optional{ it->second.asString() } : std::nullopt;
 }
+
+EndNamespaceOlympus

@@ -11,63 +11,64 @@
 #include <utils/macros.h>
 #include <utils.h>
 
-namespace oly
+BeginNamespaceOlympus
+
+DeclareInfoException(ShaderNotCompiled);
+
+class ShaderProgram
 {
-    DeclareInfoException(ShaderNotCompiled);
+    OlyNonCopyable(ShaderProgram)
+public:
+    using ErrorInfoBuffer = std::array<char, 1024>;
 
-    class ShaderProgram
+    ShaderProgram() = default;
+    ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath);
+
+    void use() noexcept { glUseProgram(m_ID); }
+
+    void setBool(const std::string_view& name, bool value) noexcept
     {
-        OlyNonCopyable(ShaderProgram)
-    public:
-        using ErrorInfoBuffer = std::array<char, 1024>;
+        glUniform1i(glGetUniformLocation(m_ID, name.data()), static_cast<int>(value));
+    }
 
-        ShaderProgram() = default;
-        ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath);
+    void setInt(const std::string_view& name, int value) noexcept
+    {
+        glUniform1i(glGetUniformLocation(m_ID, name.data()), value);
+    }
 
-        void use() noexcept { glUseProgram(m_ID); }
+    void setFloat(const std::string_view& name, float value) noexcept
+    {
+        glUniform1f(glGetUniformLocation(m_ID, name.data()), value);
+    }
 
-        void setBool(const std::string_view& name, bool value) noexcept
-        {
-            glUniform1i(glGetUniformLocation(m_ID, name.data()), static_cast<int>(value));
-        }
+    void setVec4f(const std::string_view& name, const glm::vec4& value)
+    {
+        glUniform4f(glGetUniformLocation(m_ID, name.data()), value.r, value.g, value.b, value.a);
+    }
 
-        void setInt(const std::string_view& name, int value) noexcept
-        {
-            glUniform1i(glGetUniformLocation(m_ID, name.data()), value);
-        }
+    void setMatrix4f(const std::string_view& name, const float* data) noexcept
+    {
+        glUniformMatrix4fv(glGetUniformLocation(m_ID, name.data()), 1, GL_FALSE, data);
+    }
 
-        void setFloat(const std::string_view& name, float value) noexcept
-        {
-            glUniform1f(glGetUniformLocation(m_ID, name.data()), value);
-        }
+    void setMatrix4f(const std::string_view& name, const std::array<float, 4>& floats) noexcept
+    {
+        glUniformMatrix4fv(glGetUniformLocation(m_ID, name.data()), 1, GL_FALSE, floats.data());
+    }
 
-        void setVec4f(const std::string_view& name, const glm::vec4& value)
-        {
-            glUniform4f(glGetUniformLocation(m_ID, name.data()), value.r, value.g, value.b, value.a);
-        }
+    bool isValid() const { return m_ID && m_errorInfo.empty(); }
+    operator bool() const { return isValid(); }
 
-        void setMatrix4f(const std::string_view& name, const float* data) noexcept
-        {
-            glUniformMatrix4fv(glGetUniformLocation(m_ID, name.data()), 1, GL_FALSE, data);
-        }
+    const std::string_view& getErrorInfo() const { return m_errorInfo; }
 
-        void setMatrix4f(const std::string_view& name, const std::array<float, 4>& floats) noexcept
-        {
-            glUniformMatrix4fv(glGetUniformLocation(m_ID, name.data()), 1, GL_FALSE, floats.data());
-        }
+private:
+    GLuint m_ID{ 0 };
 
-        bool isValid() const { return m_ID && m_errorInfo.empty(); }
-        operator bool() const { return isValid(); }
+    std::string m_errorInfo;
 
-        const std::string_view& getErrorInfo() const { return m_errorInfo; }
+    void validateShaderProgram(GLuint ID);
+    void validateShader(GLuint ID);
+    void writeErrorInfoAndThrow(const ErrorInfoBuffer& source);
+};
 
-    private:
-        GLuint m_ID{ 0 };
-
-        std::string m_errorInfo;
-
-        void validateShaderProgram(GLuint ID);
-        void validateShader(GLuint ID);
-        void writeErrorInfoAndThrow(const ErrorInfoBuffer& source);
-    };
-}
+EndNamespaceOlympus

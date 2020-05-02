@@ -11,6 +11,7 @@
 
 #include <extra_std/extra_std.h>
 
+BeginNamespaceOlympus
 
 namespace
 {
@@ -37,7 +38,7 @@ namespace
     }
 }
 
-oly::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
+OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     : m_title(initParams.windowTitle)
     , m_options()
     , m_latestFPS(60)
@@ -96,7 +97,7 @@ oly::OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     });
 }
 
-oly::OpenGLGLFWContext::~OpenGLGLFWContext()
+OpenGLGLFWContext::~OpenGLGLFWContext()
 {
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
@@ -105,12 +106,12 @@ oly::OpenGLGLFWContext::~OpenGLGLFWContext()
     glfwTerminate();
 }
 
-bool oly::OpenGLGLFWContext::windowShoudNotClose() const noexcept(true)
+bool OpenGLGLFWContext::windowShoudNotClose() const noexcept(true)
 {
     return !glfwWindowShouldClose(m_window);
 }
 
-glm::ivec2 oly::OpenGLGLFWContext::getWindowSize() const noexcept(true)
+glm::ivec2 OpenGLGLFWContext::getWindowSize() const noexcept(true)
 {
     glm::ivec2 result;
 
@@ -119,12 +120,12 @@ glm::ivec2 oly::OpenGLGLFWContext::getWindowSize() const noexcept(true)
     return result;
 }
 
-void oly::OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback)
+void OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback)
 {
     m_keysMapping.emplace(glfwKeyCode, std::move(keyCallback));
 }
 
-void oly::OpenGLGLFWContext::onFrameStart()
+void OpenGLGLFWContext::onFrameStart()
 {
     EASY_FUNCTION();
 
@@ -133,14 +134,14 @@ void oly::OpenGLGLFWContext::onFrameStart()
     ImGui::NewFrame();
 }
 
-void oly::OpenGLGLFWContext::updateFPS()
+void OpenGLGLFWContext::updateFPS()
 {
     const double frameEndTimeStamp = glfwGetTime();
     m_latestFPS.push_back(static_cast<unsigned>(1. / (frameEndTimeStamp - m_lastTimeStamp)));
     m_lastTimeStamp = frameEndTimeStamp;
 }
 
-void oly::OpenGLGLFWContext::onFrameEnd()
+void OpenGLGLFWContext::onFrameEnd()
 {
     EASY_FUNCTION();
 
@@ -164,3 +165,5 @@ void oly::OpenGLGLFWContext::onFrameEnd()
     glfwPollEvents();
     EASY_END_BLOCK;
 }
+
+EndNamespaceOlympus
