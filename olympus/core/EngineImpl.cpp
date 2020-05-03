@@ -95,10 +95,16 @@ int EngineImpl::run()
         }
     });
 
-    m_jobSystem.addJob(std::make_unique<DelegateJob>("Sleep test job", JobAffinity::Generic, []
+    m_jobSystem.addJob(std::make_unique<DelegateJob>("Sleep test job in generic thread", JobAffinity::Generic, []
     {
         EASY_BLOCK("Sleep job");
         std::this_thread::sleep_for(std::chrono::seconds(10));
+    }));
+
+    m_jobSystem.addJob(std::make_unique<DelegateJob>("Sleep test job in render thread", JobAffinity::Render, []
+    {
+        EASY_BLOCK("Sleep job");
+        std::this_thread::sleep_for(std::chrono::seconds(12));
     }));
 
     while (m_openGLGLFWContext->windowShoudNotClose())
