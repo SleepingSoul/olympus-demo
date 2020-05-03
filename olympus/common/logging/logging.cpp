@@ -27,7 +27,7 @@ void logging::initialize()
 #ifdef _DEBUG
     spdlog::set_level(spdlog::level::debug);
 #else
-    spdlog::set_level(spdlog::level::info);
+    spdlog::set_level(spdlog::level::debug);
 #endif
 }
 

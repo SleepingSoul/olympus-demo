@@ -2,6 +2,7 @@
 
 #include <OpenGLGLFWContext.h>
 #include <OpenGLVoxelRenderer.h>
+#include <JobSystem.h>
 
 BeginNamespaceOlympus
 
@@ -20,6 +21,7 @@ private:
 
     std::unique_ptr<OpenGLGLFWContext> m_openGLGLFWContext;
     std::unique_ptr<OpenGLVoxelRenderer> m_openGLVoxelRenderer;
+    JobSystem m_jobSystem;
 
     bool m_successfulInitialization{ false };
 };

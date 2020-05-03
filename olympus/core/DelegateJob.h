@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include <logging/logging.h>
+
 #include <Job.h>
 
 BeginNamespaceOlympus
@@ -12,12 +14,16 @@ public:
     using Base = Job;
     using Executor = std::function<void()>;
 
-    explicit DelegateJob(JobAffinity affinity, Executor executor)
-        : Base(affinity)
+    explicit DelegateJob(const char* jobID, JobAffinity affinity, Executor executor)
+        : Base(jobID, affinity)
         , m_executor(std::move(executor))
     {}
 
-    void execute() override { m_executor(); }
+    void execute() override
+    {
+        JobExecutionGuard jeg(*this);
+        m_executor();
+    }
 
 private:
     Executor m_executor;

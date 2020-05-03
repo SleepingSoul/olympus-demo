@@ -31,7 +31,7 @@ private:
     };
 
     std::map<JobAffinity, JobQueue> m_queues;
-    std::vector<std::unique_ptr<JobExecution>> m_jobs;
+    std::list<JobExecution> m_jobs;
     StopToken m_stopToken;
 };
 

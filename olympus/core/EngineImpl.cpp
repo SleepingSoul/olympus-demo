@@ -3,10 +3,14 @@
 
 #include <managers/CommandLineManager.h>
 
+#include <DelegateJob.h>
+
 BeginNamespaceOlympus
 
 EngineImpl::EngineImpl()
 {
+    logging::debug("Initializing engine in main thread with id: {}", std::this_thread::get_id());
+
     m_profilerFile = olyCommandLineManager.getString(oly::CommandLineOptions::SaveProfile);
 
 #ifndef BUILD_WITH_EASY_PROFILER
@@ -90,6 +94,12 @@ int EngineImpl::run()
             voxel.position.x += 0.2f;
         }
     });
+
+    m_jobSystem.addJob(std::make_unique<DelegateJob>("Sleep test job", JobAffinity::Generic, []
+    {
+        EASY_BLOCK("Sleep job");
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+    }));
 
     while (m_openGLGLFWContext->windowShoudNotClose())
     {

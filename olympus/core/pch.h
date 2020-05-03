@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <list>
+#include <forward_list>
 #include <array>
 #include <string>
 #include <string_view>
@@ -16,10 +17,14 @@
 #include <filesystem>
 #include <optional>
 #include <exception>
+#include <thread>
+#include <chrono>
 
 #include <boost/circular_buffer.hpp>
 
 #include <easy/profiler.h>
+
+#include <fmt/ostream.h>
 
 #include <logging/logging.h>
 #include <utils/macros.h>

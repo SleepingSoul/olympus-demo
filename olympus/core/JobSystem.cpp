@@ -14,9 +14,7 @@ JobSystem::JobSystem()
 {
     for (size_t i = 0; i < WorkerThreadCount; ++i)
     {
-        auto jobExecution = std::make_unique<JobExecution>(m_queues[static_cast<JobAffinity>(i)], m_stopToken);
-
-        m_jobs.emplace_back(std::move(jobExecution))->thread.start();
+        m_jobs.emplace_back(m_queues[static_cast<JobAffinity>(i)], m_stopToken).thread.start();
     }
 }
 
@@ -24,17 +22,17 @@ JobSystem::~JobSystem()
 {
     m_stopToken.store(true);
 
-    std::for_each(m_jobs.cbegin(), m_jobs.cend(), [](const auto& execution) { execution->event.signal(); });
+    std::for_each(m_jobs.begin(), m_jobs.end(), [](auto& execution) { execution.event.signal(); });
 
-    for (const auto& execution : m_jobs)
+    for (auto& execution : m_jobs)
     {
-        if (!execution->thread.isJoinable())
+        if (!execution.thread.isJoinable())
         {
             olyError("[JobSystem] A thread in job system is not joinable - cannot terminate work correctly.");
             continue;
         }
 
-        execution->thread.join();
+        execution.thread.join();
     }
 }
 
@@ -49,7 +47,7 @@ void JobSystem::addJob(std::unique_ptr<Job>&& job)
     }
 
     m_queues[affinity].push(std::move(job));
-    m_jobs[EnumToNumber(affinity)]->event.signal();
+    std::next(m_jobs.begin(), EnumToNumber(affinity))->event.signal();
 }
 
 EndNamespaceOlympus
