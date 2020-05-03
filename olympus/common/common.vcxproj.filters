@@ -27,6 +27,12 @@
     <ClInclude Include="managers\CommandLineManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="containers\ThreadSafeQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utils\enum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="logging\logging.cpp">
@@ -35,5 +41,10 @@
     <ClCompile Include="managers\CommandLineManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="containers\ThreadSafeQueue.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

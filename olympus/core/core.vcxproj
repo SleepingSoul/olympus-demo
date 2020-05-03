@@ -171,6 +171,9 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineImpl.cpp" />
+    <ClCompile Include="JobEvent.cpp" />
+    <ClCompile Include="JobSystem.cpp" />
+    <ClCompile Include="JobThread.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -178,8 +181,14 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DelegateJob.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineImpl.h" />
+    <ClInclude Include="Job.h" />
+    <ClInclude Include="JobAffinity.h" />
+    <ClInclude Include="JobEvent.h" />
+    <ClInclude Include="JobSystem.h" />
+    <ClInclude Include="JobThread.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

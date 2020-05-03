@@ -19,14 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="containers\ThreadSafeQueue.h" />
     <ClInclude Include="logging\logging.h" />
     <ClInclude Include="managers\CommandLineManager.h" />
+    <ClInclude Include="utils\enum.h" />
     <ClInclude Include="utils\macros.h" />
     <ClInclude Include="utils\olyerror.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="managers\CommandLineManager.cpp" />
     <ClCompile Include="logging\logging.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="containers\ThreadSafeQueue.inl" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

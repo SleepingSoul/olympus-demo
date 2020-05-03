@@ -84,6 +84,7 @@ OpenGLVoxelRenderer::OpenGLVoxelRenderer()
     , m_cameraAngleDeg(45.f)
     , m_nearDistance(1.f)
     , m_farDistance(100.f)
+    , m_renderField{1.f, 1.f}
 {
     glClearColor(0.f, 0.f, 0.f, 1.f);
 

@@ -24,3 +24,4 @@
 #include <logging/logging.h>
 #include <utils/macros.h>
 #include <utils/olyerror.h>
+#include <utils/enum.h>
