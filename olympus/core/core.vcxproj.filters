@@ -51,6 +51,9 @@
     <ClCompile Include="InitializeRenderJob.cpp">
       <Filter>Source Files\JobSystem\specific jobs</Filter>
     </ClCompile>
+    <ClCompile Include="RenderDrawCallsJob.cpp">
+      <Filter>Source Files\JobSystem\specific jobs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files\JobSystem</Filter>
     </ClInclude>
     <ClInclude Include="InitializeRenderJob.h">
+      <Filter>Header Files\JobSystem\specific jobs</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderDrawCallsJob.h">
       <Filter>Header Files\JobSystem\specific jobs</Filter>
     </ClInclude>
   </ItemGroup>

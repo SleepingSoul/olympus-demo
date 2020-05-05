@@ -19,8 +19,8 @@ public:
 private:
     std::optional<std::string> m_profilerFile;
 
-    std::unique_ptr<OpenGLGLFWContext> m_openGLGLFWContext;
-    std::unique_ptr<OpenGLVoxelRenderer> m_openGLVoxelRenderer;
+    std::shared_ptr<OpenGLGLFWContext> m_openGLGLFWContext;
+    std::shared_ptr<OpenGLVoxelRenderer> m_openGLVoxelRenderer;
     JobSystem m_jobSystem;
 
     bool m_successfulInitialization{ false };

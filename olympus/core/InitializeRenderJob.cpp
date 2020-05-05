@@ -21,6 +21,8 @@ void InitializeRenderJob::execute()
 {
     EASY_FUNCTION();
 
+    JobExecutionGuard jeg(*this);
+
     OpenGLGLFWContext::InitParameters params{};
 
     params.verMajor = 3;

@@ -1,6 +1,8 @@
 #pragma once
 
 #include <utils/macros.h>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 BeginNamespaceOlympus
 

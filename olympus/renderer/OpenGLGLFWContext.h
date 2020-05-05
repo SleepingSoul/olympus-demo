@@ -48,6 +48,9 @@ public:
     void onFrameStart();
     void onFrameEnd();
 
+    void renderFrameStart();
+    void renderFrameEnd();
+
 private:
     void updateFPS();
     unsigned calculateNormalizedFPS() const { return std::accumulate(m_latestFPS.begin(), m_latestFPS.end(), 0u) / static_cast<unsigned>(m_latestFPS.size()); }

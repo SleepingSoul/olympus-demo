@@ -15,8 +15,8 @@ public:
 
     struct InitParameters
     {
-        std::unique_ptr<OpenGLGLFWContext>& outContext;
-        std::unique_ptr<OpenGLVoxelRenderer>& outRenderer;
+        std::shared_ptr<OpenGLGLFWContext>& outContext;
+        std::shared_ptr<OpenGLVoxelRenderer>& outRenderer;
     };
 
     InitializeRenderJob(InitParameters initParams);

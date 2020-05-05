@@ -10,6 +10,9 @@ BeginNamespaceOlympus
 class Job
 {
 public:
+    // Remember: contructor is called in thread where job is being initialized (usually main thread)
+    // destructor will be called in the thread where the job is being executed.
+
     explicit Job(const char* jobID, JobAffinity affinity) noexcept(true)
         : m_affinity(affinity)
         , m_jobID(jobID)

@@ -127,11 +127,6 @@ void OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback key
 
 void OpenGLGLFWContext::onFrameStart()
 {
-    EASY_FUNCTION();
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
 }
 
 void OpenGLGLFWContext::updateFPS()
@@ -146,7 +141,17 @@ void OpenGLGLFWContext::onFrameEnd()
     EASY_FUNCTION();
 
     updateFPS();
+}
 
+void OpenGLGLFWContext::renderFrameStart()
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
+void OpenGLGLFWContext::renderFrameEnd()
+{
     if (m_options.showFPS)
     {
         ImGui::Text("FPS: %u", calculateNormalizedFPS());
