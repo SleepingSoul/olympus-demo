@@ -26,7 +26,7 @@ public:
 
     bool tryPop(T& value);
 
-    size_t size() const { return m_queue.size(); }
+    size_t size() const;
 
 private:
     std::queue<T> m_queue;

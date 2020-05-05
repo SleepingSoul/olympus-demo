@@ -171,6 +171,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
   <ItemGroup>
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineImpl.cpp" />
+    <ClCompile Include="InitializeRenderJob.cpp" />
     <ClCompile Include="JobEvent.cpp" />
     <ClCompile Include="JobSystem.cpp" />
     <ClCompile Include="JobThread.cpp" />
@@ -184,6 +185,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     <ClInclude Include="DelegateJob.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineImpl.h" />
+    <ClInclude Include="InitializeRenderJob.h" />
     <ClInclude Include="Job.h" />
     <ClInclude Include="JobAffinity.h" />
     <ClInclude Include="JobEvent.h" />

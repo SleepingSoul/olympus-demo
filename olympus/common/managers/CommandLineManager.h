@@ -1,6 +1,7 @@
 #pragma once
 
 #include <optional>
+#include <mutex>
 #include <string_view>
 #include <docopt/docopt.h>
 #include <utils/macros.h>
@@ -25,17 +26,18 @@ public:
 
     void initialize(int argc, char** argv);
 
-    std::optional<long> getLong(std::string_view name) const noexcept(true);
+    std::optional<long> getLong(std::string_view name) const;
 
-    std::optional<bool> getBool(std::string_view name) const noexcept(true);
+    std::optional<bool> getBool(std::string_view name) const;
 
-    std::optional<std::string> getString(std::string_view name) const noexcept(true);
-    std::optional<std::vector<std::string>> getStringList(std::string_view name) const noexcept(true);
+    std::optional<std::string> getString(std::string_view name) const;
+    std::optional<std::vector<std::string>> getStringList(std::string_view name) const;
 
 private:
     CommandLineManager() = default;
 
     std::map<std::string, docopt::value, std::less<>> m_args;
+    mutable std::mutex m_mutex;
 };
 
 EndNamespaceOlympus

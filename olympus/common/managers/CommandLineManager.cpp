@@ -35,8 +35,10 @@ void CommandLineManager::initialize(int argc, char** argv)
     m_args.insert(std::make_move_iterator(args.begin()), std::make_move_iterator(args.end()));
 }
 
-std::optional<long> CommandLineManager::getLong(std::string_view name) const noexcept(true)
+std::optional<long> CommandLineManager::getLong(std::string_view name) const
 {
+    std::lock_guard lg(m_mutex);
+
     const auto [found, it] = estd::find(m_args, name);
 
     try
@@ -49,8 +51,10 @@ std::optional<long> CommandLineManager::getLong(std::string_view name) const noe
     }
 }
 
-std::optional<bool> CommandLineManager::getBool(std::string_view name) const noexcept(true)
+std::optional<bool> CommandLineManager::getBool(std::string_view name) const
 {
+    std::lock_guard lg(m_mutex);
+
     const auto [found, it] = estd::find(m_args, name);
 
     try
@@ -63,8 +67,10 @@ std::optional<bool> CommandLineManager::getBool(std::string_view name) const noe
     }
 }
 
-std::optional<std::string> CommandLineManager::getString(std::string_view name) const noexcept(true)
+std::optional<std::string> CommandLineManager::getString(std::string_view name) const
 {
+    std::lock_guard lg(m_mutex);
+
     const auto [found, it] = estd::find(m_args, name);
 
     return found && it->second.isString() ? std::optional{ it->second.asString() } : std::nullopt;

@@ -37,4 +37,11 @@ bool ThreadSafeQueue<T>::tryPop(T& value)
     return true;
 }
 
+template <class T>
+size_t ThreadSafeQueue<T>::size() const
+{
+    std::lock_guard lg(m_mutex);
+    return m_queue.size();
+}
+
 EndNamespaceOlympus

@@ -23,6 +23,7 @@ public:
     virtual void execute() = 0;
 
 protected:
+    // It is recommended to use this RAII class in "execute" to ensure job execution will be logged.
     struct JobExecutionGuard
     {
     public:

@@ -19,6 +19,12 @@
     <Filter Include="Source Files\JobSystem">
       <UniqueIdentifier>{d02d31e2-62ce-4cae-8218-40b50910a8a8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\JobSystem\specific jobs">
+      <UniqueIdentifier>{fd75d70a-c376-4380-a22c-a33a2409c382}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\JobSystem\specific jobs">
+      <UniqueIdentifier>{7f0e660e-c15f-4632-bd5f-04325297d600}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,6 +47,9 @@
     </ClCompile>
     <ClCompile Include="JobSystem.cpp">
       <Filter>Source Files\JobSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="InitializeRenderJob.cpp">
+      <Filter>Source Files\JobSystem\specific jobs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -70,6 +79,9 @@
     </ClInclude>
     <ClInclude Include="DelegateJob.h">
       <Filter>Header Files\JobSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="InitializeRenderJob.h">
+      <Filter>Header Files\JobSystem\specific jobs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

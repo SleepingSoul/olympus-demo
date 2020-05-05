@@ -19,6 +19,7 @@
 #include <exception>
 #include <thread>
 #include <chrono>
+#include <future>
 
 #include <boost/circular_buffer.hpp>
 

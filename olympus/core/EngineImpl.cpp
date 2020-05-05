@@ -4,6 +4,7 @@
 #include <managers/CommandLineManager.h>
 
 #include <DelegateJob.h>
+#include <InitializeRenderJob.h>
 
 BeginNamespaceOlympus
 
@@ -31,32 +32,37 @@ EngineImpl::EngineImpl()
         profiler::startListen();
     }
 
-    OpenGLGLFWContext::InitParameters params{};
+    InitializeRenderJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer };
 
-    params.verMajor = 3;
-    params.verMinor = 3;
-    params.windowWidth = olyCommandLineManager.getLong(oly::CommandLineOptions::Width).value_or(800);
-    params.windowHeight = olyCommandLineManager.getLong(oly::CommandLineOptions::Height).value_or(600);
-    params.windowTitle = "olympus";
-    params.glslVersion = "#version 330 core";
+    auto initRenderJob = std::make_unique<InitializeRenderJob>(parameters);
 
-    try
-    {
-        m_openGLGLFWContext = std::make_unique<OpenGLGLFWContext>(params);
-    }
-    catch (const oly::InfoException & e)
-    {
-        oly::logging::critical("Failed to create OpenGL GLFW context: {}", e.what());
-        return;
-    }
+    auto renderInitSuccessFuture = initRenderJob->getSuccessFuture();
 
-    m_openGLVoxelRenderer = std::make_unique<OpenGLVoxelRenderer>();
+    m_jobSystem.addJob(std::move(initRenderJob));
 
-    m_successfulInitialization = true;
+    EASY_BLOCK("Waiting for render initialization in the main thread");
+
+    m_successfulInitialization = renderInitSuccessFuture.get();
+
+    EASY_END_BLOCK;
+
+    logging::debug("Render initialization result it: {}", m_successfulInitialization);
 }
 
 int EngineImpl::run()
 {
+    if (m_profilerFile)
+    {
+        const auto numCapturedFrames = profiler::dumpBlocksToFile(m_profilerFile->c_str());
+
+        if (numCapturedFrames == 0)
+        {
+            olyError("Profiler captured 0 frames.");
+        }
+    }
+
+    return 0;
+
     std::vector<oly::VoxelDrawCall> rdc(1);
 
     rdc[0].position = { -0.5f, 0.f, 0.f };
@@ -94,18 +100,6 @@ int EngineImpl::run()
             voxel.position.x += 0.2f;
         }
     });
-
-    m_jobSystem.addJob(std::make_unique<DelegateJob>("Sleep test job in generic thread", JobAffinity::Generic, []
-    {
-        EASY_BLOCK("Sleep job");
-        std::this_thread::sleep_for(std::chrono::seconds(10));
-    }));
-
-    m_jobSystem.addJob(std::make_unique<DelegateJob>("Sleep test job in render thread", JobAffinity::Render, []
-    {
-        EASY_BLOCK("Sleep job");
-        std::this_thread::sleep_for(std::chrono::seconds(12));
-    }));
 
     while (m_openGLGLFWContext->windowShoudNotClose())
     {
