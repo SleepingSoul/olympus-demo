@@ -111,6 +111,8 @@ void OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
 {
     EASY_FUNCTION(profiler::colors::Red);
 
+    glViewport(0, 0, m_renderField.x, m_renderField.y);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     ShaderProgram& shader = m_debugRender ? m_debugShader : m_voxelShader;
@@ -123,8 +125,13 @@ void OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
     }
 
     {
-        const auto projection = glm::perspectiveFov(glm::radians(m_cameraAngleDeg), m_renderField.x, m_renderField.y
-            , m_nearDistance, m_farDistance);
+        const auto projection = glm::perspectiveFov(
+            glm::radians(m_cameraAngleDeg),
+            static_cast<float>(m_renderField.x),
+            static_cast<float>(m_renderField.y),
+            m_nearDistance,
+            m_farDistance);
+
         shader.setMatrix4f(Shader::Projection, glm::value_ptr(projection));
     }
     

@@ -15,11 +15,11 @@ public:
 
     struct InitParameters
     {
-        std::shared_ptr<OpenGLGLFWContext>& outContext;
+        std::shared_ptr<OpenGLGLFWContext> glfwContext;
         std::shared_ptr<OpenGLVoxelRenderer>& outRenderer;
     };
 
-    InitializeRenderJob(InitParameters initParams);
+    InitializeRenderJob(InitParameters&& initParams);
 
     std::future<bool> getSuccessFuture();
     void execute() override;

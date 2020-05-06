@@ -4,8 +4,7 @@
 #include <managers/CommandLineManager.h>
 
 #include <DelegateJob.h>
-#include <InitializeRenderJob.h>
-#include <RenderDrawCallsJob.h>
+#include <RenderFrameJob.h>
 
 BeginNamespaceOlympus
 
@@ -33,21 +32,18 @@ EngineImpl::EngineImpl()
         profiler::startListen();
     }
 
-    InitializeRenderJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer };
-
-    auto initRenderJob = std::make_unique<InitializeRenderJob>(parameters);
-
-    auto renderInitSuccessFuture = initRenderJob->getSuccessFuture();
-
-    m_jobSystem.addJob(std::move(initRenderJob));
-
-    EASY_BLOCK("Waiting for render initialization");
-
-    m_successfulInitialization = renderInitSuccessFuture.get();
-
+    // GLFW should be initialized from the main thread
+    EASY_BLOCK("GLFW initialization");
+    initGLFWContext();
     EASY_END_BLOCK;
 
-    logging::info("Render initialization result is: {}", m_successfulInitialization);
+    m_openGLGLFWContext->setThreadContext(true);
+
+    m_openGLVoxelRenderer = std::make_shared<OpenGLVoxelRenderer>();
+
+    m_openGLGLFWContext->setThreadContext(false);
+
+    m_successfulInitialization = true;
 }
 
 int EngineImpl::run()
@@ -102,44 +98,25 @@ int EngineImpl::run()
         rdc[0].rotationVec = { 0.2f, 0.2f, 0.2f };
         rdc[0].angle = 30.f;
 
-        RenderDrawCallsJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer, std::move(rdc) };
-        auto renderDrawCallsJob = std::make_unique<RenderDrawCallsJob>(std::move(parameters));
+        RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer, std::move(rdc) };
+        auto renderFrameJob = std::make_unique<RenderFrameJob>(std::move(parameters));
 
-        auto renderFinishedFuture = renderDrawCallsJob->getRenderFinishedFuture();
+        auto renderFinishedFuture = renderFrameJob->getRenderFinishedFuture();
 
-        m_jobSystem.addJob(std::move(renderDrawCallsJob));
+        m_jobSystem.addJob(std::move(renderFrameJob));
 
-        EASY_BLOCK("Wait for render draw calls job to finish");
-
+        EASY_BLOCK("Wait for render frame job to finish", profiler::colors::DarkBlue);
         renderFinishedFuture.wait();
-
         EASY_END_BLOCK;
 
         m_openGLGLFWContext->onFrameEnd();
     }
 
-    auto deinitRenderJob = std::make_unique<DelegateJobWithPromise>(
-        "Deinitialize render",
-        JobAffinity::Render,
-        [m_openGLGLFWContext = std::move(m_openGLGLFWContext), m_openGLVoxelRenderer = std::move(m_openGLVoxelRenderer)]() mutable
-    {
-        EASY_BLOCK("Render deinitialization");
+    EASY_END_BLOCK;
 
-        // Calling the destructors in the render thread
-        // Probably we could somehow store this objects in the render thread?
-        m_openGLVoxelRenderer.reset();
-        m_openGLGLFWContext.reset();
-    }
-    );
-
-    auto deinitRenderJobFinishedFuture = deinitRenderJob->getJobEndFuture();
-
-    m_jobSystem.addJob(std::move(deinitRenderJob));
-
-    EASY_BLOCK("Waiting for render to deinitialize");
-
-    deinitRenderJobFinishedFuture.wait();
-
+    EASY_BLOCK("Stopping job system");
+    logging::debug("Stopping job system");
+    m_jobSystem.stop();
     EASY_END_BLOCK;
 
     if (m_profilerFile)
@@ -153,6 +130,30 @@ int EngineImpl::run()
     }
 
     return 0;
+}
+
+void EngineImpl::initGLFWContext()
+{
+    EASY_FUNCTION();
+
+    OpenGLGLFWContext::InitParameters params{};
+
+    params.verMajor = 3;
+    params.verMinor = 3;
+    params.windowWidth = olyCommandLineManager.getLong(oly::CommandLineOptions::Width).value_or(800);
+    params.windowHeight = olyCommandLineManager.getLong(oly::CommandLineOptions::Height).value_or(600);
+    params.windowTitle = "olympus";
+    params.glslVersion = "#version 330 core";
+
+    try
+    {
+        m_openGLGLFWContext = std::make_unique<OpenGLGLFWContext>(params);
+    }
+    catch (const oly::InfoException& e)
+    {
+        olyError("Failed to create OpenGL GLFW context: {}", e.what());
+        return;
+    }
 }
 
 EndNamespaceOlympus

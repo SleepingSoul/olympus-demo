@@ -21,8 +21,8 @@ public:
     void setCameraPosition(const glm::vec3& camPos) { m_cameraPos = camPos; }
     glm::vec3 getCameraPosition() const { return m_cameraPos; }
 
-    void setRenderField(const glm::vec2& renderFieldPx) { m_renderField = renderFieldPx; }
-    glm::vec2 getRenderField() const { return m_renderField; }
+    void setRenderField(const glm::ivec2& renderFieldPx) { m_renderField = renderFieldPx; }
+    glm::ivec2 getRenderField() const { return m_renderField; }
 
     void setCameraAngle(float camAngleDeg) { m_cameraAngleDeg = camAngleDeg; }
     float getCameraAngle() const { return m_cameraAngleDeg; }
@@ -50,7 +50,7 @@ private:
 
     // Camera properties
     glm::vec3 m_cameraPos;
-    glm::vec2 m_renderField;
+    glm::ivec2 m_renderField;
     float m_cameraAngleDeg;
     float m_nearDistance;
     float m_farDistance;

@@ -17,6 +17,8 @@ public:
     int run();
 
 private:
+    void initGLFWContext();
+
     std::optional<std::string> m_profilerFile;
 
     std::shared_ptr<OpenGLGLFWContext> m_openGLGLFWContext;

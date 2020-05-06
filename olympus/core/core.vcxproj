@@ -180,7 +180,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="RenderDrawCallsJob.cpp" />
+    <ClCompile Include="RenderFrameJob.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DelegateJob.h" />
@@ -193,7 +193,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     <ClInclude Include="JobSystem.h" />
     <ClInclude Include="JobThread.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="RenderDrawCallsJob.h" />
+    <ClInclude Include="RenderFrameJob.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

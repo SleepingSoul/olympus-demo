@@ -8,7 +8,7 @@ BeginNamespaceOlympus
 class OpenGLVoxelRenderer;
 class OpenGLGLFWContext;
 
-class RenderDrawCallsJob : public Job
+class RenderFrameJob : public Job
 {
 public:
     using Base = Job;
@@ -20,7 +20,7 @@ public:
         std::vector<VoxelDrawCall> drawCalls;
     };
 
-    RenderDrawCallsJob(InitParameters&& initParams);
+    RenderFrameJob(InitParameters&& initParams);
 
     std::future<void> getRenderFinishedFuture();
 

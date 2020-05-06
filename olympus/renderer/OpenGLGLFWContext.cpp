@@ -8,8 +8,10 @@
 #include <imgui_impl_opengl3.h>
 
 #include <easy/profiler.h>
+#include <fmt/ostream.h>
 
 #include <extra_std/extra_std.h>
+#include <logging/logging.h>
 
 BeginNamespaceOlympus
 
@@ -17,9 +19,6 @@ namespace
 {
     void framebufferSizeCallback(GLFWwindow* window, int width, int height)
     {
-        EASY_FUNCTION();
-
-        glViewport(0, 0, width, height);
     }
 
     void keyboardCallback(GLFWwindow* window, int key, int scancode, int action, int mode)
@@ -120,6 +119,26 @@ glm::ivec2 OpenGLGLFWContext::getWindowSize() const noexcept(true)
     return result;
 }
 
+void OpenGLGLFWContext::setThreadContext(bool makeContextCurrent)
+{
+    EASY_FUNCTION("Make context current: %d", makeContextCurrent);
+
+    std::lock_guard lg(m_mutex);
+
+    const GLFWwindow* const currContext = glfwGetCurrentContext();
+
+    if (makeContextCurrent && currContext == nullptr)
+    {
+        logging::debug("GLFW context set to window: {} for thread: {}", reinterpret_cast<void*>(m_window), std::this_thread::get_id());
+        glfwMakeContextCurrent(m_window);
+    }
+    else if (!makeContextCurrent && currContext == m_window)
+    {
+        logging::debug("GLFW context set to nullptr from thread: {}", std::this_thread::get_id());
+        glfwMakeContextCurrent(nullptr);
+    }
+}
+
 void OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback)
 {
     m_keysMapping.emplace(glfwKeyCode, std::move(keyCallback));
@@ -138,13 +157,19 @@ void OpenGLGLFWContext::updateFPS()
 
 void OpenGLGLFWContext::onFrameEnd()
 {
-    EASY_FUNCTION();
+    EASY_BLOCK("GLFW poll events");
+    glfwPollEvents();
+    EASY_END_BLOCK;
 
     updateFPS();
 }
 
 void OpenGLGLFWContext::renderFrameStart()
 {
+    EASY_FUNCTION();
+
+    setThreadContext(true);
+
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
@@ -164,10 +189,6 @@ void OpenGLGLFWContext::renderFrameEnd()
 
     EASY_BLOCK("GLFW swap buffers");
     glfwSwapBuffers(m_window);
-    EASY_END_BLOCK;
-
-    EASY_BLOCK("GLFW poll events");
-    glfwPollEvents();
     EASY_END_BLOCK;
 }
 

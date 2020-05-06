@@ -20,6 +20,30 @@ JobSystem::JobSystem()
 
 JobSystem::~JobSystem()
 {
+    stop();
+}
+
+void JobSystem::addJob(std::unique_ptr<Job>&& job)
+{
+    const auto affinity = job->getAffinity();
+
+    if (affinity == JobAffinity::Invalid)
+    {
+        olyError("[JobSystem] A job with invalid affinity given - no job will be executed.");
+        return;
+    }
+
+    m_queues[affinity].push(std::move(job));
+    std::next(m_jobs.begin(), EnumToNumber(affinity))->event.signal();
+}
+
+void JobSystem::stop()
+{
+    if (m_stopped)
+    {
+        return;
+    }
+
     m_stopToken.store(true);
 
     std::for_each(m_jobs.begin(), m_jobs.end(), [](auto& execution) { execution.event.signal(); });
@@ -34,20 +58,8 @@ JobSystem::~JobSystem()
 
         execution.thread.join();
     }
-}
 
-void JobSystem::addJob(std::unique_ptr<Job>&& job)
-{
-    const auto affinity = job->getAffinity();
-
-    if (affinity == JobAffinity::Invalid)
-    {
-        olyError("[JobSystem] A job with invalid affinity gived - no jon will be executed.");
-        return;
-    }
-
-    m_queues[affinity].push(std::move(job));
-    std::next(m_jobs.begin(), EnumToNumber(affinity))->event.signal();
+    m_stopped = true;
 }
 
 EndNamespaceOlympus

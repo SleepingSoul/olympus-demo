@@ -43,11 +43,15 @@ public:
     bool windowShoudNotClose() const noexcept(true);
     glm::ivec2 getWindowSize() const noexcept(true);
 
+    void setThreadContext(bool makeContextCurrent);
+
     void addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback);
 
+    // These methods should be called from the main thread!
     void onFrameStart();
     void onFrameEnd();
 
+    // This methods should be called from the render thread (where OpenGL is initialized)
     void renderFrameStart();
     void renderFrameEnd();
 
@@ -73,6 +77,8 @@ private:
     boost::circular_buffer<unsigned> m_latestFPS;
 
     std::function<void(int, int)> onResize;
+
+    std::mutex m_mutex;
 };
 
 EndNamespaceOlympus

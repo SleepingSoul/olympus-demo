@@ -1,22 +1,22 @@
 #include <pch.h>
-#include "RenderDrawCallsJob.h"
+#include "RenderFrameJob.h"
 #include <JobAffinity.h>
 #include <OpenGLGLFWContext.h>
 #include <OpenGLVoxelRenderer.h>
 
 BeginNamespaceOlympus
 
-RenderDrawCallsJob::RenderDrawCallsJob(InitParameters&& initParams)
+RenderFrameJob::RenderFrameJob(InitParameters&& initParams)
     : Base("Render draw calls", JobAffinity::Render)
     , m_params(std::move(initParams))
 {}
 
-std::future<void> RenderDrawCallsJob::getRenderFinishedFuture()
+std::future<void> RenderFrameJob::getRenderFinishedFuture()
 {
     return m_renderFinished.get_future();
 }
 
-void RenderDrawCallsJob::execute()
+void RenderFrameJob::execute()
 {
     EASY_FUNCTION("Num draw calls = %zu", m_params.drawCalls.size());
 
@@ -27,7 +27,9 @@ void RenderDrawCallsJob::execute()
     m_params.renderer->setClearColor(glm::vec4{ 0.f, 0.f, 0.f, 1.f });
 
     m_params.renderer->setCameraPosition({ 0.f, 0.f, -5.f });
+
     m_params.renderer->setRenderField(m_params.context->getWindowSize());
+
     m_params.renderer->setDebugRender(true);
 
     m_params.renderer->renderVoxels(m_params.drawCalls);

@@ -18,6 +18,7 @@ public:
     ~JobSystem();
 
     void addJob(std::unique_ptr<Job>&& job);
+    void stop();
 
 private:
     struct JobExecution
@@ -33,6 +34,7 @@ private:
     std::map<JobAffinity, JobQueue> m_queues;
     std::list<JobExecution> m_jobs;
     StopToken m_stopToken;
+    bool m_stopped{ false };
 };
 
 EndNamespaceOlympus
