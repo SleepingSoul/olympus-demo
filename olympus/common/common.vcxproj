@@ -25,10 +25,12 @@
     <ClInclude Include="utils\enum.h" />
     <ClInclude Include="utils\macros.h" />
     <ClInclude Include="utils\olyerror.h" />
+    <ClInclude Include="utils\threading_utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="managers\CommandLineManager.cpp" />
     <ClCompile Include="logging\logging.cpp" />
+    <ClCompile Include="utils\threading_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="containers\ThreadSafeQueue.inl" />

@@ -10,8 +10,6 @@ BeginNamespaceOlympus
 
 EngineImpl::EngineImpl()
 {
-    logging::debug("Initializing engine in main thread with id: {}", std::this_thread::get_id());
-
     m_profilerFile = olyCommandLineManager.getString(oly::CommandLineOptions::SaveProfile);
 
 #ifndef BUILD_WITH_EASY_PROFILER
@@ -92,27 +90,21 @@ int EngineImpl::run()
 
         m_openGLGLFWContext->onFrameStart();
 
-        std::vector<oly::VoxelDrawCall> rdc(1);
-
-        rdc[0].position = { -0.5f, 0.f, 0.f };
-        rdc[0].rotationVec = { 0.2f, 0.2f, 0.2f };
-        rdc[0].angle = 30.f;
-
-        RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer, std::move(rdc) };
-        auto renderFrameJob = std::make_unique<RenderFrameJob>(std::move(parameters));
-
-        auto renderFinishedFuture = renderFrameJob->getRenderFinishedFuture();
-
-        m_jobSystem.addJob(std::move(renderFrameJob));
+        auto renderFinishedFuture = prepeareAndSendRenderFrameJob();
 
         EASY_BLOCK("Wait for render frame job to finish", profiler::colors::DarkBlue);
-        renderFinishedFuture.wait();
+        try {
+            renderFinishedFuture.get();
+        }
+        catch (std::exception& e)
+        {
+            olyError(e.what());
+
+        }
         EASY_END_BLOCK;
 
         m_openGLGLFWContext->onFrameEnd();
     }
-
-    EASY_END_BLOCK;
 
     EASY_BLOCK("Stopping job system");
     logging::debug("Stopping job system");
@@ -154,6 +146,27 @@ void EngineImpl::initGLFWContext()
         olyError("Failed to create OpenGL GLFW context: {}", e.what());
         return;
     }
+}
+
+[[nodiscard]] std::future<void> EngineImpl::prepeareAndSendRenderFrameJob()
+{
+    // Doing it here because "getWindowSize" is allowed only from the main thread
+    m_openGLVoxelRenderer->setRenderField(m_openGLGLFWContext->getWindowSize());
+
+    std::vector<oly::VoxelDrawCall> rdc(1);
+
+    rdc[0].position = { -0.5f, 0.f, 0.f };
+    rdc[0].rotationVec = { 0.2f, 0.2f, 0.2f };
+    rdc[0].angle = 30.f;
+
+    RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer, std::move(rdc) };
+    auto renderFrameJob = std::make_unique<RenderFrameJob>(std::move(parameters));
+
+    auto renderFinishedFuture = renderFrameJob->getRenderFinishedFuture();
+
+    m_jobSystem.addJob(std::move(renderFrameJob));
+
+    return renderFinishedFuture;
 }
 
 EndNamespaceOlympus

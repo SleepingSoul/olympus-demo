@@ -28,13 +28,13 @@ void RenderFrameJob::execute()
 
     m_params.renderer->setCameraPosition({ 0.f, 0.f, -5.f });
 
-    m_params.renderer->setRenderField(m_params.context->getWindowSize());
-
     m_params.renderer->setDebugRender(true);
 
     m_params.renderer->renderVoxels(m_params.drawCalls);
 
     m_params.context->renderFrameEnd();
+
+    m_renderFinished.set_value();
 }
 
 EndNamespaceOlympus

@@ -33,12 +33,18 @@
     <ClInclude Include="utils\enum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="utils\threading_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="logging\logging.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="managers\CommandLineManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utils\threading_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

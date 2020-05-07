@@ -18,6 +18,7 @@ public:
 
 private:
     void initGLFWContext();
+    [[nodiscard]] std::future<void> prepeareAndSendRenderFrameJob();
 
     std::optional<std::string> m_profilerFile;
 

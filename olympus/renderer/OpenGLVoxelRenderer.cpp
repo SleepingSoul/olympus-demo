@@ -111,6 +111,11 @@ void OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
 {
     EASY_FUNCTION(profiler::colors::Red);
 
+    if (m_renderField == glm::ivec2{ 0, 0 })
+    {
+        return;
+    }
+
     glViewport(0, 0, m_renderField.x, m_renderField.y);
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -20,6 +20,7 @@ BeginNamespaceOlympus
 
 DeclareInfoException(WindowCreationFailed);
 DeclareInfoException(OpenGLDynamicSymbolsBindingError);
+DeclareInfoException(ThreadSelectionError);
 
 class OpenGLGLFWContext
 {
@@ -56,6 +57,7 @@ public:
     void renderFrameEnd();
 
 private:
+    void ensureMainThread(const char* funcName) const;
     void updateFPS();
     unsigned calculateNormalizedFPS() const { return std::accumulate(m_latestFPS.begin(), m_latestFPS.end(), 0u) / static_cast<unsigned>(m_latestFPS.size()); }
 

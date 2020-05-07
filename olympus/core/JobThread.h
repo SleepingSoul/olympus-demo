@@ -19,6 +19,7 @@ public:
     void start();
     void join() { m_thread.join(); }
     bool isJoinable() const { return m_thread.joinable(); }
+    auto getID() const { return m_thread.get_id(); }
 
 private:
     void pollAndExecuteJobs();

@@ -12,8 +12,12 @@
 
 #include <extra_std/extra_std.h>
 #include <logging/logging.h>
+#include <utils/olyerror.h>
+#include <utils/threading_utils.h>
 
 BeginNamespaceOlympus
+
+#define EnsureMainThread ensureMainThread(__FUNCTION__)
 
 namespace
 {
@@ -42,6 +46,16 @@ OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     , m_options()
     , m_latestFPS(60)
 {
+    // GLFW is required to be initialized only in main thread
+
+    if (!threading::isMainThread())
+    {
+        olyError("Attempt to initialize OpenGLGLFWContext in secondary thread: {}. Only main thread is allowed: {}",
+            std::this_thread::get_id(), threading::getMainThreadID());
+
+        throw ThreadSelectionError("Not main thread");
+    }
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, initParams.verMajor);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, initParams.verMinor);
@@ -89,6 +103,8 @@ OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
 
     addKeyboardCallback(GLFW_KEY_ESCAPE, [this](int scancode, int action, int mode)
     {
+        logging::info("ESC press was detected.");
+
         if (action == GLFW_PRESS)
         {
             glfwSetWindowShouldClose(m_window, true);
@@ -112,6 +128,8 @@ bool OpenGLGLFWContext::windowShoudNotClose() const noexcept(true)
 
 glm::ivec2 OpenGLGLFWContext::getWindowSize() const noexcept(true)
 {
+    EnsureMainThread;
+
     glm::ivec2 result;
 
     glfwGetWindowSize(m_window, &result.x, &result.y);
@@ -127,6 +145,22 @@ void OpenGLGLFWContext::setThreadContext(bool makeContextCurrent)
 
     const GLFWwindow* const currContext = glfwGetCurrentContext();
 
+    static std::thread::id lastCallerThreadID;
+    const auto noThreadID = std::thread::id{};
+
+    const auto currentThreadID = std::this_thread::get_id();
+
+    if (lastCallerThreadID != noThreadID && currentThreadID != lastCallerThreadID &&
+        makeContextCurrent && currContext)
+    {
+        olyError("Attempt to set positive context in thread: {} when it wasn't unset in the previous thread: {}", currentThreadID, lastCallerThreadID);
+        return;
+    }
+    else
+    {
+        lastCallerThreadID = currentThreadID;
+    }
+
     if (makeContextCurrent && currContext == nullptr)
     {
         logging::debug("GLFW context set to window: {} for thread: {}", reinterpret_cast<void*>(m_window), std::this_thread::get_id());
@@ -141,11 +175,22 @@ void OpenGLGLFWContext::setThreadContext(bool makeContextCurrent)
 
 void OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback)
 {
+    EnsureMainThread;
+
     m_keysMapping.emplace(glfwKeyCode, std::move(keyCallback));
 }
 
 void OpenGLGLFWContext::onFrameStart()
 {
+    EnsureMainThread;
+}
+
+void OpenGLGLFWContext::ensureMainThread(const char* funcName) const
+{
+    if (!threading::isMainThread())
+    {
+        olyError("Function '{}' should be called only from the main thread, but called from the other.", funcName);
+    }
 }
 
 void OpenGLGLFWContext::updateFPS()
@@ -157,8 +202,12 @@ void OpenGLGLFWContext::updateFPS()
 
 void OpenGLGLFWContext::onFrameEnd()
 {
+    EnsureMainThread;
+
     EASY_BLOCK("GLFW poll events");
+    logging::debug("Calling pollEvents");
     glfwPollEvents();
+    logging::debug("After pollEvents");
     EASY_END_BLOCK;
 
     updateFPS();
@@ -191,5 +240,7 @@ void OpenGLGLFWContext::renderFrameEnd()
     glfwSwapBuffers(m_window);
     EASY_END_BLOCK;
 }
+
+#undef EnsureMainThread
 
 EndNamespaceOlympus

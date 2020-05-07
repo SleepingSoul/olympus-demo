@@ -29,8 +29,13 @@ void JobThread::pollAndExecuteJobs()
 
         std::unique_ptr<Job> newJob;
         
-        while (m_sharedJobQueue.tryPop(newJob) && !m_stopToken.load())
+        while (m_sharedJobQueue.tryPop(newJob))
         {
+            if (m_stopToken.load())
+            {
+                return;
+            }
+
             newJob->execute();
         }
     }

@@ -52,7 +52,7 @@ void JobSystem::stop()
     {
         if (!execution.thread.isJoinable())
         {
-            olyError("[JobSystem] A thread in job system is not joinable - cannot terminate work correctly.");
+            olyError("[JobSystem] A thread with id: {} in job system is not joinable - cannot terminate work correctly.", execution.thread.getID());
             continue;
         }
 
