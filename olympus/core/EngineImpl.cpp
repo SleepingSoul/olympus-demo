@@ -93,14 +93,7 @@ int EngineImpl::run()
         auto renderFinishedFuture = prepeareAndSendRenderFrameJob();
 
         EASY_BLOCK("Wait for render frame job to finish", profiler::colors::DarkBlue);
-        try {
-            renderFinishedFuture.get();
-        }
-        catch (std::exception& e)
-        {
-            olyError(e.what());
-
-        }
+        renderFinishedFuture.get();
         EASY_END_BLOCK;
 
         m_openGLGLFWContext->onFrameEnd();
