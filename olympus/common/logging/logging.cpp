@@ -24,7 +24,9 @@ void logging::initialize()
     auto logger = std::make_shared<spdlog::logger>(LoggerName, sinks.begin(), sinks.end());
     spdlog::set_default_logger(std::move(logger));
 
+    spdlog::flush_on(spdlog::level::level_enum::debug);
 #ifdef _DEBUG
+    
     spdlog::set_level(spdlog::level::debug);
 #else
     spdlog::set_level(spdlog::level::debug);

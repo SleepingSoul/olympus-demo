@@ -183,6 +183,7 @@ void OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback key
 void OpenGLGLFWContext::onFrameStart()
 {
     EnsureMainThread;
+    ImGui_ImplGlfw_NewFrame();
 }
 
 void OpenGLGLFWContext::ensureMainThread(const char* funcName) const
@@ -220,7 +221,6 @@ void OpenGLGLFWContext::renderFrameStart()
     setThreadContext(true);
 
     ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 }
 

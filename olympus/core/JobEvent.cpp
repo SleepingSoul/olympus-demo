@@ -6,19 +6,27 @@ BeginNamespaceOlympus
 void JobEvent::waitAndReset()
 {
     std::unique_lock lk(m_mutex);
-    m_condition.wait(lk, [this] { return m_isSet.load(); });
-    m_isSet.store(false);
+
+    m_condition.wait(lk, [this] { return m_isSet; });
+
+    m_isSet = false;
 }
 
 void JobEvent::signal()
 {
-    m_isSet.store(true);
-    m_condition.notify_all();
+    set(true);
+    m_condition.notify_one();
 }
 
 void JobEvent::reset()
 {
-    m_isSet.store(false);
+    set(false);
+}
+
+void JobEvent::set(bool isSet)
+{
+    std::lock_guard lg(m_mutex);
+    m_isSet = isSet;
 }
 
 EndNamespaceOlympus

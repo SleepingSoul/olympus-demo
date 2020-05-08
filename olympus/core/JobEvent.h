@@ -17,7 +17,9 @@ public:
     void reset();
 
 private:
-    std::atomic_bool m_isSet{ false };
+    void set(bool isSet);
+
+    bool m_isSet{ false };
     std::mutex m_mutex;
     std::condition_variable m_condition;
 };
