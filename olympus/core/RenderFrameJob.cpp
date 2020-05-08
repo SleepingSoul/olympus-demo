@@ -7,7 +7,7 @@
 BeginNamespaceOlympus
 
 RenderFrameJob::RenderFrameJob(InitParameters&& initParams)
-    : Base("Render draw calls", JobAffinity::Render)
+    : Base("Render draw calls", JobAffinity::Render, /*silent*/true)
     , m_params(std::move(initParams))
 {}
 
@@ -18,9 +18,7 @@ std::future<void> RenderFrameJob::getRenderFinishedFuture()
 
 void RenderFrameJob::execute()
 {
-    EASY_FUNCTION("Num draw calls = %zu", m_params.drawCalls.size());
-
-    JobExecutionGuard jeg(*this);
+    EASY_FUNCTION("Num draw calls = %zu", m_params.drawCalls.size(), profiler::colors::Red);
 
     m_params.context->renderFrameStart();
 

@@ -36,7 +36,19 @@ void JobThread::pollAndExecuteJobs()
                 return;
             }
 
+            const bool silent = newJob->isSilent();
+
+            if (!silent)
+            {
+                logging::debug("Start executing job '{}' in thread {}.", newJob->getJobID(), m_thread.get_id());
+            }
+
             newJob->execute();
+
+            if (!silent)
+            {
+                logging::debug("Job '{}' was executed.", newJob->getJobID());
+            }
         }
     }
 }

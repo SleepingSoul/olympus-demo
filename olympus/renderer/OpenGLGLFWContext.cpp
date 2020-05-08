@@ -163,12 +163,10 @@ void OpenGLGLFWContext::setThreadContext(bool makeContextCurrent)
 
     if (makeContextCurrent && currContext == nullptr)
     {
-        logging::debug("GLFW context set to window: {} for thread: {}", reinterpret_cast<void*>(m_window), std::this_thread::get_id());
         glfwMakeContextCurrent(m_window);
     }
     else if (!makeContextCurrent && currContext == m_window)
     {
-        logging::debug("GLFW context set to nullptr from thread: {}", std::this_thread::get_id());
         glfwMakeContextCurrent(nullptr);
     }
 }
@@ -178,12 +176,6 @@ void OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback key
     EnsureMainThread;
 
     m_keysMapping.emplace(glfwKeyCode, std::move(keyCallback));
-}
-
-void OpenGLGLFWContext::onFrameStart()
-{
-    EnsureMainThread;
-    ImGui_ImplGlfw_NewFrame();
 }
 
 void OpenGLGLFWContext::ensureMainThread(const char* funcName) const
@@ -201,14 +193,28 @@ void OpenGLGLFWContext::updateFPS()
     m_lastTimeStamp = frameEndTimeStamp;
 }
 
+void OpenGLGLFWContext::onFrameStart()
+{
+    EnsureMainThread;
+
+    EASY_BLOCK("ImGui opengl new frame", profiler::colors::Red);
+
+    setThreadContext(true);
+
+    ImGui_ImplOpenGL3_NewFrame();
+
+    setThreadContext(false);
+
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+}
+
 void OpenGLGLFWContext::onFrameEnd()
 {
     EnsureMainThread;
 
     EASY_BLOCK("GLFW poll events");
-    logging::debug("Calling pollEvents");
     glfwPollEvents();
-    logging::debug("After pollEvents");
     EASY_END_BLOCK;
 
     updateFPS();
@@ -219,9 +225,6 @@ void OpenGLGLFWContext::renderFrameStart()
     EASY_FUNCTION();
 
     setThreadContext(true);
-
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui::NewFrame();
 }
 
 void OpenGLGLFWContext::renderFrameEnd()
@@ -239,6 +242,8 @@ void OpenGLGLFWContext::renderFrameEnd()
     EASY_BLOCK("GLFW swap buffers");
     glfwSwapBuffers(m_window);
     EASY_END_BLOCK;
+
+    setThreadContext(false);
 }
 
 #undef EnsureMainThread
