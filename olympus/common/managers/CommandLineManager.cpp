@@ -13,12 +13,14 @@ namespace
     auto Usage =
         R"(olympus
 Usage:
-    core.exe [--width=w --height=h --saveprofile=filename]
+    core.exe --stream-url=url [--width=w --height=h --saveprofile=filename --stream-creds=<login:password>]
 Options:
-    -h, --help                Show this screen.
-    --width=<px>              Screen width in pixels [default: 800].
-    --height=<px>             Screen height in pixels [default: 600].
-    --saveprofile=<filename>  This option works only if program is build in PROFILE configuration. If specified, profiled data will be collected and saved to the file.
+    -h, --help                              Show this screen.
+    --width=<px>                            Screen width in pixels [default: 800].
+    --height=<px>                           Screen height in pixels [default: 600].
+    --saveprofile=<filename>                This option works only if program is build in PROFILE configuration. If specified, profiled data will be collected and saved to the file.
+    --stream-url=<url>                      URL of the videostream.
+    --stream-creds=<login:password>         Crenedtials of the videostream.
         )";
 }
 

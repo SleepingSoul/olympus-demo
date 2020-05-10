@@ -7,9 +7,10 @@
 
 int main(int argc, char** argv)
 {
+    oly::logging::initialize();
+
     oly::threading::defineCurrentThreadAsMain();
 
-    oly::logging::initialize();
     olyCommandLineManager.initialize(argc, argv);
 
     olyEngine.initialize();

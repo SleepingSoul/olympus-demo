@@ -1,7 +1,8 @@
 #pragma once
 
-#ifdef _DEBUG
 #include <logging/logging.h>
+
+#ifdef _DEBUG
 
 #define olyError(format, ...)\
 oly::logging::error(format, __VA_ARGS__);\

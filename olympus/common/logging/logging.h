@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fmt/ostream.h>
+
 #include <spdlog/spdlog.h>
 #include <utils/macros.h>
 

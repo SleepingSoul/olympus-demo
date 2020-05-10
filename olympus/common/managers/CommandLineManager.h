@@ -15,6 +15,8 @@ namespace CommandLineOptions
         const char* const Width = "--width";
         const char* const Height = "--height";
         const char* const SaveProfile = "--saveprofile";
+        const char* const StreamURL = "--stream-url";
+        const char* const StreamCredentials = "--stream-creds";
     }
 }
 
