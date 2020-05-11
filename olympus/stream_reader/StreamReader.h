@@ -6,13 +6,15 @@
 
 #include <utils/macros.h>
 
+#include <StreamDecoder.h>
+
 BeginNamespaceOlympus
 
 class StreamReader
 {
     OlyNonCopyableMovable(StreamReader)
 public:
-    using Buffer = std::vector<char>;
+    using Buffer = stream_decoder::Buffer;
     using StopToken = std::atomic_bool;
 
     struct ClientData

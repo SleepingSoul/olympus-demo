@@ -13,8 +13,6 @@
 #include <logging/logging.h>
 #include <utils/olyerror.h>
 
-#include <StreamDecoder.h>
-
 BeginNamespaceOlympus
 
 namespace
@@ -32,11 +30,11 @@ namespace
 
         auto& clientData = *reinterpret_cast<StreamReader::ClientData*>(userp);
 
-        auto* const dataBegin = reinterpret_cast<unsigned char*>(data);
+        const auto* const dataBegin = reinterpret_cast<unsigned char*>(data);
 
         std::lock_guard lg(clientData.mutex);
 
-        clientData.buffer.insert(clientData.buffer.end(), dataBegin, dataBegin + size * nmemb);
+        clientData.buffer.insert(clientData.buffer.end(), dataBegin, std::next(dataBegin, size * nmemb));
 
         if (stream_decoder::tryExtractFrame(clientData.buffer, clientData.jpegBytes))
         {
@@ -81,7 +79,6 @@ namespace
 }
 
 StreamReader::StreamReader()
-    : m_clientData{ std::mutex(), Buffer(), Buffer() }
 {
     m_clientData.buffer.reserve(BufferCapacity);
     m_clientData.jpegBytes.reserve(BufferCapacity);
