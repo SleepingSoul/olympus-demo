@@ -1,7 +1,5 @@
 #include "AsyncVideostreamListener.h"
 
-#include <fmt/ostream.h>
-
 #include <easy/profiler.h>
 
 #include <logging/logging.h>
@@ -28,16 +26,18 @@ void AsyncVideostreamListener::start()
 {
     if (m_started.load())
     {
-        olyError("[AsyncVideostreamListener] Attemt to start videostream when it is still in progress.");
+        olyError("[AsyncVideostreamListener] Attempt to start videostream when it is still in progress.");
         return;
     }
 
     m_streamThread = std::thread([this]
     {
-        logging::info("[AsyncVideostreamListener] Starting listening in thread: {}", std::this_thread::get_id());
+        logging::info("[AsyncVideostreamListener] Starting listening.");
+
         m_started.store(true);
         m_streamReader.readStream();
         m_started.store(false);
+
         logging::info("[AsyncVideostreamListener] Finished listening.");
     });
 }

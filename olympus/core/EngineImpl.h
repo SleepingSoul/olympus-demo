@@ -29,8 +29,6 @@ private:
     AsyncVideostreamListener m_listener;
 
     JobSystem m_jobSystem;
-    StreamReader m_streamReader;
-
 
     bool m_successfulInitialization{ false };
 };

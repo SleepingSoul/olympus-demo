@@ -22,8 +22,6 @@ public:
     void start();
     void stop();
 
-    // warning!
-    // this function is not logically const and, after it returns the latest frame
     cv::Mat getLatestFrame();
 
     bool isListening() const { return m_started.load(); }

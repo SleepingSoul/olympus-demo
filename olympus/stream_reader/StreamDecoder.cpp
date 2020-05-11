@@ -48,15 +48,7 @@ namespace stream_decoder
     {
         EASY_FUNCTION("size=%zu", jpegData.size(), profiler::colors::Green);
 
-        try
-        {
-            return cv::imdecode(cv::Mat{ jpegData }, cv::IMREAD_COLOR);
-        }
-        catch (std::exception& e)
-        {
-            logging::error("[StreamDecoder] Error while decoding the frame: {}", e.what());
-            return cv::Mat{};
-        }
+        return cv::imdecode(cv::Mat{ jpegData }, cv::IMREAD_COLOR);
     }
 
 }
