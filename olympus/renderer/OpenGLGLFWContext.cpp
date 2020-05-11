@@ -50,8 +50,7 @@ OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
 
     if (!threading::isMainThread())
     {
-        olyError("Attempt to initialize OpenGLGLFWContext in secondary thread: {}. Only main thread is allowed: {}",
-            std::this_thread::get_id(), threading::getMainThreadID());
+        olyError("Attempt to initialize OpenGLGLFWContext in secondary thread");
 
         throw ThreadSelectionError("Not main thread");
     }

@@ -7,8 +7,9 @@ BeginNamespaceOlympus
 
 namespace
 {
-    auto LogFileName = "last_launch_logs.txt";
-    auto LoggerName = "olympus_logger";
+    const char* const LogFileName = "last_launch_logs.txt";
+    const char* const LoggerName = "olympus_logger";
+    const char* const LoggerPattern = "[%H:%M:%S.%f] %^[%l]%$ [thread %t] %v";
     const bool FlushOldLogger = true;
 }
 
@@ -25,6 +26,7 @@ void logging::initialize()
     spdlog::set_default_logger(std::move(logger));
 
     spdlog::flush_on(spdlog::level::level_enum::debug);
+    spdlog::set_pattern(LoggerPattern);
 #ifdef _DEBUG
     
     spdlog::set_level(spdlog::level::debug);

@@ -35,6 +35,8 @@ EngineImpl::EngineImpl()
     initGLFWContext();
     EASY_END_BLOCK;
 
+    m_listener.start();
+
     m_openGLGLFWContext->setThreadContext(true);
 
     m_openGLVoxelRenderer = std::make_shared<OpenGLVoxelRenderer>();
@@ -84,6 +86,8 @@ int EngineImpl::run()
     //    }
     //});
 
+    cv::Mat m;
+
     while (m_openGLGLFWContext->windowShoudNotClose())
     {
         EASY_BLOCK("frame");
@@ -92,6 +96,12 @@ int EngineImpl::run()
 
         auto renderFinishedFuture = prepeareAndSendRenderFrameJob();
 
+        if (m_listener.isListening())
+        {
+            m = m_listener.getLatestFrame();
+            logging::info("Received the custom frame, Size={}", m.size());
+        }
+
         EASY_BLOCK("Wait for render frame job to finish", profiler::colors::DarkBlue);
         renderFinishedFuture.get();
         EASY_END_BLOCK;
@@ -99,9 +109,14 @@ int EngineImpl::run()
         m_openGLGLFWContext->onFrameEnd();
     }
 
-    EASY_BLOCK("Stopping job system");
+    EASY_BLOCK("Stopping job system", profiler::colors::LightBlue);
     logging::debug("Stopping job system");
     m_jobSystem.stop();
+    EASY_END_BLOCK;
+
+    EASY_BLOCK("Stopping async videostream listener", profiler::colors::LightBlue);
+    logging::debug("Stopping async videostream listener");
+    m_listener.stop();
     EASY_END_BLOCK;
 
     if (m_profilerFile)

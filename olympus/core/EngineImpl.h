@@ -3,6 +3,7 @@
 #include <OpenGLGLFWContext.h>
 #include <OpenGLVoxelRenderer.h>
 #include <JobSystem.h>
+#include <AsyncVideostreamListener.h>
 
 BeginNamespaceOlympus
 
@@ -24,6 +25,9 @@ private:
 
     std::shared_ptr<OpenGLGLFWContext> m_openGLGLFWContext;
     std::shared_ptr<OpenGLVoxelRenderer> m_openGLVoxelRenderer;
+
+    AsyncVideostreamListener m_listener;
+
     JobSystem m_jobSystem;
 
     bool m_successfulInitialization{ false };
