@@ -6,9 +6,12 @@
 
 BeginNamespaceOlympus
 
+class Texture;
+
 struct VoxelDrawCall
 {
-    glm::vec4 color;
+    Texture* texture;
+    glm::vec4 colorMask;
     glm::vec3 position;
     glm::vec3 rotationVec;
     float angle;
