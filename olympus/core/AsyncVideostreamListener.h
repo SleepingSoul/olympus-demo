@@ -1,8 +1,5 @@
 #pragma once
 
-#include <atomic>
-#include <thread>
-
 #include <opencv2/opencv.hpp>
 
 #include <StreamReader.h>

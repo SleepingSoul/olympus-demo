@@ -154,12 +154,10 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="AsyncVideostreamListener.h" />
     <ClInclude Include="StreamDecoder.h" />
     <ClInclude Include="StreamReader.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AsyncVideostreamListener.cpp" />
     <ClCompile Include="StreamDecoder.cpp" />
     <ClCompile Include="StreamReader.cpp" />
   </ItemGroup>

@@ -169,6 +169,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AsyncVideostreamListener.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineImpl.cpp" />
     <ClCompile Include="JobEvent.cpp" />
@@ -182,6 +183,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     <ClCompile Include="RenderFrameJob.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AsyncVideostreamListener.h" />
     <ClInclude Include="DelegateJob.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineImpl.h" />
