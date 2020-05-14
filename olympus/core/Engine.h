@@ -3,6 +3,8 @@
 BeginNamespaceOlympus
 
 class EngineImpl;
+class TextureStorage;
+class AsyncVideostreamListener;
 
 class Engine
 {
@@ -13,6 +15,8 @@ public:
     void initialize();
 
     bool initializedSuccessfuly() const;
+
+    AsyncVideostreamListener& getAsyncVideostreamListener();
 
     int run();
 

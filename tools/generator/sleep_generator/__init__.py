@@ -33,11 +33,11 @@ def generate_textures_enum_definition():
 
         helper.put(COPYRIGHT_HEADER)
         helper.put('#pragma once\n\n')
-        helper.put('namespace slp\n')
+        helper.put('namespace oly\n')
 
         with Block(helper, '{\n', '}\n'):
 
-            with IndentIncreaser(helper) as namespace_slp:
+            with IndentIncreaser(helper) as namespace_oly:
 
                 helper.put(f"enum class {config['EnumName']} : {config['UnderlyingType']}\n")
 
@@ -62,7 +62,7 @@ def generate_textures_enum_definition():
                             else:
                                 helper.put(f', {img_name}\n')
 
-                            image_address_table[enum_value] = f'{direct_data_path}/{filename}'
+                            image_address_table[enum_value] = f"{config['WorkingDirectoryDataPath']}/{filename}"
 
                             enum_value += 1
             
@@ -87,7 +87,7 @@ def generate_textures_address_table(config, table):
 
     print('Generating textures address table...')
 
-    table_file_path = f"{config['TargetFolder']}/{config['TableFileName']}"
+    table_file_path = f"{config['TexturesFolder']}/{config['TableFileName']}"
 
     try:
         with open(table_file_path, 'w') as table_file:

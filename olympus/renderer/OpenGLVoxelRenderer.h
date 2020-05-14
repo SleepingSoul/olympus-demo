@@ -8,14 +8,15 @@
 #include <utils/macros.h>
 
 #include <ShaderProgram.h>
-#include "DrawCall.h"
+#include <BackgroundRenderComponent.h>
+#include <DrawCall.h>
 
 BeginNamespaceOlympus
 
-class OpenGLVoxelRenderer
+class OpenGLRenderer
 {
 public:
-    OpenGLVoxelRenderer();
+    OpenGLRenderer();
     void setClearColor(const glm::vec4& rgbaColor);
 
     void setCameraPosition(const glm::vec3& camPos) { m_cameraPos = camPos; }
@@ -37,6 +38,8 @@ public:
 
     void renderVoxels(std::vector<VoxelDrawCall>& voxels);
 
+    BackgroundRenderComponent& getBackgroundRenderComponent() { return m_backgroundRenderComponent; }
+
 private:
     void debugRenderVoxel();
 
@@ -54,6 +57,8 @@ private:
     float m_cameraAngleDeg;
     float m_nearDistance;
     float m_farDistance;
+
+    BackgroundRenderComponent m_backgroundRenderComponent;
 };
 
 EndNamespaceOlympus

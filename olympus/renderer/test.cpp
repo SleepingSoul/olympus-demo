@@ -31,7 +31,7 @@ int main(int argc, char** argv)
 
             // After context is initialized, we can create an OpenGL Renderer to render using the existing context. Only 1 contexts exists
             // and renderer will render into this context.
-            oly::OpenGLVoxelRenderer renderer;
+            oly::OpenGLRenderer renderer;
 
             std::vector<oly::VoxelDrawCall> rdc(5);
 

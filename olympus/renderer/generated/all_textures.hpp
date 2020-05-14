@@ -5,11 +5,11 @@
 
 #pragma once
 
-namespace slp
+namespace oly
 {
-    enum class Textures : unsigned
+    enum class TextureID : unsigned
     {
-          no_signal = 0
+          NoSignal = 0
     };
 }
 

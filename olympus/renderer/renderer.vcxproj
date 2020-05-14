@@ -19,15 +19,20 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BackgroundRenderComponent.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DrawCall.h" />
+    <ClInclude Include="generated\all_textures.hpp" />
     <ClInclude Include="OpenGLGLFWContext.h" />
     <ClInclude Include="OpenGLVoxelRenderer.h" />
+    <ClInclude Include="render_defs.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TextureStorage.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BackgroundRenderComponent.cpp" />
     <ClCompile Include="OpenGLGLFWContext.cpp" />
     <ClCompile Include="OpenGLVoxelRenderer.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
@@ -36,6 +41,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TextureStorage.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="generated\textures_table.json" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

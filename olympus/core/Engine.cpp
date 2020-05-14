@@ -20,6 +20,11 @@ bool Engine::initializedSuccessfuly() const
     return m_impl->initializedSuccessfuly();
 }
 
+AsyncVideostreamListener& Engine::getAsyncVideostreamListener()
+{
+    return m_impl->getAsyncVideostreamListener();
+}
+
 int Engine::run()
 {
     return m_impl->run();

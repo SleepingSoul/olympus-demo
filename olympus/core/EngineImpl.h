@@ -2,6 +2,7 @@
 
 #include <OpenGLGLFWContext.h>
 #include <OpenGLVoxelRenderer.h>
+#include <TextureStorage.h>
 #include <JobSystem.h>
 #include <AsyncVideostreamListener.h>
 
@@ -15,6 +16,8 @@ public:
 
     bool initializedSuccessfuly() const { return m_successfulInitialization; }
 
+    AsyncVideostreamListener& getAsyncVideostreamListener() { return m_listener; }
+
     int run();
 
 private:
@@ -24,11 +27,13 @@ private:
     std::optional<std::string> m_profilerFile;
 
     std::shared_ptr<OpenGLGLFWContext> m_openGLGLFWContext;
-    std::shared_ptr<OpenGLVoxelRenderer> m_openGLVoxelRenderer;
+    std::shared_ptr<OpenGLRenderer> m_openGLVoxelRenderer;
 
     AsyncVideostreamListener m_listener;
 
     JobSystem m_jobSystem;
+
+    TextureStogare m_texStorage;
 
     bool m_successfulInitialization{ false };
 };

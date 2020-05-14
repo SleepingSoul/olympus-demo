@@ -5,7 +5,7 @@
 
 BeginNamespaceOlympus
 
-class OpenGLVoxelRenderer;
+class OpenGLRenderer;
 class OpenGLGLFWContext;
 
 class RenderFrameJob : public Job
@@ -16,8 +16,9 @@ public:
     struct InitParameters
     {
         std::shared_ptr<OpenGLGLFWContext> context;
-        std::shared_ptr<OpenGLVoxelRenderer> renderer;
+        std::shared_ptr<OpenGLRenderer> renderer;
         std::vector<VoxelDrawCall> drawCalls;
+        Texture* backgroundTexture;
     };
 
     RenderFrameJob(InitParameters&& initParams);

@@ -1,8 +1,11 @@
 #include <pch.h>
 #include "RenderFrameJob.h"
+#include <Engine.h>
+#include <AsyncVideostreamListener.h>
 #include <JobAffinity.h>
 #include <OpenGLGLFWContext.h>
 #include <OpenGLVoxelRenderer.h>
+#include <Texture.h>
 
 BeginNamespaceOlympus
 
@@ -22,11 +25,24 @@ void RenderFrameJob::execute()
 
     m_params.context->renderFrameStart();
 
+    auto& listener = olyEngine.getAsyncVideostreamListener();
+
+    if (listener.isListening())
+    {
+        const auto lastFrame = listener.getLatestFrame();
+
+        if (!lastFrame.empty())
+        {
+            const auto size = lastFrame.size();
+            m_params.backgroundTexture->hotReset(lastFrame.ptr(), size.width, size.height, GL_BGR);
+        }
+    }
+
+    m_params.renderer->getBackgroundRenderComponent().setBackgroundTexture(m_params.backgroundTexture);
+
     m_params.renderer->setClearColor(glm::vec4{ 0.f, 0.f, 0.f, 1.f });
 
     m_params.renderer->setCameraPosition({ 0.f, 0.f, -5.f });
-
-    m_params.renderer->setDebugRender(true);
 
     m_params.renderer->renderVoxels(m_params.drawCalls);
 

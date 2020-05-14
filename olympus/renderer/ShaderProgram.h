@@ -25,6 +25,7 @@ public:
     ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath);
 
     void use() noexcept { glUseProgram(m_ID); }
+    void unuse() noexcept { glUseProgram(0); }
 
     void setBool(const std::string_view& name, bool value) noexcept
     {

@@ -39,7 +39,11 @@ EngineImpl::EngineImpl()
 
     m_openGLGLFWContext->setThreadContext(true);
 
-    m_openGLVoxelRenderer = std::make_shared<OpenGLVoxelRenderer>();
+    m_openGLVoxelRenderer = std::make_shared<OpenGLRenderer>();
+
+    EASY_BLOCK("Textures preload");
+    m_texStorage.preloadAllTextures();
+    EASY_END_BLOCK;
 
     m_openGLGLFWContext->setThreadContext(false);
 
@@ -95,12 +99,6 @@ int EngineImpl::run()
         m_openGLGLFWContext->onFrameStart();
 
         auto renderFinishedFuture = prepeareAndSendRenderFrameJob();
-
-        if (m_listener.isListening())
-        {
-            m = m_listener.getLatestFrame();
-            logging::info("Received the custom frame, Size={}", m.size());
-        }
 
         EASY_BLOCK("Wait for render frame job to finish", profiler::colors::DarkBlue);
         renderFinishedFuture.get();
@@ -161,13 +159,10 @@ void EngineImpl::initGLFWContext()
     // Doing it here because "getWindowSize" is allowed only from the main thread
     m_openGLVoxelRenderer->setRenderField(m_openGLGLFWContext->getWindowSize());
 
-    std::vector<oly::VoxelDrawCall> rdc(1);
+    std::vector<oly::VoxelDrawCall> drawCalls(1);
 
-    rdc[0].position = { -0.5f, 0.f, 0.f };
-    rdc[0].rotationVec = { 0.2f, 0.2f, 0.2f };
-    rdc[0].angle = 30.f;
-
-    RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer, std::move(rdc) };
+    RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer, std::move(drawCalls),
+        m_texStorage.getTexture(TextureID::NoSignal) };
     auto renderFrameJob = std::make_unique<RenderFrameJob>(std::move(parameters));
 
     auto renderFinishedFuture = renderFrameJob->getRenderFinishedFuture();

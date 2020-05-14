@@ -1,6 +1,8 @@
 #include "Texture.h"
 
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
+#undef STB_IMAGE_IMPLEMENTATION
 
 #include <utils/olyerror.h>
 
@@ -28,9 +30,11 @@ namespace
 
 Texture::Texture(const std::filesystem::path& textureFile)
 {
-    glCreateTextures(GL_TEXTURE_2D, 1, &m_id);
+    glGenTextures(1, &m_id);
 
     glBindTexture(GL_TEXTURE_2D, m_id);
+
+    stbi_set_flip_vertically_on_load(true);
 
     stbi_uc* const data = stbi_load(textureFile.u8string().c_str(), &m_width, &m_height, &m_numChannels, 0);
 
@@ -49,13 +53,14 @@ Texture::Texture(const std::filesystem::path& textureFile)
     }
 
     glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);
 
-    glTextureParameteri(m_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(m_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTextureParameteri(m_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTextureParameteri(m_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -75,7 +80,10 @@ void Texture::hotReset(const void* data, GLsizei width, GLsizei height, GLenum f
         return;
     }
 
-    glTextureSubImage2D(m_id, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
+    glBindTexture(GL_TEXTURE_2D, m_id);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 EndNamespaceOlympus

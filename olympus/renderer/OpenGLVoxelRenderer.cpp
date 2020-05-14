@@ -1,11 +1,17 @@
 #include "OpenGLVoxelRenderer.h"
 #include <string_view>
+
+#include <Windows.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
 #include <easy/profiler.h>
 
 BeginNamespaceOlympus
+
+extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
 
 namespace Shader
 {
@@ -13,13 +19,14 @@ namespace Shader
     const std::string_view View = "view";
     const std::string_view Projection = "projection";
     const std::string_view Color = "color";
+    const std::string_view Texture = "textureID";
 }
 
 namespace Voxel
 {
     namespace
     {
-        const float Vertices[] = {
+        const float CubeVertices[] = {
             -0.5f, -0.5f, -0.5f,
              0.5f, -0.5f, -0.5f,
              0.5f,  0.5f, -0.5f,
@@ -63,7 +70,7 @@ namespace Voxel
             -0.5f,  0.5f, -0.5f
         };
 
-        const size_t NumVertices = sizeof(Vertices) / sizeof(decltype(*Vertices)) / 3;
+        const size_t NumVertices = sizeof(CubeVertices) / sizeof(decltype(*CubeVertices)) / 3;
     }
 }
 
@@ -77,7 +84,7 @@ namespace Debug
     }
 }
 
-OpenGLVoxelRenderer::OpenGLVoxelRenderer()
+OpenGLRenderer::OpenGLRenderer()
     : m_debugShader(Debug::VSPath, Debug::FSPath)
     , m_debugRender(false)
     , m_cameraPos(0.f, 0.f, 0.f)
@@ -93,21 +100,21 @@ OpenGLVoxelRenderer::OpenGLVoxelRenderer()
 
     glBindBuffer(GL_ARRAY_BUFFER, m_voxelVBO);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Voxel::Vertices), Voxel::Vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Voxel::CubeVertices), Voxel::CubeVertices, GL_STATIC_DRAW);
 
     glBindVertexArray(m_voxelVAO);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), reinterpret_cast<void*>(0));
     glEnableVertexAttribArray(0);
 }
 
-void OpenGLVoxelRenderer::setClearColor(const glm::vec4& rgbaColor)
+void OpenGLRenderer::setClearColor(const glm::vec4& rgbaColor)
 {
     EASY_FUNCTION();
 
     glClearColor(rgbaColor.r, rgbaColor.g, rgbaColor.b, rgbaColor.a);
 }
 
-void OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
+void OpenGLRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
 {
     EASY_FUNCTION(profiler::colors::Red);
 
@@ -116,55 +123,60 @@ void OpenGLVoxelRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
         return;
     }
 
-    glViewport(0, 0, m_renderField.x, m_renderField.y);
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    ShaderProgram& shader = m_debugRender ? m_debugShader : m_voxelShader;
+    EASY_BLOCK("Render background", profiler::colors::Red100);
+    m_backgroundRenderComponent.render();
+    EASY_END_BLOCK;
 
-    shader.use();
+    //glViewport(0, 0, m_renderField.x, m_renderField.y);
 
-    {
-        const auto view = glm::translate(glm::identity<glm::mat4>(), m_cameraPos);
-        shader.setMatrix4f(Shader::View, glm::value_ptr(view));
-    }
 
-    {
-        const auto projection = glm::perspectiveFov(
-            glm::radians(m_cameraAngleDeg),
-            static_cast<float>(m_renderField.x),
-            static_cast<float>(m_renderField.y),
-            m_nearDistance,
-            m_farDistance);
+    //ShaderProgram& shader = m_debugRender ? m_debugShader : m_voxelShader;
 
-        shader.setMatrix4f(Shader::Projection, glm::value_ptr(projection));
-    }
-    
-    EASY_BLOCK("Render draw calls", profiler::colors::Red100);
-    for (const auto& voxel : voxels)
-    {
-        EASY_BLOCK("Render single voxel", profiler::colors::Yellow);
+    //shader.use();
 
-        auto model = glm::identity<glm::mat4>();
-        model = glm::translate(model, voxel.position);
-        model = glm::rotate(model, voxel.angle, voxel.rotationVec);
+    //{
+    //    const auto view = glm::translate(glm::identity<glm::mat4>(), m_cameraPos);
+    //    shader.setMatrix4f(Shader::View, glm::value_ptr(view));
+    //}
 
-        shader.setMatrix4f(Shader::Model, glm::value_ptr(model));
+    //{
+    //    const auto projection = glm::perspectiveFov(
+    //        glm::radians(m_cameraAngleDeg),
+    //        static_cast<float>(m_renderField.x),
+    //        static_cast<float>(m_renderField.y),
+    //        m_nearDistance,
+    //        m_farDistance);
 
-        if (m_debugRender)
-        {
-            shader.setVec4f(Shader::Color, Debug::Color);
+    //    shader.setMatrix4f(Shader::Projection, glm::value_ptr(projection));
+    //}
+    //
+    //EASY_BLOCK("Render draw calls", profiler::colors::Red100);
+    //for (const auto& voxel : voxels)
+    //{
+    //    EASY_BLOCK("Render single voxel", profiler::colors::Yellow);
 
-            debugRenderVoxel();
-        }
-        else
-        {
-            // TODO: impl
-        }
-    }
+    //    auto model = glm::identity<glm::mat4>();
+    //    model = glm::translate(model, voxel.position);
+    //    model = glm::rotate(model, voxel.angle, voxel.rotationVec);
+
+    //    shader.setMatrix4f(Shader::Model, glm::value_ptr(model));
+
+    //    if (m_debugRender)
+    //    {
+    //        shader.setVec4f(Shader::Color, Debug::Color);
+
+    //        debugRenderVoxel();
+    //    }
+    //    else
+    //    {
+    //        // TODO: impl
+    //    }
+    //}
 }
 
-void OpenGLVoxelRenderer::debugRenderVoxel()
+void OpenGLRenderer::debugRenderVoxel()
 {
     for (GLuint i = 0; i < Voxel::NumVertices; i += 3)
     {
