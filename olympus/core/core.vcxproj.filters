@@ -54,6 +54,9 @@
     <ClCompile Include="AsyncVideostreamListener.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DecodeFrameJob.cpp">
+      <Filter>Source Files\JobSystem\specific jobs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -88,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="AsyncVideostreamListener.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DecodeFrameJob.h">
+      <Filter>Header Files\JobSystem\specific jobs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

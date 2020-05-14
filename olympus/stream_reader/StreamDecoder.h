@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <optional>
 
 #include <opencv2/opencv.hpp>
 
@@ -12,7 +13,7 @@ namespace stream_decoder
 {
     using Buffer = std::vector<char>;
 
-    bool tryExtractFrame(Buffer& bytes, Buffer& buffer);
+    std::optional<Buffer> tryExtractFrame(Buffer& bytes);
 
     cv::Mat decode(const Buffer& data);
 }

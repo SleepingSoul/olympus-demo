@@ -25,6 +25,11 @@ AsyncVideostreamListener& Engine::getAsyncVideostreamListener()
     return m_impl->getAsyncVideostreamListener();
 }
 
+JobSystem& Engine::getJobSystem()
+{
+    return m_impl->getJobSystem();
+}
+
 int Engine::run()
 {
     return m_impl->run();

@@ -32,13 +32,16 @@ namespace
 
         const auto* const dataBegin = reinterpret_cast<unsigned char*>(data);
 
-        std::lock_guard lg(clientData.mutex);
-
         clientData.buffer.insert(clientData.buffer.end(), dataBegin, std::next(dataBegin, size * nmemb));
 
-        if (stream_decoder::tryExtractFrame(clientData.buffer, clientData.jpegBytes))
+        if (auto frame = stream_decoder::tryExtractFrame(clientData.buffer); frame.has_value())
         {
             logging::debug("[StreamReader] JPEG frame exctracted.");
+
+            if (clientData.onFrameReady)
+            {
+                clientData.onFrameReady(std::move(*frame));
+            }
         }
 
         return size * nmemb;
@@ -81,7 +84,6 @@ namespace
 StreamReader::StreamReader()
 {
     m_clientData.buffer.reserve(BufferCapacity);
-    m_clientData.jpegBytes.reserve(BufferCapacity);
 
     curl_global_init(CURL_GLOBAL_WIN32);
 }
@@ -156,27 +158,9 @@ void StreamReader::readStream()
     }
 }
 
-void StreamReader::swapBuffers(Buffer& outBuffer)
+void StreamReader::setOnFrameReady(OnFrameReadyCallback callback)
 {
-    EASY_FUNCTION(profiler::colors::DarkGreen);
-
-    outBuffer.clear();
-
-    if (outBuffer.capacity() != BufferCapacity)
-    {
-        outBuffer.reserve(BufferCapacity);
-    }
-
-    std::lock_guard lg(m_clientData.mutex);
-
-    m_clientData.jpegBytes.swap(outBuffer);
-}
-
-bool StreamReader::frameReady() const
-{
-    std::lock_guard lg(m_clientData.mutex);
-
-    return !m_clientData.jpegBytes.empty();
+    m_clientData.onFrameReady = std::move(callback);
 }
 
 void StreamReader::stop()

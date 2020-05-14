@@ -3,7 +3,16 @@
 
 #include <StreamDecoder.h>
 
+#include <Engine.h>
+#include <JobSystem.h>
+#include <DecodeFrameJob.h>
+
 BeginNamespaceOlympus
+
+AsyncVideostreamListener::AsyncVideostreamListener()
+{
+    m_streamReader.setOnFrameReady([this](Buffer&& frame) { onFrameReady(std::move(frame)); });
+}
 
 AsyncVideostreamListener::~AsyncVideostreamListener()
 {
@@ -54,14 +63,20 @@ void AsyncVideostreamListener::stop()
 
 cv::Mat AsyncVideostreamListener::getLatestFrame()
 {
-    if (!m_streamReader.frameReady())
+    std::lock_guard lg(m_mutex);
+
+    return m_latestFrame;
+}
+
+void AsyncVideostreamListener::onFrameReady(Buffer&& frame)
+{
+    auto decodeFrameJob = std::make_unique<DecodeFrameJob>(std::move(frame), [this](cv::Mat&& result)
     {
-        return cv::Mat{};
-    }
+        std::lock_guard lg(m_mutex);
+        m_latestFrame = std::move(result);
+    });
 
-    m_streamReader.swapBuffers(m_latestDataBuffer);
-
-    return stream_decoder::decode(m_latestDataBuffer);
+    olyEngine.getJobSystem().addJob(std::move(decodeFrameJob));
 }
 
 EndNamespaceOlympus

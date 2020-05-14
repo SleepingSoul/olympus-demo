@@ -17,6 +17,7 @@ public:
     bool initializedSuccessfuly() const { return m_successfulInitialization; }
 
     AsyncVideostreamListener& getAsyncVideostreamListener() { return m_listener; }
+    JobSystem& getJobSystem() { return m_jobSystem; }
 
     int run();
 

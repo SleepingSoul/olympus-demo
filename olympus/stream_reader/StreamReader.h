@@ -3,6 +3,7 @@
 #include <atomic>
 #include <mutex>
 #include <vector>
+#include <functional>
 
 #include <utils/macros.h>
 
@@ -16,12 +17,12 @@ class StreamReader
 public:
     using Buffer = stream_decoder::Buffer;
     using StopToken = std::atomic_bool;
+    using OnFrameReadyCallback = std::function<void(Buffer&&)>;
 
     struct ClientData
     {
-        std::mutex mutex;
         Buffer buffer;
-        Buffer jpegBytes;
+        OnFrameReadyCallback onFrameReady{ nullptr };
     };
 
     StreamReader();
@@ -30,10 +31,7 @@ public:
     // Blocking operation. Will start continiously reading the videostream.
     void readStream();
 
-    void swapBuffers(Buffer& outBuffer);
-
-    // Returns true if the storage contains the data for latest frame read from the stream, or false if otherwise.
-    bool frameReady() const;
+    void setOnFrameReady(OnFrameReadyCallback callback);
 
     // Will set the stop flag, so 'readStream' will stop sometime.
     void stop();

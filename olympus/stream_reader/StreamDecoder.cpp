@@ -21,7 +21,7 @@ namespace stream_decoder
         const std::boyer_moore_searcher endSearcher(JPEGEnd.begin(), JPEGEnd.end());
     }
 
-    bool tryExtractFrame(Buffer& bytes, Buffer& buffer)
+    std::optional<Buffer> tryExtractFrame(Buffer& bytes)
     {
         EASY_FUNCTION("bytes=%zu", bytes.size(), profiler::colors::Green);
 
@@ -34,14 +34,12 @@ namespace stream_decoder
         {
             const auto endOfJPEG = std::next(jpegEnd, JPEGEnd.size());
 
-            buffer.assign(jpegBegin, endOfJPEG);
-
             bytes.erase(bytes.cbegin(), endOfJPEG);
 
-            return true;
+            return Buffer(jpegBegin, endOfJPEG);
         }
 
-        return false;
+        return std::nullopt;
     }
 
     cv::Mat decode(const Buffer& jpegData)
