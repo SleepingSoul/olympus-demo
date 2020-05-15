@@ -9,7 +9,6 @@ BeginNamespaceOlympus
 
 class Texture
 {
-    OlyNonCopyable(Texture)
 public:
     using TextureID = GLuint;
 
@@ -20,6 +19,7 @@ public:
     TextureID getID() const { return m_id; }
     GLsizei getWidth() const { return m_width; }
     GLsizei getHeight() const { return m_height; }
+    GLenum getFormat() const { return m_format; }
 
     bool isValid() const { return m_id != 0 && m_loadSuccess; }
 
@@ -31,7 +31,7 @@ private:
 
     GLsizei m_width{ 0 };
     GLsizei m_height{ 0 };
-    int m_numChannels{ 0 };
+    GLenum m_format;
 
     std::filesystem::path m_path;
 };

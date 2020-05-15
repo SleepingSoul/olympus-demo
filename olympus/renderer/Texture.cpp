@@ -36,7 +36,9 @@ Texture::Texture(const std::filesystem::path& textureFile)
 
     stbi_set_flip_vertically_on_load(true);
 
-    stbi_uc* const data = stbi_load(textureFile.u8string().c_str(), &m_width, &m_height, &m_numChannels, 0);
+    int numChannels = 0;
+
+    stbi_uc* const data = stbi_load(textureFile.u8string().c_str(), &m_width, &m_height, &numChannels, 0);
 
     if (!data)
     {
@@ -44,15 +46,15 @@ Texture::Texture(const std::filesystem::path& textureFile)
         return;
     }
 
-    const auto format = channelsNumberToFormat(m_numChannels);
+    m_format = channelsNumberToFormat(numChannels);
 
-    if (format == GL_NONE)
+    if (m_format == GL_NONE)
     {
         olyError("[Texture] unrecognized format of the given image: '{}'", textureFile);
         return;
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, format, m_width, m_height, 0, format, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(GL_TEXTURE_2D, 0, m_format, m_width, m_height, 0, m_format, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
 
     stbi_image_free(data);
@@ -79,6 +81,8 @@ void Texture::hotReset(const void* data, GLsizei width, GLsizei height, GLenum f
         olyError("[Texture] texture hot reset with different size values is unsupported.");
         return;
     }
+
+    m_format = format;
 
     glBindTexture(GL_TEXTURE_2D, m_id);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
