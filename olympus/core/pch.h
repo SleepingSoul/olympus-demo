@@ -24,6 +24,7 @@
 #include <boost/circular_buffer.hpp>
 
 #include <easy/profiler.h>
+#include <easy/arbitrary_value.h>
 
 #include <fmt/ostream.h>
 

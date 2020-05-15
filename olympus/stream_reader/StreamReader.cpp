@@ -22,11 +22,11 @@ namespace
 
     constexpr long CurlConnectionTimeoutS = 3;
 
-    constexpr size_t BufferCapacity = 100000;
+    constexpr size_t BufferCapacity = 200000;
 
     size_t curlWriteCallback(void* data, size_t size, size_t nmemb, void* userp)
     {
-        EASY_FUNCTION("bytes=%zu", size * nmemb);
+        EASY_FUNCTION();
 
         auto& clientData = *reinterpret_cast<StreamReader::ClientData*>(userp);
 

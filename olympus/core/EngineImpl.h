@@ -30,9 +30,10 @@ private:
     std::shared_ptr<OpenGLGLFWContext> m_openGLGLFWContext;
     std::shared_ptr<OpenGLRenderer> m_openGLVoxelRenderer;
 
-    AsyncVideostreamListener m_listener;
-
     JobSystem m_jobSystem;
+
+    AsyncVideostreamListener m_listener;
+    AsyncVideostreamListener::FrameID m_lastFrameID{ 0 };
 
     TextureStogare m_texStorage;
 

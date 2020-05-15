@@ -11,7 +11,13 @@
 
 BeginNamespaceOlympus
 
-extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+extern "C"
+{
+    // Request high performance graphics (discrete GPU) on Laptops with AMD and Nvidia GPUs
+
+    __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x0000'0001;
+    __declspec(dllexport) DWORD NvOptimusEnablement = 0x0000'0001;
+}
 
 namespace Shader
 {
@@ -123,13 +129,13 @@ void OpenGLRenderer::renderVoxels(std::vector<VoxelDrawCall>& voxels)
         return;
     }
 
+    glViewport(0, 0, m_renderField.x, m_renderField.y);
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     EASY_BLOCK("Render background", profiler::colors::Red100);
     m_backgroundRenderComponent.render();
     EASY_END_BLOCK;
-
-    //glViewport(0, 0, m_renderField.x, m_renderField.y);
 
 
     //ShaderProgram& shader = m_debugRender ? m_debugShader : m_voxelShader;

@@ -27,14 +27,16 @@ void RenderFrameJob::execute()
 
     auto& listener = olyEngine.getAsyncVideostreamListener();
 
-    if (listener.isListening())
+    if (m_params.backgroundUpdated && listener.isListening())
     {
         const auto lastFrame = listener.getLatestFrame();
 
         if (!lastFrame.empty())
         {
             const auto size = lastFrame.size();
+            EASY_BLOCK("Resetting the texture", profiler::colors::DarkRed);
             m_params.backgroundTexture->hotReset(lastFrame.ptr(), size.width, size.height, GL_BGR);
+            EASY_END_BLOCK;
         }
     }
 

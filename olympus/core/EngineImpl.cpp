@@ -52,46 +52,6 @@ EngineImpl::EngineImpl()
 
 int EngineImpl::run()
 {
-    std::vector<oly::VoxelDrawCall> rdc(1);
-
-    rdc[0].position = { -0.5f, 0.f, 0.f };
-    rdc[0].rotationVec = { 0.2f, 0.2f, 0.2f };
-    rdc[0].angle = 30.f;
-
-    //m_openGLGLFWContext->addKeyboardCallback(GLFW_KEY_W, [&voxel = rdc.front()](int scancode, int action, int mode)
-    //{
-    //    if (action == GLFW_PRESS)
-    //    {
-    //        voxel.position.y += 0.2f;
-    //    }
-    //});
-
-    //m_openGLGLFWContext->addKeyboardCallback(GLFW_KEY_S, [&voxel = rdc.front()](int scancode, int action, int mode)
-    //{
-    //    if (action == GLFW_PRESS)
-    //    {
-    //        voxel.position.y -= 0.2f;
-    //    }
-    //});
-
-    //m_openGLGLFWContext->addKeyboardCallback(GLFW_KEY_A, [&voxel = rdc.front()](int scancode, int action, int mode)
-    //{
-    //    if (action == GLFW_PRESS)
-    //    {
-    //        voxel.position.x -= 0.2f;
-    //    }
-    //});
-
-    //m_openGLGLFWContext->addKeyboardCallback(GLFW_KEY_D, [&voxel = rdc.front()](int scancode, int action, int mode)
-    //{
-    //    if (action == GLFW_PRESS)
-    //    {
-    //        voxel.position.x += 0.2f;
-    //    }
-    //});
-
-    cv::Mat m;
-
     while (m_openGLGLFWContext->windowShoudNotClose())
     {
         EASY_BLOCK("frame");
@@ -159,10 +119,22 @@ void EngineImpl::initGLFWContext()
     // Doing it here because "getWindowSize" is allowed only from the main thread
     m_openGLVoxelRenderer->setRenderField(m_openGLGLFWContext->getWindowSize());
 
+    const auto lastFrameID = m_listener.getLatestFrameID();
+
+    bool backgroundUpdated = false;
+
+    if (m_lastFrameID != lastFrameID)
+    {
+        backgroundUpdated = true;
+        m_lastFrameID = lastFrameID;
+    }
+
     std::vector<oly::VoxelDrawCall> drawCalls(1);
 
     RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer, std::move(drawCalls),
-        m_texStorage.getTexture(TextureID::NoSignal) };
+        m_texStorage.getTexture(TextureID::NoSignal),
+        backgroundUpdated };
+
     auto renderFrameJob = std::make_unique<RenderFrameJob>(std::move(parameters));
 
     auto renderFinishedFuture = renderFrameJob->getRenderFinishedFuture();

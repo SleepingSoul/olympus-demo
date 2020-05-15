@@ -61,11 +61,18 @@ void AsyncVideostreamListener::stop()
     m_streamThread.join();
 }
 
-cv::Mat AsyncVideostreamListener::getLatestFrame()
+cv::Mat AsyncVideostreamListener::getLatestFrame() const
 {
     std::lock_guard lg(m_mutex);
 
     return m_latestFrame;
+}
+
+AsyncVideostreamListener::FrameID AsyncVideostreamListener::getLatestFrameID() const
+{
+    std::lock_guard lg(m_mutex);
+
+    return m_latestFrameID;
 }
 
 void AsyncVideostreamListener::onFrameReady(Buffer&& frame)
@@ -74,6 +81,7 @@ void AsyncVideostreamListener::onFrameReady(Buffer&& frame)
     {
         std::lock_guard lg(m_mutex);
         m_latestFrame = std::move(result);
+        ++m_latestFrameID;
     });
 
     olyEngine.getJobSystem().addJob(std::move(decodeFrameJob));

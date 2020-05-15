@@ -5,8 +5,10 @@
 #include <functional>
 
 #include <easy/profiler.h>
+#include <easy/arbitrary_value.h>
 
 #include <logging/logging.h>
+#include <utils/olyerror.h>
 
 BeginNamespaceOlympus
 
@@ -23,23 +25,36 @@ namespace stream_decoder
 
     std::optional<Buffer> tryExtractFrame(Buffer& bytes)
     {
-        EASY_FUNCTION("bytes=%zu", bytes.size(), profiler::colors::Green);
+        EASY_FUNCTION(profiler::colors::Green);
 
         const auto jpegBegin = std::search(bytes.cbegin(), bytes.cend(), beginSearcher);
+
+        // TODO: look for end of jpeg from the other side, should be a bit faster
         const auto jpegEnd = std::search(bytes.cbegin(), bytes.cend(), endSearcher);
 
         const auto end = bytes.cend();
 
-        if (jpegBegin != end && jpegEnd != end)
+        const bool beginEndFound = (jpegBegin == end || jpegEnd == end);
+
+        if (jpegBegin == end || jpegEnd == end)
         {
-            const auto endOfJPEG = std::next(jpegEnd, JPEGEnd.size());
-
-            bytes.erase(bytes.cbegin(), endOfJPEG);
-
-            return Buffer(jpegBegin, endOfJPEG);
+            return std::nullopt;
         }
 
-        return std::nullopt;
+        EASY_VALUE("bytes", bytes.size());
+
+        if (const auto size = std::distance(jpegBegin, jpegEnd); size < 0 || size > 200000)
+        {
+            olyError("[StreamDecoder] Something wrong with the JPEG. Distance between begin and end is: {}", size);
+        }
+
+        const auto endOfJPEG = std::next(jpegEnd, JPEGEnd.size());
+
+        Buffer result(jpegBegin, endOfJPEG);
+
+        bytes.erase(bytes.cbegin(), endOfJPEG);
+
+        return result;
     }
 
     cv::Mat decode(const Buffer& jpegData)

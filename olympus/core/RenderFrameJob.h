@@ -19,6 +19,7 @@ public:
         std::shared_ptr<OpenGLRenderer> renderer;
         std::vector<VoxelDrawCall> drawCalls;
         Texture* backgroundTexture;
+        bool backgroundUpdated;
     };
 
     RenderFrameJob(InitParameters&& initParams);
