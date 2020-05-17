@@ -59,14 +59,11 @@ public:
 private:
     void ensureMainThread(const char* funcName) const;
     void updateFPS();
-    unsigned calculateNormalizedFPS() const { return std::accumulate(m_latestFPS.begin(), m_latestFPS.end(), 0u) / static_cast<unsigned>(m_latestFPS.size()); }
+    unsigned calculateNormalizedFPS() const;
 
-    struct Options
-    {
-        bool showFPS;
-    };
+    void renderDebugInfo();
 
-    Options m_options;
+    bool m_showDebug{ false };
 
     std::multimap<int, GLFWKeyCallback> m_keysMapping;
 
@@ -80,7 +77,7 @@ private:
 
     std::function<void(int, int)> onResize;
 
-    std::mutex m_mutex;
+    std::mutex m_GLFWContextMutex;
 };
 
 EndNamespaceOlympus

@@ -4,7 +4,7 @@
 BeginNamespaceOlympus
 
 DecodeFrameJob::DecodeFrameJob(stream_decoder::Buffer&& frame, ThreadSafeOutputFunctor outputFunctor)
-    : Base("Decode frame job", JobAffinity::Generic)
+    : Base("Decode frame job", JobAffinity::Generic, true)
     , m_frame(std::move(frame))
     , m_outputFunctor(std::move(outputFunctor))
 {}

@@ -43,7 +43,6 @@ namespace
 
 OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     : m_title(initParams.windowTitle)
-    , m_options()
     , m_latestFPS(60)
 {
     // GLFW is required to be initialized only in main thread
@@ -96,7 +95,7 @@ OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     {
         if (action == GLFW_PRESS)
         {
-            m_options.showFPS = !m_options.showFPS;
+            m_showDebug = !m_showDebug;
         }
     });
 
@@ -140,7 +139,7 @@ void OpenGLGLFWContext::setThreadContext(bool makeContextCurrent)
 {
     EASY_FUNCTION("Make context current: %d", makeContextCurrent);
 
-    std::lock_guard lg(m_mutex);
+    std::lock_guard lg(m_GLFWContextMutex);
 
     const GLFWwindow* const currContext = glfwGetCurrentContext();
 
@@ -192,6 +191,30 @@ void OpenGLGLFWContext::updateFPS()
     m_lastTimeStamp = frameEndTimeStamp;
 }
 
+unsigned OpenGLGLFWContext::calculateNormalizedFPS() const
+{
+    if (m_latestFPS.empty())
+    {
+        return 0;
+    }
+    return std::accumulate(m_latestFPS.begin(), m_latestFPS.end(), 0u) / static_cast<unsigned>(m_latestFPS.size());
+}
+
+void OpenGLGLFWContext::renderDebugInfo()
+{
+    if (!m_showDebug)
+    {
+        return;
+    }
+
+    ImGui::Begin("Main window debug");
+
+    ImGui::Text("Real current FPS: %d", m_latestFPS.back());
+    ImGui::Text("Normalized current FPS: %d", calculateNormalizedFPS());
+
+    ImGui::End();
+}
+
 void OpenGLGLFWContext::onFrameStart()
 {
     EnsureMainThread;
@@ -228,10 +251,7 @@ void OpenGLGLFWContext::renderFrameStart()
 
 void OpenGLGLFWContext::renderFrameEnd()
 {
-    if (m_options.showFPS)
-    {
-        ImGui::Text("FPS: %u", calculateNormalizedFPS());
-    }
+    renderDebugInfo();
 
     EASY_BLOCK("ImGUI prosessing");
     ImGui::Render();

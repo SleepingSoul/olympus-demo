@@ -8,7 +8,7 @@
 
 BeginNamespaceOlympus
 
-EngineImpl::EngineImpl()
+void EngineImpl::initialize()
 {
     m_profilerFile = olyCommandLineManager.getString(oly::CommandLineOptions::SaveProfile);
 

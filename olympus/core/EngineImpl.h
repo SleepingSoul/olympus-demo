@@ -12,7 +12,9 @@ class EngineImpl
 {
     OlyNonCopyableMovable(EngineImpl)
 public:
-    EngineImpl();
+    EngineImpl() = default;
+
+    void initialize();
 
     bool initializedSuccessfuly() const { return m_successfulInitialization; }
 

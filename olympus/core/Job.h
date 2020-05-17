@@ -16,6 +16,8 @@ public:
         , m_silent(silent)
     {}
 
+    virtual ~Job() = default;
+
     auto getAffinity() const { return m_affinity; }
     auto getJobID() const { return m_jobID; }
     auto isSilent() const { return m_silent; }

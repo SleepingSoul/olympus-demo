@@ -20,7 +20,7 @@ namespace stream_decoder
         constexpr std::array JPEGEnd = { '\xff', '\xd9' };
 
         const std::boyer_moore_searcher beginSearcher(JPEGStart.begin(), JPEGStart.end());
-        const std::boyer_moore_searcher endSearcher(JPEGEnd.begin(), JPEGEnd.end());
+        const std::boyer_moore_searcher endSearcher(JPEGEnd.rbegin(), JPEGEnd.rend());
     }
 
     std::optional<Buffer> tryExtractFrame(Buffer& bytes)
@@ -29,30 +29,27 @@ namespace stream_decoder
 
         const auto jpegBegin = std::search(bytes.cbegin(), bytes.cend(), beginSearcher);
 
-        // TODO: look for end of jpeg from the other side, should be a bit faster
-        const auto jpegEnd = std::search(bytes.cbegin(), bytes.cend(), endSearcher);
+        const auto jpegEnd = std::search(bytes.crbegin(), bytes.crend(), endSearcher);
 
-        const auto end = bytes.cend();
-
-        const bool beginEndFound = (jpegBegin == end || jpegEnd == end);
-
-        if (jpegBegin == end || jpegEnd == end)
+        if (jpegBegin == bytes.cend() || jpegEnd == bytes.crend())
         {
             return std::nullopt;
         }
 
         EASY_VALUE("bytes", bytes.size());
 
-        if (const auto size = std::distance(jpegBegin, jpegEnd); size < 0 || size > 200000)
+        if (const auto size = std::distance(jpegEnd, std::make_reverse_iterator(jpegBegin)); size < 0)
         {
-            olyError("[StreamDecoder] Something wrong with the JPEG. Distance between begin and end is: {}", size);
+            logging::error("[StreamDecoder] Broken stream frame detected. Begin-end distance is: {}", size);
+
+            bytes.erase(bytes.cbegin(), jpegEnd.base());
+
+            return std::nullopt;
         }
 
-        const auto endOfJPEG = std::next(jpegEnd, JPEGEnd.size());
+        Buffer result(jpegBegin, jpegEnd.base());
 
-        Buffer result(jpegBegin, endOfJPEG);
-
-        bytes.erase(bytes.cbegin(), endOfJPEG);
+        bytes.erase(bytes.cbegin(), jpegEnd.base());
 
         return result;
     }

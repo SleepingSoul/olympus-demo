@@ -13,6 +13,7 @@ Engine& Engine::instance()
 void Engine::initialize()
 {
     m_impl = std::make_unique<EngineImpl>();
+    m_impl->initialize();
 }
 
 bool Engine::initializedSuccessfuly() const
