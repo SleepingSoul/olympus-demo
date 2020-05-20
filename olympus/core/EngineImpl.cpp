@@ -1,6 +1,8 @@
 #include <pch.h>
 #include "EngineImpl.h"
 
+#include <imgui/imgui.h>
+
 #include <managers/CommandLineManager.h>
 
 #include <DelegateJob.h>
@@ -47,6 +49,11 @@ void EngineImpl::initialize()
         cubeRenderComponent.setDebugMode(!cubeRenderComponent.isDebugMode());
     });
 
+    m_openGLGLFWContext->addImGuiDebugOutputFunctor([this]
+    {
+        ImGui::Text("Camera FPS: %u", m_listener.getStreamFPS());
+    });
+
     EASY_BLOCK("Textures preload");
     m_texStorage.preloadAllTextures();
     EASY_END_BLOCK;
@@ -54,6 +61,11 @@ void EngineImpl::initialize()
     m_openGLGLFWContext->setThreadContext(false);
 
     m_successfulInitialization = true;
+}
+
+double EngineImpl::getTimeFromStart() const
+{
+    return glfwGetTime();
 }
 
 int EngineImpl::run()

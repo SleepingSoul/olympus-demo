@@ -20,6 +20,9 @@ public:
 
     AsyncVideostreamListener& getAsyncVideostreamListener() { return m_listener; }
     JobSystem& getJobSystem() { return m_jobSystem; }
+    OpenGLGLFWContext& getWindowContext() { return *m_openGLGLFWContext; }
+
+    double getTimeFromStart() const;
 
     int run();
 

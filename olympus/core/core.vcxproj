@@ -74,7 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)renderer;$(SolutionDir)..\vcpkg\installed\x64-windows\include;$(SolutionDir)common\external;$(SolutionDir)common;$(SolutionDir)common\external\easy_profiler\easy_profiler_core\include;$(ProjectDir);$(SolutionDir)stream_reader;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)renderer;$(SolutionDir)..\vcpkg\installed\x64-windows\include;$(SolutionDir)common\external;$(SolutionDir)common;$(SolutionDir)common\external\easy_profiler\easy_profiler_core\include;$(ProjectDir);$(SolutionDir)stream_reader;$(SolutionDir)external_projects\imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDIr)external_binaries\debug_bins;$(SolutionDir)..\vcpkg\installed\x64-windows\debug\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)$(IntDir)</LibraryPath>
     <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -83,7 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)renderer;$(SolutionDir)..\vcpkg\installed\x64-windows\include;$(SolutionDir)common\external;$(SolutionDir)common;$(SolutionDir)common\external\easy_profiler\easy_profiler_core\include;$(ProjectDir);$(SolutionDir)stream_reader;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)renderer;$(SolutionDir)..\vcpkg\installed\x64-windows\include;$(SolutionDir)common\external;$(SolutionDir)common;$(SolutionDir)common\external\easy_profiler\easy_profiler_core\include;$(ProjectDir);$(SolutionDir)stream_reader;$(SolutionDir)external_projects\imgui;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDIr)external_binaries\release_bins;$(SolutionDir)..\vcpkg\installed\x64-windows\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)$(IntDir)</LibraryPath>
     <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -115,7 +115,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalDependencies>stream_reader.lib;renderer.lib;docopt.lib;common.lib;fmtd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imgui.lib;stream_reader.lib;renderer.lib;docopt.lib;common.lib;fmtd.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy  /s /y $(SolutionDir)..\vcpkg\installed\x64-windows\debug\bin $(OutDir)
@@ -159,7 +159,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EntryPointSymbol>mainCRTStartup</EntryPointSymbol>
-      <AdditionalDependencies>stream_reader.lib;renderer.lib;docopt.lib;common.lib;easy_profiler.lib;fmt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imgui.lib;stream_reader.lib;renderer.lib;docopt.lib;common.lib;easy_profiler.lib;fmt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy  /s /y $(SolutionDir)..\vcpkg\installed\x64-windows\bin $(OutDir)

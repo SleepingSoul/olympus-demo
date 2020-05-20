@@ -31,6 +31,16 @@ JobSystem& Engine::getJobSystem()
     return m_impl->getJobSystem();
 }
 
+OpenGLGLFWContext& Engine::getWindowContext()
+{
+    return m_impl->getWindowContext();
+}
+
+double Engine::getTimeFromStart() const
+{
+    return m_impl->getTimeFromStart();
+}
+
 int Engine::run()
 {
     return m_impl->run();

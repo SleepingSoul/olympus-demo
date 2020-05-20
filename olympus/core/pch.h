@@ -20,6 +20,7 @@
 #include <thread>
 #include <chrono>
 #include <future>
+#include <numeric>
 
 #include <boost/circular_buffer.hpp>
 

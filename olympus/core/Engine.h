@@ -6,6 +6,7 @@ class EngineImpl;
 class TextureStorage;
 class AsyncVideostreamListener;
 class JobSystem;
+class OpenGLGLFWContext;
 
 class Engine
 {
@@ -19,6 +20,9 @@ public:
 
     AsyncVideostreamListener& getAsyncVideostreamListener();
     JobSystem& getJobSystem();
+    OpenGLGLFWContext& getWindowContext();
+
+    double getTimeFromStart() const;
 
     int run();
 

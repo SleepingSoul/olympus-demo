@@ -10,6 +10,7 @@
 BeginNamespaceOlympus
 
 AsyncVideostreamListener::AsyncVideostreamListener()
+    : m_streamFPS(60)
 {
     m_streamReader.setOnFrameReady([this](Buffer&& frame) { onFrameReady(std::move(frame)); });
 }
@@ -75,8 +76,24 @@ AsyncVideostreamListener::FrameID AsyncVideostreamListener::getLatestFrameID() c
     return m_latestFrameID;
 }
 
+unsigned AsyncVideostreamListener::getStreamFPS() const
+{
+    return m_normalizedStreamFPS.load();
+}
+
+void AsyncVideostreamListener::updateStreamFPS()
+{
+    const auto currentTime = olyEngine.getTimeFromStart();
+    m_streamFPS.push_back(static_cast<unsigned>(1. / (currentTime - m_lastTimeStamp)));
+    m_lastTimeStamp = currentTime;
+
+    m_normalizedStreamFPS.store(std::accumulate(m_streamFPS.begin(), m_streamFPS.end(), 0u) / static_cast<unsigned>(m_streamFPS.size()));
+}
+
 void AsyncVideostreamListener::onFrameReady(Buffer&& frame)
 {
+    updateStreamFPS();
+
     auto decodeFrameJob = std::make_unique<DecodeFrameJob>(std::move(frame), [this](cv::Mat&& result)
     {
         std::lock_guard lg(m_mutex);

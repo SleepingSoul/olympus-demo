@@ -218,6 +218,8 @@ void OpenGLGLFWContext::renderDebugInfo()
     ImGui::Text("Real current FPS: %d", m_latestFPS.back());
     ImGui::Text("Normalized current FPS: %d", calculateNormalizedFPS());
 
+    std::for_each(m_imGUIDebugOutputFunctors.cbegin(), m_imGUIDebugOutputFunctors.cend(), [](const auto& outputFunc) { outputFunc(); });
+
     ImGui::End();
 }
 
@@ -269,6 +271,11 @@ void OpenGLGLFWContext::renderFrameEnd()
     EASY_END_BLOCK;
 
     setThreadContext(false);
+}
+
+void OpenGLGLFWContext::addImGuiDebugOutputFunctor(std::function<void()> outputFunctor)
+{
+    m_imGUIDebugOutputFunctors.emplace_back(std::move(outputFunctor));
 }
 
 #undef EnsureMainThread

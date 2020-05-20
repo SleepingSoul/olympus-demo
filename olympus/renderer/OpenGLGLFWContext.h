@@ -59,6 +59,8 @@ public:
     void renderFrameStart();
     void renderFrameEnd();
 
+    void addImGuiDebugOutputFunctor(std::function<void()> outputFunctor);
+
 private:
     void ensureMainThread(const char* funcName) const;
     void updateFPS();
@@ -69,6 +71,7 @@ private:
     bool m_showDebug{ false };
 
     std::multimap<int, GLFWKeyCallback> m_keysMapping;
+    std::vector<std::function<void()>> m_imGUIDebugOutputFunctors;
 
     GLFWwindow* m_window;
     std::string m_title;

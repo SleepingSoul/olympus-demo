@@ -25,7 +25,11 @@ public:
 
     bool isListening() const { return m_started.load(); }
 
+    unsigned getStreamFPS() const;
+
 private:
+    void updateStreamFPS();
+
     void onFrameReady(Buffer&& frame);
 
     StreamReader m_streamReader;
@@ -37,6 +41,10 @@ private:
 
     std::thread m_streamThread;
     std::atomic_bool m_started{ false };
+
+    boost::circular_buffer<unsigned> m_streamFPS;
+    std::atomic_uint m_normalizedStreamFPS{ 0u };
+    double m_lastTimeStamp{ 0. };
 };
 
 EndNamespaceOlympus
