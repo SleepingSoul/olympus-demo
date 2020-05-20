@@ -1,7 +1,7 @@
 #pragma once
 
 #include <Job.h>
-#include <DrawCall.h>
+#include <Cube.h>
 
 BeginNamespaceOlympus
 
@@ -17,7 +17,7 @@ public:
     {
         std::shared_ptr<OpenGLGLFWContext> context;
         std::shared_ptr<OpenGLRenderer> renderer;
-        std::vector<VoxelDrawCall> drawCalls;
+        std::vector<Cube> cubes;
         Texture* backgroundTexture;
         bool backgroundUpdated;
     };

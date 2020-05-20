@@ -22,6 +22,8 @@ public:
         Right
     };
 
+    Camera() = default;
+
     const glm::vec3& getPosition() const { return m_position; }
     void setPosition(const glm::vec3& pos) { m_position = pos; }
 

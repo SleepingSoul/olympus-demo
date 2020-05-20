@@ -25,6 +25,21 @@ public:
 
     void hotReset(const void* data, GLsizei width, GLsizei height, GLenum format);
 
+    bool operator <(const Texture& other) const
+    {
+        return m_id < other.m_id;
+    }
+
+    bool operator ==(const Texture& other) const
+    {
+        return m_id == other.m_id;
+    }
+
+    bool operator !=(const Texture& other) const
+    {
+        return m_id != other.m_id;
+    }
+
 private:
     TextureID m_id{ 0 };
     bool m_loadSuccess{ false };

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <OpenGLGLFWContext.h>
-#include <OpenGLVoxelRenderer.h>
+#include <OpenGLRenderer.h>
 #include <TextureStorage.h>
 #include <JobSystem.h>
 #include <AsyncVideostreamListener.h>
@@ -30,7 +30,7 @@ private:
     std::optional<std::string> m_profilerFile;
 
     std::shared_ptr<OpenGLGLFWContext> m_openGLGLFWContext;
-    std::shared_ptr<OpenGLRenderer> m_openGLVoxelRenderer;
+    std::shared_ptr<OpenGLRenderer> m_openGLRenderer;
 
     JobSystem m_jobSystem;
 

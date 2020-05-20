@@ -27,6 +27,7 @@ class OpenGLGLFWContext
     OlyNonCopyableMovable(OpenGLGLFWContext)
 public:
     using GLFWKeyCallback = std::function<void(int, int, int)>;
+    using GLFWKeyPressCallback = std::function<void()>;
 
     struct InitParameters
     {
@@ -36,6 +37,7 @@ public:
         std::string glslVersion;
         unsigned windowHeight{ 0 };
         unsigned windowWidth{ 0 };
+        bool resizable{ false };
     };
 
     explicit OpenGLGLFWContext(const InitParameters& initParams);
@@ -47,6 +49,7 @@ public:
     void setThreadContext(bool makeContextCurrent);
 
     void addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback);
+    void addKeyboardPressCallback(int glfwKeyCode, GLFWKeyPressCallback keyPressCallback);
 
     // These methods should be called from the main thread!
     void onFrameStart();

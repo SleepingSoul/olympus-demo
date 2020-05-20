@@ -9,7 +9,8 @@ namespace oly
 {
     enum class TextureID : unsigned
     {
-          NoSignal = 0
+          Crate = 0
+        , NoSignal
     };
 }
 

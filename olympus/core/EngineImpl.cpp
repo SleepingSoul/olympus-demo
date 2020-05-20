@@ -39,7 +39,13 @@ void EngineImpl::initialize()
 
     m_openGLGLFWContext->setThreadContext(true);
 
-    m_openGLVoxelRenderer = std::make_shared<OpenGLRenderer>();
+    m_openGLRenderer = std::make_shared<OpenGLRenderer>();
+
+    m_openGLGLFWContext->addKeyboardPressCallback(GLFW_KEY_F2, [this]
+    {
+        auto& cubeRenderComponent = m_openGLRenderer->getCubeRenderComponent();
+        cubeRenderComponent.setDebugMode(!cubeRenderComponent.isDebugMode());
+    });
 
     EASY_BLOCK("Textures preload");
     m_texStorage.preloadAllTextures();
@@ -117,7 +123,7 @@ void EngineImpl::initGLFWContext()
 [[nodiscard]] std::future<void> EngineImpl::prepeareAndSendRenderFrameJob()
 {
     // Doing it here because "getWindowSize" is allowed only from the main thread
-    m_openGLVoxelRenderer->setRenderField(m_openGLGLFWContext->getWindowSize());
+    m_openGLRenderer->setRenderField(m_openGLGLFWContext->getWindowSize());
 
     const auto lastFrameID = m_listener.getLatestFrameID();
 
@@ -129,9 +135,13 @@ void EngineImpl::initGLFWContext()
         m_lastFrameID = lastFrameID;
     }
 
-    std::vector<oly::VoxelDrawCall> drawCalls(1);
+    std::vector<oly::Cube> cubes(2);
+    cubes[0].face = m_texStorage.getTexture(TextureID::Crate);
+    cubes[1].face = m_texStorage.getTexture(TextureID::Crate);
+    cubes[1].position.y = 1.f;
+    cubes[1].edgeSize = 2.f;
 
-    RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLVoxelRenderer, std::move(drawCalls),
+    RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLRenderer, std::move(cubes),
         m_texStorage.getTexture(TextureID::NoSignal),
         backgroundUpdated };
 

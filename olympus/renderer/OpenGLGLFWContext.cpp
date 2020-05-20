@@ -58,6 +58,7 @@ OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, initParams.verMajor);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, initParams.verMinor);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, initParams.resizable ? GLFW_TRUE : GLFW_FALSE);
 
     if (m_window = glfwCreateWindow(initParams.windowWidth, initParams.windowHeight, initParams.windowTitle.c_str(), NULL, NULL);
         m_window == nullptr)
@@ -91,22 +92,16 @@ OpenGLGLFWContext::OpenGLGLFWContext(const InitParameters& initParams)
     ImGui_ImplGlfw_InitForOpenGL(m_window, true);
     ImGui_ImplOpenGL3_Init(initParams.glslVersion.c_str());
 
-    addKeyboardCallback(GLFW_KEY_F1, [this](int scancode, int action, int mode)
+    addKeyboardPressCallback(GLFW_KEY_F1, [this]
     {
-        if (action == GLFW_PRESS)
-        {
-            m_showDebug = !m_showDebug;
-        }
+        m_showDebug = !m_showDebug;
     });
 
-    addKeyboardCallback(GLFW_KEY_ESCAPE, [this](int scancode, int action, int mode)
+    addKeyboardPressCallback(GLFW_KEY_ESCAPE, [this]
     {
         logging::info("ESC press was detected.");
 
-        if (action == GLFW_PRESS)
-        {
-            glfwSetWindowShouldClose(m_window, true);
-        }
+        glfwSetWindowShouldClose(m_window, true);
     });
 }
 
@@ -174,6 +169,17 @@ void OpenGLGLFWContext::addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback key
     EnsureMainThread;
 
     m_keysMapping.emplace(glfwKeyCode, std::move(keyCallback));
+}
+
+void OpenGLGLFWContext::addKeyboardPressCallback(int glfwKeyCode, GLFWKeyPressCallback keyPressCallback)
+{
+    addKeyboardCallback(glfwKeyCode, [onPress = std::move(keyPressCallback)](int scancode, int action, int mode)
+    {
+        if (action == GLFW_PRESS)
+        {
+            onPress();
+        }
+    });
 }
 
 void OpenGLGLFWContext::ensureMainThread(const char* funcName) const
