@@ -15,7 +15,7 @@ void JobEvent::waitAndReset()
 void JobEvent::signal()
 {
     set(true);
-    m_condition.notify_one();
+    m_condition.notify_all();
 }
 
 void JobEvent::reset()

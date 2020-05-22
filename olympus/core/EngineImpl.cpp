@@ -7,6 +7,8 @@
 
 #include <DelegateJob.h>
 #include <RenderFrameJob.h>
+#include <RecognizeBaseJob.h>
+#include <RecognitionOptions.h>
 
 BeginNamespaceOlympus
 
@@ -77,6 +79,16 @@ int EngineImpl::run()
         m_openGLGLFWContext->onFrameStart();
 
         auto renderFinishedFuture = prepeareAndSendRenderFrameJob();
+
+        if (!m_isRecognizing.load())
+        {
+            m_isRecognizing.store(true);
+            m_jobSystem.addJob(std::make_unique<RecognizeBaseJob>(m_listener.getLatestFrame(), [this](std::vector<cv::Vec2i>&& result)
+            {
+                m_recognized = std::move(result);
+                m_isRecognizing.store(false);
+            }));
+        }
 
         EASY_BLOCK("Wait for render frame job to finish", profiler::colors::DarkBlue);
         renderFinishedFuture.get();

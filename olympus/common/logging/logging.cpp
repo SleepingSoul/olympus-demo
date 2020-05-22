@@ -11,6 +11,29 @@ namespace
     const char* const LoggerName = "olympus_logger";
     const char* const LoggerPattern = "[%H:%M:%S.%f] %^[%l]%$ [thread %t] %v";
     const bool FlushOldLogger = true;
+
+    logging::LogLevel CurrentLogLevel = logging::LogLevel::Debug;
+
+    constexpr spdlog::level::level_enum convertLogLevel(logging::LogLevel logLvl)
+    {
+        using namespace logging;
+        using namespace spdlog;
+
+        switch (logLvl)
+        {
+        case LogLevel::Debug:
+            return level::debug;
+        case LogLevel::Info:
+            return level::info;
+        case LogLevel::Warning:
+            return level::warn;
+        case LogLevel::Error:
+            return level::err;
+        case LogLevel::Critical:
+        default:
+            return level::critical;
+        }
+    }
 }
 
 void logging::initialize()
@@ -28,11 +51,21 @@ void logging::initialize()
     spdlog::flush_on(spdlog::level::level_enum::debug);
     spdlog::set_pattern(LoggerPattern);
 #ifdef _DEBUG
-    
-    spdlog::set_level(spdlog::level::debug);
+    setLogLevel(LogLevel::Debug);
 #else
-    spdlog::set_level(spdlog::level::debug);
+    setLogLevel(LogLevel::Debug);
 #endif
+}
+
+void logging::setLogLevel(LogLevel logLevel)
+{
+    CurrentLogLevel = logLevel;
+    spdlog::set_level(convertLogLevel(logLevel));
+}
+
+logging::LogLevel logging::getLogLevel()
+{
+    return CurrentLogLevel;
 }
 
 EndNamespaceOlympus

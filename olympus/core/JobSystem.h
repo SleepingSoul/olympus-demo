@@ -10,6 +10,7 @@ class Job;
 
 class JobSystem
 {
+    OlyNonCopyableMovable(JobSystem)
 public:
     using JobQueue = JobThread::JobQueue;
     using StopToken = JobThread::StopToken;
@@ -21,14 +22,20 @@ public:
     void stop();
 
 private:
-    struct JobExecution
+    class JobExecution
     {
-        JobExecution(JobQueue& jobQueue, StopToken& stopToken)
-            : thread(jobQueue, event, stopToken)
-        {}
+        OlyNonCopyable(JobExecution)
+    public:
+        JobExecution(size_t numThreads, JobQueue& jobQueue, StopToken& stopToken);
 
-        JobEvent event;
-        JobThread thread;
+        void start();
+        void join();
+
+        auto& getEvent() { return m_event; }
+
+    private:
+        JobEvent m_event;
+        std::list<JobThread> m_threads;
     };
 
     std::map<JobAffinity, JobQueue> m_queues;

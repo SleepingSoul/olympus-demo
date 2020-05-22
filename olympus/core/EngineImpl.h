@@ -1,5 +1,7 @@
 #pragma once
 
+#include <opencv2/opencv.hpp>
+
 #include <OpenGLGLFWContext.h>
 #include <OpenGLRenderer.h>
 #include <TextureStorage.h>
@@ -43,6 +45,10 @@ private:
     TextureStogare m_texStorage;
 
     bool m_successfulInitialization{ false };
+
+    std::atomic_bool m_isRecognizing{ false };
+
+    std::vector<cv::Vec2i> m_recognized;
 };
 
 EndNamespaceOlympus

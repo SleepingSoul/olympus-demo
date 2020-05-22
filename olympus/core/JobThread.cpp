@@ -18,6 +18,8 @@ void JobThread::start()
 
 void JobThread::pollAndExecuteJobs()
 {
+    logging::info("[JobThread] This thread starting polling and executing jobs.");
+
     while (true)
     {
         m_jobEvent.waitAndReset();

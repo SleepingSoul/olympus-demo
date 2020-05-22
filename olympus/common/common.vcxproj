@@ -24,6 +24,7 @@
     <ClInclude Include="managers\CommandLineManager.h" />
     <ClInclude Include="utils\enum.h" />
     <ClInclude Include="utils\macros.h" />
+    <ClInclude Include="utils\math.h" />
     <ClInclude Include="utils\olyerror.h" />
     <ClInclude Include="utils\threading_utils.h" />
   </ItemGroup>

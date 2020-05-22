@@ -9,7 +9,19 @@ BeginNamespaceOlympus
 
 namespace logging
 {
+    enum class LogLevel : unsigned char
+    {
+        Debug = 0,
+        Info,
+        Warning,
+        Error,
+        Critical
+    };
+
     void initialize();
+
+    void setLogLevel(LogLevel logLevel);
+    LogLevel getLogLevel();
 
     template <class ...TArgs>
     static void debug(const char* format, TArgs&&... args)

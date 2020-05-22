@@ -14,6 +14,7 @@
 #include <logging/logging.h>
 #include <utils/olyerror.h>
 #include <utils/threading_utils.h>
+#include <utils/enum.h>
 
 BeginNamespaceOlympus
 
@@ -217,6 +218,29 @@ void OpenGLGLFWContext::renderDebugInfo()
 
     ImGui::Text("Real current FPS: %d", m_latestFPS.back());
     ImGui::Text("Normalized current FPS: %d", calculateNormalizedFPS());
+    
+    const char* items[] = { "debug", "info", "warning", "error", "critical" };
+    static const char* currentItem = items[EnumToNumber(logging::getLogLevel())];
+
+    if (ImGui::BeginCombo("Set log level", currentItem))
+    {
+        for (int i = 0; i < IM_ARRAYSIZE(items); ++i)
+        {
+            const bool isSelected = (currentItem == items[i]);
+
+            if (ImGui::Selectable(items[i], isSelected))
+            {
+                logging::setLogLevel(static_cast<logging::LogLevel>(i));
+                currentItem = items[i];
+            }
+
+            if (isSelected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
 
     std::for_each(m_imGUIDebugOutputFunctors.cbegin(), m_imGUIDebugOutputFunctors.cend(), [](const auto& outputFunc) { outputFunc(); });
 
