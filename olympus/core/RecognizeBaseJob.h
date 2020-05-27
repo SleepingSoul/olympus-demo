@@ -1,7 +1,8 @@
 #pragma once
 
-#include <opencv2/opencv.hpp>
+#include <glm/glm.hpp>
 
+#include <GlyphOptions.h>
 #include <StreamDecoder.h>
 
 #include <Job.h>
@@ -12,14 +13,15 @@ class RecognizeBaseJob : public Job
 {
 public:
     using Base = Job;
-    using ThreadSafeOutputFunctor = std::function<void(std::vector<cv::Vec2i>&&)>;
+    using ThreadSafeOutputFunctor = std::function<void(std::optional<glm::mat4>&&)>;
 
-    RecognizeBaseJob(cv::Mat&& frame, ThreadSafeOutputFunctor outputFunctor);
+    RecognizeBaseJob(cv::Mat&& frame, const glyph::GlyphRecognitionOptions& options, ThreadSafeOutputFunctor outputFunctor);
 
     void execute() override;
 
 private:
     cv::Mat m_frame;
+    const glyph::GlyphRecognitionOptions& m_options;
 
     ThreadSafeOutputFunctor m_outputFunctor;
 };

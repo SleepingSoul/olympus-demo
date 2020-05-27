@@ -10,6 +10,7 @@
 #include <ShaderProgram.h>
 #include <BackgroundRenderComponent.h>
 #include <CubeRenderComponent.h>
+#include <SimpleShapeRenderComponent.h>
 #include <Camera.h>
 
 BeginNamespaceOlympus
@@ -19,21 +20,21 @@ class OpenGLRenderer
 public:
     OpenGLRenderer();
 
-    void swapCubeBuffers(std::vector<Cube>& cubes);
-
     Camera& getCamera() { return m_camera; }
-    BackgroundRenderComponent& getBackgroundRenderComponent() { return m_backgroundRenderComponent; }
-    CubeRenderComponent& getCubeRenderComponent() { return m_cubeRenderComponent; }
+    auto& getBackgroundRenderComponent() { return m_backgroundRenderComponent; }
+    auto& getCubeRenderComponent() { return m_cubeRenderComponent; }
+    auto& getSimpleShapeRenderComponent() { return m_simpleShapeRenderComponent; }
 
     void setRenderField(const glm::ivec2 renderField) { m_renderField = renderField; }
 
     void render();
 
+    void setDebugMode(bool debugMode);
+
 private:
     BackgroundRenderComponent m_backgroundRenderComponent;
     CubeRenderComponent m_cubeRenderComponent;
-
-    std::vector<Cube> m_cubes;
+    SimpleShapeRenderComponent m_simpleShapeRenderComponent;
 
     Camera m_camera;
 

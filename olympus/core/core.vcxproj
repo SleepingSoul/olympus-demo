@@ -120,6 +120,7 @@
     <PostBuildEvent>
       <Command>xcopy  /s /y $(SolutionDir)..\vcpkg\installed\x64-windows\debug\bin $(OutDir)
 for /R $(SolutionDir)external_binaries\debug %%f in (*.dll) do copy %%f $(OutDir)
+del /s /q $(OutDir)data
 mkdir $(OutDir)data
 xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     </PostBuildEvent>
@@ -164,15 +165,18 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     <PostBuildEvent>
       <Command>xcopy  /s /y $(SolutionDir)..\vcpkg\installed\x64-windows\bin $(OutDir)
 for /R $(SolutionDir)external_binaries\release %%f in (*.dll) do copy %%f $(OutDir)
+del /s /q $(OutDir)data
 mkdir $(OutDir)data
 xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AsyncVideostreamListener.cpp" />
+    <ClCompile Include="BaseRecognitionSubsystem.cpp" />
     <ClCompile Include="DecodeFrameJob.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="EngineImpl.cpp" />
+    <ClCompile Include="EngineSubsystem.cpp" />
     <ClCompile Include="JobEvent.cpp" />
     <ClCompile Include="JobSystem.cpp" />
     <ClCompile Include="JobThread.cpp" />
@@ -186,10 +190,12 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsyncVideostreamListener.h" />
+    <ClInclude Include="BaseRecognitionSubsystem.h" />
     <ClInclude Include="DecodeFrameJob.h" />
     <ClInclude Include="DelegateJob.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EngineImpl.h" />
+    <ClInclude Include="EngineSubsystem.h" />
     <ClInclude Include="Job.h" />
     <ClInclude Include="JobAffinity.h" />
     <ClInclude Include="JobEvent.h" />

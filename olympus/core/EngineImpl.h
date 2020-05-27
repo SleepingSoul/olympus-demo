@@ -7,6 +7,7 @@
 #include <TextureStorage.h>
 #include <JobSystem.h>
 #include <AsyncVideostreamListener.h>
+#include <EngineSubsystem.h>
 
 BeginNamespaceOlympus
 
@@ -23,12 +24,18 @@ public:
     AsyncVideostreamListener& getAsyncVideostreamListener() { return m_listener; }
     JobSystem& getJobSystem() { return m_jobSystem; }
     OpenGLGLFWContext& getWindowContext() { return *m_openGLGLFWContext; }
+    OpenGLRenderer& getRenderer() { return *m_openGLRenderer; }
+    TextureStogare& getTextureStorage() { return m_texStorage; }
+
+    bool isDebugMode() const { return m_isDebugMode; }
 
     double getTimeFromStart() const;
 
     int run();
 
 private:
+    std::vector<std::unique_ptr<EngineSubsystem>> m_subsystems;
+
     void initGLFWContext();
     [[nodiscard]] std::future<void> prepeareAndSendRenderFrameJob();
 
@@ -46,9 +53,7 @@ private:
 
     bool m_successfulInitialization{ false };
 
-    std::atomic_bool m_isRecognizing{ false };
-
-    std::vector<cv::Vec2i> m_recognized;
+    bool m_isDebugMode{ false };
 };
 
 EndNamespaceOlympus

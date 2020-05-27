@@ -2,6 +2,7 @@
 
 #include <Job.h>
 #include <Cube.h>
+#include <Point.h>
 
 BeginNamespaceOlympus
 
@@ -17,7 +18,6 @@ public:
     {
         std::shared_ptr<OpenGLGLFWContext> context;
         std::shared_ptr<OpenGLRenderer> renderer;
-        std::vector<Cube> cubes;
         Texture* backgroundTexture;
         bool backgroundUpdated;
     };

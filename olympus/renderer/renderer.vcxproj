@@ -27,8 +27,10 @@
     <ClInclude Include="generated\all_textures.hpp" />
     <ClInclude Include="OpenGLGLFWContext.h" />
     <ClInclude Include="OpenGLRenderer.h" />
+    <ClInclude Include="Point.h" />
     <ClInclude Include="render_defs.h" />
     <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="SimpleShapeRenderComponent.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureStorage.h" />
     <ClInclude Include="utils.h" />
@@ -39,6 +41,7 @@
     <ClCompile Include="OpenGLGLFWContext.cpp" />
     <ClCompile Include="OpenGLRenderer.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="SimpleShapeRenderComponent.cpp" />
     <ClCompile Include="test.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>

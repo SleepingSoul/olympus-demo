@@ -6,6 +6,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <extra_std/extra_std.h>
+
 #include <utils/olyerror.h>
 
 #include <render_defs.h>
@@ -51,9 +53,16 @@ namespace
          0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
 
-    const size_t NumVertices = sizeof(CubeVertices) / sizeof(decltype(*CubeVertices)) / 3;
+    const size_t NumVertices = sizeof(CubeVertices) / sizeof(decltype(*CubeVertices)) / 5;
 
     const char* const DebugCubeVS = "data/shaders/cube_shader_d.vs";
     const char* const DebugCubeFS = "data/shaders/cube_shader_d.fs";
@@ -104,24 +113,15 @@ CubeRenderComponent::~CubeRenderComponent()
     glDeleteVertexArrays(1, &m_vertexArrayID);
 }
 
-void CubeRenderComponent::renderCubes(const Camera& camera, std::vector<Cube>& cubes)
+void CubeRenderComponent::render(const Camera& camera)
 {
     EASY_FUNCTION(profiler::colors::Red);
 
-    /*EASY_BLOCK("Sort cubes", profiler::colors::Red300);
-    std::sort(cubes.begin(), cubes.end(), [](const Cube& left, const Cube& right) { return left.face < right.face; });
-    EASY_END_BLOCK;
-
-    if (cubes.size() != 1)
-    {
-        olyError("Unsupported");
-    }
-*/
     auto& shader = m_debugMode ? m_debugShader : m_shader;
 
     shader.use();
 
-    const auto view = glm::translate(glm::identity<glm::mat4>(), camera.getPosition());
+    const auto view = camera.getTransformMatrix();
     shader.setMatrix4f(View, glm::value_ptr(view));
 
     std::array<GLint, 4> viewport;
@@ -140,7 +140,7 @@ void CubeRenderComponent::renderCubes(const Camera& camera, std::vector<Cube>& c
 
     glBindVertexArray(m_vertexArrayID);
 
-    for (const Cube& cube : cubes)
+    for (const Cube& cube : m_cubes)
     {
         auto model = glm::identity<glm::mat4>();
         model = glm::translate(model, cube.position);
@@ -180,6 +180,8 @@ void CubeRenderComponent::renderCubes(const Camera& camera, std::vector<Cube>& c
     }
 
     shader.unuse();
+
+    m_cubes.clear();
 
     glBindVertexArray(0);
 }

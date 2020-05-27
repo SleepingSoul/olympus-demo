@@ -21,14 +21,7 @@ extern "C"
 
 OpenGLRenderer::OpenGLRenderer()
     : m_camera()
-{
-
-}
-
-void OpenGLRenderer::swapCubeBuffers(std::vector<Cube>& cubes)
-{
-    m_cubes.swap(cubes);
-}
+{}
 
 void OpenGLRenderer::render()
 {
@@ -46,8 +39,17 @@ void OpenGLRenderer::render()
     EASY_END_BLOCK;
 
     EASY_BLOCK("Render cubes", profiler::colors::Red200);
-    m_cubeRenderComponent.renderCubes(m_camera, m_cubes);
+    m_cubeRenderComponent.render(m_camera);
     EASY_END_BLOCK;
+
+    EASY_BLOCK("Render 2D points");
+    m_simpleShapeRenderComponent.render();
+    EASY_END_BLOCK;
+}
+
+void OpenGLRenderer::setDebugMode(bool debugMode)
+{
+    m_cubeRenderComponent.setDebugMode(debugMode);
 }
 
 EndNamespaceOlympus

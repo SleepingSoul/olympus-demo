@@ -25,6 +25,12 @@
     <Filter Include="Header Files\JobSystem\specific jobs">
       <UniqueIdentifier>{7f0e660e-c15f-4632-bd5f-04325297d600}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Subsystem">
+      <UniqueIdentifier>{d68ade07-9c0a-42e7-83c1-717cb4ca2fd8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Subsystem">
+      <UniqueIdentifier>{28254138-ed9c-4d71-90ef-7074996b98fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -59,6 +65,12 @@
     </ClCompile>
     <ClCompile Include="RecognizeBaseJob.cpp">
       <Filter>Source Files\JobSystem\specific jobs</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineSubsystem.cpp">
+      <Filter>Source Files\Subsystem</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseRecognitionSubsystem.cpp">
+      <Filter>Source Files\Subsystem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +115,12 @@
     </ClInclude>
     <ClInclude Include="RecognizeBaseJob.h">
       <Filter>Header Files\JobSystem\specific jobs</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineSubsystem.h">
+      <Filter>Header Files\Subsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseRecognitionSubsystem.h">
+      <Filter>Header Files\Subsystem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

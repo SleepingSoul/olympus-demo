@@ -131,6 +131,13 @@ glm::ivec2 OpenGLGLFWContext::getWindowSize() const noexcept(true)
     return result;
 }
 
+glm::vec2 OpenGLGLFWContext::getNormalizedWindowPosition(glm::ivec2 pxPosition) const
+{
+    const auto windowSizePx = getWindowSize();
+
+    return (static_cast<glm::vec2>(pxPosition) / static_cast<glm::vec2>(windowSizePx) - 0.5f) * 2.f;
+}
+
 void OpenGLGLFWContext::setThreadContext(bool makeContextCurrent)
 {
     EASY_FUNCTION("Make context current: %d", makeContextCurrent);

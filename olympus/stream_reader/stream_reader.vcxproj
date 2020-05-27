@@ -101,7 +101,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>libcurl-d.lib;zlibd.lib;opencv_cored.lib;opencv_imgcodecsd.lib;opencv_imgprocd.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcurl-d.lib;zlibd.lib;opencv_cored.lib;opencv_imgcodecsd.lib;opencv_imgprocd.lib;opencv_calib3dd.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -150,16 +150,20 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>libcurl.lib;zlib.lib;opencv_core.lib;opencv_imgcodecs.lib;opencv_imgproc.lib;easy_profiler.lib</AdditionalDependencies>
+      <AdditionalDependencies>libcurl.lib;zlib.lib;opencv_core.lib;opencv_imgcodecs.lib;opencv_imgproc.lib;opencv_calib3d.lib;easy_profiler.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="glyph_detector.h" />
+    <ClInclude Include="GlyphOptions.h" />
     <ClInclude Include="RecognitionOptions.h" />
     <ClInclude Include="Recognizer.h" />
     <ClInclude Include="StreamDecoder.h" />
     <ClInclude Include="StreamReader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="GlyphOptions.cpp" />
+    <ClCompile Include="glyph_detector.cpp" />
     <ClCompile Include="Recognizer.cpp" />
     <ClCompile Include="StreamDecoder.cpp" />
     <ClCompile Include="StreamReader.cpp" />

@@ -39,6 +39,9 @@
     <ClInclude Include="utils\math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="utils\forward.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="logging\logging.cpp">

@@ -23,6 +23,7 @@
     <ClInclude Include="logging\logging.h" />
     <ClInclude Include="managers\CommandLineManager.h" />
     <ClInclude Include="utils\enum.h" />
+    <ClInclude Include="utils\forward.h" />
     <ClInclude Include="utils\macros.h" />
     <ClInclude Include="utils\math.h" />
     <ClInclude Include="utils\olyerror.h" />

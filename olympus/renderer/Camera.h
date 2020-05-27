@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <mutex>
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -54,6 +55,18 @@ public:
     float getZoom() const { return m_zoom; }
     void setZoom(float zoom) { m_zoom = zoom; }
 
+    void setTransformMatrix(const glm::mat4& matrix)
+    {
+        std::lock_guard lg(m_mutex);
+        m_transformMatrix = matrix;
+    }
+
+    glm::mat4 getTransformMatrix() const
+    {
+        std::lock_guard lg(m_mutex);
+        return m_transformMatrix;
+    }
+
     glm::mat4 getViewMatrix() const
     {
         return glm::lookAt(m_position, m_position + m_front, m_up);
@@ -106,6 +119,8 @@ public:
     }
 
 private:
+    mutable std::mutex m_mutex;
+
     void updateCameraVectors()
     {
         m_front = glm::normalize(glm::vec3{
@@ -131,6 +146,8 @@ private:
     float m_movementSpeed{ 2.5f };
     float m_mouseSensitivity{ 0.1f };
     float m_zoom{ 45.f };
+
+    glm::mat4 m_transformMatrix{ glm::identity<glm::mat4>() };
 };
 
 EndNamespaceOlympus

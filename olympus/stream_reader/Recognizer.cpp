@@ -38,7 +38,7 @@ namespace recognizer
 
         cv::Mat lowerRedFilter{}, upperRedFilter{};
 
-        EASY_BLOCK("Lower and upper values fintering", profiler::colors::Green200);
+        EASY_BLOCK("Lower and upper values filtering", profiler::colors::Green200);
         cv::inRange(threshold, options.lowerHSVBegin, options.lowerHSVEnd, lowerRedFilter);
         cv::inRange(threshold, options.upperHSVBegin, options.upperHSVEnd, upperRedFilter);
         EASY_END_BLOCK;
@@ -54,12 +54,21 @@ namespace recognizer
         cv::findContours(threshold, contours, options.contourRetrievalMode, options.contourApproxMode);
         EASY_END_BLOCK;
 
+        EASY_BLOCK("Removing zero contours", profiler::colors::Green200);
         const auto newEnd = std::remove_if(contours.begin(), contours.end(), [](const cv::Mat& contour)
         {
             return equalsWithAlpha(cv::contourArea(contour), 0., 0.001);
         });
 
         contours.erase(newEnd, contours.end());
+        EASY_END_BLOCK;
+
+        EASY_BLOCK("Sort contours by area", profiler::colors::Green200);
+        std::sort(contours.begin(), contours.end(), [](const auto& left, const auto& right)
+        {
+            return cv::contourArea(left) > cv::contourArea(right);
+        });
+        EASY_END_BLOCK;
 
         if (contours.size() > options.numContours)
         {

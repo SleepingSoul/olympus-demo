@@ -9,6 +9,7 @@
 #include <RenderFrameJob.h>
 #include <RecognizeBaseJob.h>
 #include <RecognitionOptions.h>
+#include <BaseRecognitionSubsystem.h>
 
 BeginNamespaceOlympus
 
@@ -47,8 +48,7 @@ void EngineImpl::initialize()
 
     m_openGLGLFWContext->addKeyboardPressCallback(GLFW_KEY_F2, [this]
     {
-        auto& cubeRenderComponent = m_openGLRenderer->getCubeRenderComponent();
-        cubeRenderComponent.setDebugMode(!cubeRenderComponent.isDebugMode());
+        m_isDebugMode = !m_isDebugMode;
     });
 
     m_openGLGLFWContext->addImGuiDebugOutputFunctor([this]
@@ -62,6 +62,8 @@ void EngineImpl::initialize()
 
     m_openGLGLFWContext->setThreadContext(false);
 
+    m_subsystems.emplace_back(std::make_unique<BaseRecognitionSubsystem>(*this));
+
     m_successfulInitialization = true;
 }
 
@@ -72,26 +74,26 @@ double EngineImpl::getTimeFromStart() const
 
 int EngineImpl::run()
 {
+    std::future<void> renderFinishedFuture;
+
     while (m_openGLGLFWContext->windowShoudNotClose())
     {
         EASY_BLOCK("frame");
 
         m_openGLGLFWContext->onFrameStart();
 
-        auto renderFinishedFuture = prepeareAndSendRenderFrameJob();
-
-        if (!m_isRecognizing.load())
+        for (const auto& subsystem : m_subsystems)
         {
-            m_isRecognizing.store(true);
-            m_jobSystem.addJob(std::make_unique<RecognizeBaseJob>(m_listener.getLatestFrame(), [this](std::vector<cv::Vec2i>&& result)
-            {
-                m_recognized = std::move(result);
-                m_isRecognizing.store(false);
-            }));
+            subsystem->update();
         }
 
-        EASY_BLOCK("Wait for render frame job to finish", profiler::colors::DarkBlue);
-        renderFinishedFuture.get();
+        auto renderFinishedFuture = prepeareAndSendRenderFrameJob();
+
+        EASY_BLOCK("Wait for previous render frame job to finish", profiler::colors::DarkBlue);
+        if (renderFinishedFuture.valid())
+        {
+            renderFinishedFuture.get();
+        }
         EASY_END_BLOCK;
 
         m_openGLGLFWContext->onFrameEnd();
@@ -149,6 +151,8 @@ void EngineImpl::initGLFWContext()
     // Doing it here because "getWindowSize" is allowed only from the main thread
     m_openGLRenderer->setRenderField(m_openGLGLFWContext->getWindowSize());
 
+    m_openGLRenderer->setDebugMode(m_isDebugMode);
+
     const auto lastFrameID = m_listener.getLatestFrameID();
 
     bool backgroundUpdated = false;
@@ -159,13 +163,7 @@ void EngineImpl::initGLFWContext()
         m_lastFrameID = lastFrameID;
     }
 
-    std::vector<oly::Cube> cubes(2);
-    cubes[0].face = m_texStorage.getTexture(TextureID::Crate);
-    cubes[1].face = m_texStorage.getTexture(TextureID::Crate);
-    cubes[1].position.y = 1.f;
-    cubes[1].edgeSize = 2.f;
-
-    RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLRenderer, std::move(cubes),
+    RenderFrameJob::InitParameters parameters{ m_openGLGLFWContext, m_openGLRenderer,
         m_texStorage.getTexture(TextureID::NoSignal),
         backgroundUpdated };
 

@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 
 #include <utils/macros.h>
+#include <utils/forward.h>
 
 #include <ShaderProgram.h>
 #include <Cube.h>
@@ -19,12 +20,16 @@ public:
     CubeRenderComponent();
     ~CubeRenderComponent();
 
-    void renderCubes(const Camera& camera, std::vector<Cube>& cubes);
+    OlyPerfectForwardInContainer(renderCubes, m_cubes)
+
+    void render(const Camera& camera);
 
     void setDebugMode(bool debugMode) { m_debugMode = debugMode; }
     bool isDebugMode() const { return m_debugMode; }
 
 private:
+    std::vector<Cube> m_cubes;
+
     bool m_debugMode{ false };
 
     GLuint m_vertexArrayID{ 0 };

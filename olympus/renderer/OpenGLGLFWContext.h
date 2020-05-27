@@ -46,6 +46,8 @@ public:
     bool windowShoudNotClose() const noexcept(true);
     glm::ivec2 getWindowSize() const noexcept(true);
 
+    glm::vec2 getNormalizedWindowPosition(glm::ivec2 pxPosition) const;
+
     void setThreadContext(bool makeContextCurrent);
 
     void addKeyboardCallback(int glfwKeyCode, GLFWKeyCallback keyCallback);

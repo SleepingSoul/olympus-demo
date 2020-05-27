@@ -21,7 +21,7 @@ std::future<void> RenderFrameJob::getRenderFinishedFuture()
 
 void RenderFrameJob::execute()
 {
-    EASY_FUNCTION("Num draw calls = %zu", m_params.cubes.size(), profiler::colors::Red);
+    EASY_FUNCTION(profiler::colors::Red);
 
     m_params.context->renderFrameStart();
 
@@ -43,8 +43,6 @@ void RenderFrameJob::execute()
     m_params.renderer->getBackgroundRenderComponent().setBackgroundTexture(m_params.backgroundTexture);
 
     m_params.renderer->getCamera().setPosition({ 0.f, 0.f, -5.f });
-
-    m_params.renderer->swapCubeBuffers(m_params.cubes);
 
     m_params.renderer->render();
 
