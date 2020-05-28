@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="containers\DoubleBuffer.h" />
     <ClInclude Include="containers\ThreadSafeQueue.h" />
     <ClInclude Include="logging\logging.h" />
     <ClInclude Include="managers\CommandLineManager.h" />

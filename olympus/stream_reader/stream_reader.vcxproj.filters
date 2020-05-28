@@ -21,12 +21,6 @@
     <ClInclude Include="StreamDecoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Recognizer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RecognitionOptions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="glyph_detector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -39,9 +33,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StreamDecoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Recognizer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="glyph_detector.cpp">

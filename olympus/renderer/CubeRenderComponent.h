@@ -6,6 +6,7 @@
 
 #include <utils/macros.h>
 #include <utils/forward.h>
+#include <containers/DoubleBuffer.h>
 
 #include <ShaderProgram.h>
 #include <Cube.h>
@@ -20,15 +21,17 @@ public:
     CubeRenderComponent();
     ~CubeRenderComponent();
 
-    OlyPerfectForwardInContainer(renderCubes, m_cubes)
+    OlyPerfectForwardInContainer(renderCubes, m_cubes.frontBuffer())
 
     void render(const Camera& camera);
 
     void setDebugMode(bool debugMode) { m_debugMode = debugMode; }
     bool isDebugMode() const { return m_debugMode; }
 
+    void swapBuffers() { m_cubes.swapBuffersSafe(); }
+
 private:
-    std::vector<Cube> m_cubes;
+    DoubleBuffer<std::vector<Cube>> m_cubes;
 
     bool m_debugMode{ false };
 

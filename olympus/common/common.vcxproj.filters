@@ -42,6 +42,9 @@
     <ClInclude Include="utils\forward.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="containers\DoubleBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="logging\logging.cpp">

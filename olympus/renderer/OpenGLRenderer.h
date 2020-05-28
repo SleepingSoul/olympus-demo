@@ -29,6 +29,8 @@ public:
 
     void render();
 
+    void swapBuffers();
+
     void setDebugMode(bool debugMode);
 
 private:

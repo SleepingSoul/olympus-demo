@@ -6,6 +6,7 @@
 
 #include <utils/macros.h>
 #include <utils/forward.h>
+#include <containers/DoubleBuffer.h>
 
 #include <Point.h>
 #include <ShaderProgram.h>
@@ -21,14 +22,15 @@ public:
     SimpleShapeRenderComponent();
     ~SimpleShapeRenderComponent();
 
-    OlyPerfectForwardInContainer(render2DPoints, m_2Dpoints)
+    OlyPerfectForwardInContainer(render2DPoints, m_2Dpoints.frontBuffer())
 
     void render();
     size_t getMaxPoints() const;
 
-private:
+    void swapBuffers() { m_2Dpoints.swapBuffersSafe(); }
 
-    std::vector<Point2D> m_2Dpoints;
+private:
+    DoubleBuffer<std::vector<Point2D>> m_2Dpoints;
 
     GLuint m_vertexArrayID{ 0 };
 

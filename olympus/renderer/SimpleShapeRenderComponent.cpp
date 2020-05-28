@@ -57,12 +57,12 @@ void SimpleShapeRenderComponent::render()
 
     m_2DpointsShader.setVec2i(FBSizeName, glm::ivec2(viewportWidth, viewportHeight));
 
-    const auto size = std::min(m_2Dpoints.size(), MaxPoints);
+    const auto size = std::min(m_2Dpoints.backBuffer().size(), MaxPoints);
 
     EASY_BLOCK("Transfering data to shader", profiler::colors::Red300);
     for (size_t i = 0; i < size; ++i)
     {
-        const auto& point = m_2Dpoints[i];
+        const auto& point = m_2Dpoints.backBuffer()[i];
 
         std::sprintf(buffer.data(), ColorNameFormat, i);
         m_2DpointsShader.setVec4f(buffer.data(), point.color);
@@ -82,7 +82,7 @@ void SimpleShapeRenderComponent::render()
 
     m_2DpointsShader.unuse();
 
-    m_2Dpoints.clear();
+    m_2Dpoints.clearBackBuffer();
 }
 
 size_t SimpleShapeRenderComponent::getMaxPoints() const

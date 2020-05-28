@@ -8,7 +8,6 @@
 #include <DelegateJob.h>
 #include <RenderFrameJob.h>
 #include <RecognizeBaseJob.h>
-#include <RecognitionOptions.h>
 #include <BaseRecognitionSubsystem.h>
 
 BeginNamespaceOlympus

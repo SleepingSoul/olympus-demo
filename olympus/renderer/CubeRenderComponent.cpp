@@ -140,7 +140,7 @@ void CubeRenderComponent::render(const Camera& camera)
 
     glBindVertexArray(m_vertexArrayID);
 
-    for (const Cube& cube : m_cubes)
+    for (const Cube& cube : m_cubes.backBuffer())
     {
         auto model = glm::identity<glm::mat4>();
         model = glm::translate(model, cube.position);
@@ -181,7 +181,7 @@ void CubeRenderComponent::render(const Camera& camera)
 
     shader.unuse();
 
-    m_cubes.clear();
+    m_cubes.clearBackBuffer();
 
     glBindVertexArray(0);
 }

@@ -9,6 +9,9 @@
 
 #include <easy/profiler.h>
 
+#include <utils/threading_utils.h>
+#include <utils/olyerror.h>
+
 BeginNamespaceOlympus
 
 extern "C"
@@ -45,6 +48,18 @@ void OpenGLRenderer::render()
     EASY_BLOCK("Render 2D points");
     m_simpleShapeRenderComponent.render();
     EASY_END_BLOCK;
+}
+
+void OpenGLRenderer::swapBuffers()
+{
+    if (!threading::isMainThread())
+    {
+        olyError("[OpenGLRenderer] Potentialy unsafe operation: swapping buffers from the secondary thread.");
+    }
+
+    m_cubeRenderComponent.swapBuffers();
+    m_backgroundRenderComponent.swapBuffers();
+    m_simpleShapeRenderComponent.swapBuffers();
 }
 
 void OpenGLRenderer::setDebugMode(bool debugMode)
