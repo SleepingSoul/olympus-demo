@@ -58,8 +58,18 @@ void OpenGLRenderer::swapBuffers()
     }
 
     m_cubeRenderComponent.swapBuffers();
-    m_backgroundRenderComponent.swapBuffers();
     m_simpleShapeRenderComponent.swapBuffers();
+}
+
+void OpenGLRenderer::clearBackBuffers()
+{
+    if (!threading::isMainThread())
+    {
+        olyError("[OpenGLRenderer] Potentialy unsafe operation: clearing render buffers from the secondary thread.");
+    }
+
+    m_cubeRenderComponent.clearBackBuffer();
+    m_simpleShapeRenderComponent.clearBackBuffers();
 }
 
 void OpenGLRenderer::setDebugMode(bool debugMode)

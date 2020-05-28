@@ -79,20 +79,25 @@ int EngineImpl::run()
     {
         EASY_BLOCK("frame");
 
+        // Pre-frame start synchronization: previous render job should be finished at this point
+        EASY_BLOCK("Wait for previous render frame job to finish", profiler::colors::DarkBlue);
+        if (renderFinishedFuture.valid()) [[likely]]
+        {
+            renderFinishedFuture.get();
+        }
+        EASY_END_BLOCK;
+
         m_openGLGLFWContext->onFrameStart();
 
+        // Send render frame job with previous frame data
+        renderFinishedFuture = prepeareAndSendRenderFrameJob();
+
+        EASY_BLOCK("Main frame logic: update all subsystems", profiler::colors::Silver);
         for (const auto& subsystem : m_subsystems)
         {
             subsystem->update();
         }
 
-        auto renderFinishedFuture = prepeareAndSendRenderFrameJob();
-
-        EASY_BLOCK("Wait for previous render frame job to finish", profiler::colors::DarkBlue);
-        if (renderFinishedFuture.valid())
-        {
-            renderFinishedFuture.get();
-        }
         EASY_END_BLOCK;
 
         m_openGLGLFWContext->onFrameEnd();
@@ -147,10 +152,10 @@ void EngineImpl::initGLFWContext()
 
 [[nodiscard]] std::future<void> EngineImpl::prepeareAndSendRenderFrameJob()
 {
-    // Doing it here because "getWindowSize" is allowed only from the main thread
     m_openGLRenderer->setRenderField(m_openGLGLFWContext->getWindowSize());
-
     m_openGLRenderer->setDebugMode(m_isDebugMode);
+    m_openGLRenderer->clearBackBuffers();
+    m_openGLRenderer->swapBuffers();
 
     const auto lastFrameID = m_listener.getLatestFrameID();
 

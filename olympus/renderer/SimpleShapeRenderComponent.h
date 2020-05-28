@@ -28,6 +28,7 @@ public:
     size_t getMaxPoints() const;
 
     void swapBuffers() { m_2Dpoints.swapBuffersSafe(); }
+    void clearBackBuffers() { m_2Dpoints.clearBackBuffer(); }
 
 private:
     DoubleBuffer<std::vector<Point2D>> m_2Dpoints;

@@ -21,8 +21,6 @@ public:
 
     void render();
 
-    void swapBuffers() {}
-
 private:
     GLuint m_vertexArrayID{ 0 };
     GLuint m_vertexBufferID{ 0 };

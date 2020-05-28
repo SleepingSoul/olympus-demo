@@ -81,8 +81,6 @@ void SimpleShapeRenderComponent::render()
     glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
     m_2DpointsShader.unuse();
-
-    m_2Dpoints.clearBackBuffer();
 }
 
 size_t SimpleShapeRenderComponent::getMaxPoints() const

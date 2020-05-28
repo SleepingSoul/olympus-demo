@@ -181,8 +181,6 @@ void CubeRenderComponent::render(const Camera& camera)
 
     shader.unuse();
 
-    m_cubes.clearBackBuffer();
-
     glBindVertexArray(0);
 }
 

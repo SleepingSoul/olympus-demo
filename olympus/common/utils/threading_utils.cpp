@@ -19,7 +19,7 @@ namespace threading
     {
         if (MainThreadID != NoThreadID)
         {
-            olyError("Attempt to redefine main thread detected.");
+            olyError("Attempt to re-define main thread.");
             return;
         }
 

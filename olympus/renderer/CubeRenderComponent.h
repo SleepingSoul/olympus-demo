@@ -29,6 +29,7 @@ public:
     bool isDebugMode() const { return m_debugMode; }
 
     void swapBuffers() { m_cubes.swapBuffersSafe(); }
+    void clearBackBuffer() { m_cubes.clearBackBuffer(); }
 
 private:
     DoubleBuffer<std::vector<Cube>> m_cubes;

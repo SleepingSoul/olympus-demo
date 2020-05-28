@@ -30,6 +30,7 @@ public:
     void render();
 
     void swapBuffers();
+    void clearBackBuffers();
 
     void setDebugMode(bool debugMode);
 
