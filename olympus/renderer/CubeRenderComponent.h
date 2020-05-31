@@ -4,6 +4,8 @@
 
 #include <glad/glad.h>
 
+#include <opencv2/opencv.hpp>
+
 #include <utils/macros.h>
 #include <utils/forward.h>
 #include <containers/DoubleBuffer.h>

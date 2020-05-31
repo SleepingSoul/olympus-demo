@@ -5,11 +5,11 @@
 
 #include <extra_std/extra_std.h>
 
-#include <glyph_detector.h>
+#include <marker_detector.h>
 
 BeginNamespaceOlympus
 
-RecognizeBaseJob::RecognizeBaseJob(cv::Mat&& frame, const glyph::GlyphRecognitionOptions& options, ThreadSafeOutputFunctor outputFunctor)
+RecognizeBaseJob::RecognizeBaseJob(cv::Mat&& frame, markers::MarkerRecognitionOptions& options, ThreadSafeOutputFunctor outputFunctor)
     : Base("RecognizeBase", JobAffinity::Generic)
     , m_frame(std::move(frame))
     , m_outputFunctor(std::move(outputFunctor))
@@ -18,7 +18,7 @@ RecognizeBaseJob::RecognizeBaseJob(cv::Mat&& frame, const glyph::GlyphRecognitio
 
 void RecognizeBaseJob::execute()
 {
-    m_outputFunctor(glyph::detectGlyph(m_options, m_frame));
+    m_outputFunctor(markers::detectMarker(m_options, m_frame));
 }
 
 EndNamespaceOlympus

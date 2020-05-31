@@ -3,6 +3,8 @@
 #include <vector>
 #include <mutex>
 
+#include <opencv2/opencv.hpp>
+
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -55,17 +57,13 @@ public:
     float getZoom() const { return m_zoom; }
     void setZoom(float zoom) { m_zoom = zoom; }
 
-    void setTransformMatrix(const glm::mat4& matrix)
-    {
-        std::lock_guard lg(m_mutex);
-        m_transformMatrix = matrix;
-    }
+    void setARModelViewMatrix(const cv::Mat& matrix) { m_ARmodelView = matrix; }
 
-    glm::mat4 getTransformMatrix() const
-    {
-        std::lock_guard lg(m_mutex);
-        return m_transformMatrix;
-    }
+    cv::Mat getARModelViewMatrix() const { return m_ARmodelView.clone(); }
+
+    void setARProjectionMatrix(const cv::Mat& matrix) { m_ARprojection = matrix; }
+
+    cv::Mat getARProjectionMatrix() const { return m_ARprojection.clone(); }
 
     glm::mat4 getViewMatrix() const
     {
@@ -119,8 +117,6 @@ public:
     }
 
 private:
-    mutable std::mutex m_mutex;
-
     void updateCameraVectors()
     {
         m_front = glm::normalize(glm::vec3{
@@ -147,7 +143,8 @@ private:
     float m_mouseSensitivity{ 0.1f };
     float m_zoom{ 45.f };
 
-    glm::mat4 m_transformMatrix{ glm::identity<glm::mat4>() };
+    cv::Mat m_ARmodelView;
+    cv::Mat m_ARprojection;
 };
 
 EndNamespaceOlympus

@@ -117,28 +117,42 @@ void CubeRenderComponent::render(const Camera& camera)
 {
     EASY_FUNCTION(profiler::colors::Red);
 
+    const auto modelView = camera.getARModelViewMatrix();
+    const auto projection = camera.getARProjectionMatrix();
+
+    if (modelView.size() != cv::Size(4, 4) || modelView.type() != CV_32F || projection.size() != cv::Size(4, 4) || projection.type() != CV_32F)
+    {
+        logging::warning("[CubeRendererComponent] Cannot perform render operation because input parameters are invalid.");
+        return;
+    }
+
     auto& shader = m_debugMode ? m_debugShader : m_shader;
 
     shader.use();
 
-    const auto view = camera.getTransformMatrix();
-    shader.setMatrix4f(View, glm::value_ptr(view));
+    shader.setMatrix4f(View, &modelView.at<float>(0));
 
     std::array<GLint, 4> viewport;
     glGetIntegerv(GL_VIEWPORT, viewport.data());
     const auto viewportWidth = viewport[2];
     const auto viewportHeight = viewport[3];
 
-    const auto projection = glm::perspectiveFov(
-        glm::radians(45.f),
-        static_cast<float>(viewportWidth),
-        static_cast<float>(viewportHeight),
-        NearDistance,
-        FarDistance);
+    //auto projection = glm::perspectiveFov(
+    //    glm::radians(51.f),
+    //    static_cast<float>(viewportWidth),
+    //    static_cast<float>(viewportHeight),
+    //    0.1f,
+    //    10.f);
 
-    shader.setMatrix4f(Projection, glm::value_ptr(projection));
+    //auto projection = glm::identity<glm::mat4>();
+
+    //const auto projection = glm::ortho(-1.f, 1.f, -1.f, 1.f, 0.f, 100.f);
+
+    shader.setMatrix4f(Projection, &projection.at<float>(0));
 
     glBindVertexArray(m_vertexArrayID);
+
+    glEnable(GL_DEPTH_TEST);
 
     for (const Cube& cube : m_cubes.backBuffer())
     {
@@ -165,6 +179,7 @@ void CubeRenderComponent::render(const Camera& camera)
         {
             if (!cube.face)
             {
+                logging::warning("[CubeRenderComponent] No face specified for cube. Render skipped.");
                 continue;
             }
 
@@ -173,11 +188,11 @@ void CubeRenderComponent::render(const Camera& camera)
             
             glBindTexture(GL_TEXTURE_2D, cube.face->getID());
 
-            glEnable(GL_DEPTH_TEST);
             glDrawArrays(GL_TRIANGLES, 0, 36);
-            glDisable(GL_DEPTH_TEST);
         }
     }
+
+    glDisable(GL_DEPTH_TEST);
 
     shader.unuse();
 

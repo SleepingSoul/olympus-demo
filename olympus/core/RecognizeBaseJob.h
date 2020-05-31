@@ -1,8 +1,7 @@
 #pragma once
 
-#include <glm/glm.hpp>
-
-#include <GlyphOptions.h>
+#include <MarkerOptions.h>
+#include <marker_detector.h>
 #include <StreamDecoder.h>
 
 #include <Job.h>
@@ -13,15 +12,15 @@ class RecognizeBaseJob : public Job
 {
 public:
     using Base = Job;
-    using ThreadSafeOutputFunctor = std::function<void(std::optional<glm::mat4>&&)>;
+    using ThreadSafeOutputFunctor = std::function<void(std::optional<markers::DetectResult>&&)>;
 
-    RecognizeBaseJob(cv::Mat&& frame, const glyph::GlyphRecognitionOptions& options, ThreadSafeOutputFunctor outputFunctor);
+    RecognizeBaseJob(cv::Mat&& frame, markers::MarkerRecognitionOptions& options, ThreadSafeOutputFunctor outputFunctor);
 
     void execute() override;
 
 private:
     cv::Mat m_frame;
-    const glyph::GlyphRecognitionOptions& m_options;
+    markers::MarkerRecognitionOptions& m_options;
 
     ThreadSafeOutputFunctor m_outputFunctor;
 };

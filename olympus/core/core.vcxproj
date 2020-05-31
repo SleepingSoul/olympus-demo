@@ -74,7 +74,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)renderer;$(SolutionDir)..\vcpkg\installed\x64-windows\include;$(SolutionDir)common\external;$(SolutionDir)common;$(SolutionDir)common\external\easy_profiler\easy_profiler_core\include;$(ProjectDir);$(SolutionDir)stream_reader;$(SolutionDir)external_projects\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)renderer;$(SolutionDir)..\vcpkg\installed\x64-windows\include;$(SolutionDir)common\external;$(SolutionDir)common;$(SolutionDir)common\external\easy_profiler\easy_profiler_core\include;$(ProjectDir);$(SolutionDir)stream_reader;$(SolutionDir)external_projects\imgui;$(SolutionDir)external_projects\aruco\aruco\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDIr)external_binaries\debug_bins;$(SolutionDir)..\vcpkg\installed\x64-windows\debug\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)$(IntDir)</LibraryPath>
     <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
   </PropertyGroup>
@@ -83,7 +83,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)renderer;$(SolutionDir)..\vcpkg\installed\x64-windows\include;$(SolutionDir)common\external;$(SolutionDir)common;$(SolutionDir)common\external\easy_profiler\easy_profiler_core\include;$(ProjectDir);$(SolutionDir)stream_reader;$(SolutionDir)external_projects\imgui;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)renderer;$(SolutionDir)..\vcpkg\installed\x64-windows\include;$(SolutionDir)common\external;$(SolutionDir)common;$(SolutionDir)common\external\easy_profiler\easy_profiler_core\include;$(ProjectDir);$(SolutionDir)stream_reader;$(SolutionDir)external_projects\imgui;$(SolutionDir)external_projects\aruco\aruco\src;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDIr)external_binaries\release_bins;$(SolutionDir)..\vcpkg\installed\x64-windows\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)$(IntDir)</LibraryPath>
     <OutDir>$(SolutionDir)build\$(Configuration)\</OutDir>
   </PropertyGroup>

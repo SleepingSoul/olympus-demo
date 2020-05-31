@@ -3,41 +3,16 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <glm/gtc/type_ptr.hpp>
+#include <managers/CommandLineManager.h>
 
 #include <EngineImpl.h>
 
 BeginNamespaceOlympus
 
-namespace
-{
-    glm::mat4 convertMatrix(cv::Mat matrix)
-    {
-        auto type = matrix.type();
-        auto needed = CV_32FC1;
-
-        if (matrix.cols != 3 || matrix.rows != 3)
-        {
-            olyError("[BaseRecognitionSubsystem] Failed to convert matrices.");
-            return glm::identity<glm::mat4>();
-        }
-
-        if (matrix.type() != CV_32FC1)
-        {
-            matrix.convertTo(matrix, CV_32FC1);
-        }
-
-        glm::mat3 result;
-        std::memcpy(glm::value_ptr(result), matrix.ptr(), 9 * sizeof(float));
-        //result = glm::transpose(result);
-
-        return glm::mat4(result);
-    }
-}
-
 BaseRecognitionSubsystem::BaseRecognitionSubsystem(EngineImpl& engine)
     : Base(engine)
-    , m_glyphOptions("data/calibration.data")
+    , m_markerOptions("data/calibration3.yml",
+        cv::Size(*olyCommandLineManager.getLong(CommandLineOptions::Width), *olyCommandLineManager.getLong(CommandLineOptions::Height)))
 {}
 
 void BaseRecognitionSubsystem::update()
@@ -51,11 +26,14 @@ void BaseRecognitionSubsystem::update()
     {
         m_lastFrameID = latestFrameID;
         m_isRecognizing.store(true);
-        jobSystem.addJob(std::make_unique<RecognizeBaseJob>(listener.getLatestFrame(), m_glyphOptions, [this](std::optional<glm::mat4>&& result)
+        jobSystem.addJob(std::make_unique<RecognizeBaseJob>(listener.getLatestFrame(), m_markerOptions, [this](std::optional <markers::DetectResult>&& result)
         {
             std::lock_guard lg(m_mutex);
 
-            m_viewMatrix = std::move(result).value_or(glm::identity<glm::mat4>());
+            if (result)
+            {
+                m_detectResult = std::move(*result);
+            }
 
             m_isRecognizing.store(false);
         }));
@@ -65,14 +43,18 @@ void BaseRecognitionSubsystem::update()
     auto& renderer = m_engine.getRenderer();
 
     Cube cube;
-    cube.edgeSize = 5;
+    cube.edgeSize = 0.2f;
     cube.position = { 0, 0, 0 };
     cube.face = m_engine.getTextureStorage().getTexture(TextureID::Crate);
 
-    renderer.getCubeRenderComponent().renderCubes(std::move(cube));
+    auto cube2 = cube;
+    cube2.position.x = 0.2f;
+
+    renderer.getCubeRenderComponent().renderCubes(std::vector{ cube, cube2 });
 
     std::lock_guard lg(m_mutex);
-    renderer.getCamera().setTransformMatrix(m_viewMatrix);
+    renderer.getCamera().setARModelViewMatrix(m_detectResult.modelviewMatrix);
+    renderer.getCamera().setARProjectionMatrix(m_detectResult.projectionMatrix);
 }
 
 EndNamespaceOlympus

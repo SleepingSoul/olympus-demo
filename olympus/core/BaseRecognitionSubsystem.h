@@ -1,6 +1,6 @@
 #pragma once
 
-#include <glm/gtc/matrix_transform.hpp>
+#include <marker_detector.h>
 
 #include <EngineSubsystem.h>
 #include <AsyncVideostreamListener.h>
@@ -18,10 +18,13 @@ public:
     void update() override;
 
 private:
-    std::mutex m_mutex;
     AsyncVideostreamListener::FrameID m_lastFrameID{ 0 };
-    glm::mat4 m_viewMatrix{ glm::identity<glm::mat4>() };
-    glyph::GlyphRecognitionOptions m_glyphOptions;
+
+    std::mutex m_mutex;
+    markers::DetectResult m_detectResult;
+
+    markers::MarkerRecognitionOptions m_markerOptions;
+
     std::atomic_bool m_isRecognizing{ false };
 };
 

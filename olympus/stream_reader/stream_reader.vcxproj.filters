@@ -21,10 +21,10 @@
     <ClInclude Include="StreamDecoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="glyph_detector.h">
+    <ClInclude Include="marker_detector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GlyphOptions.h">
+    <ClInclude Include="MarkerOptions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,10 +35,10 @@
     <ClCompile Include="StreamDecoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="glyph_detector.cpp">
+    <ClCompile Include="marker_detector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GlyphOptions.cpp">
+    <ClCompile Include="MarkerOptions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

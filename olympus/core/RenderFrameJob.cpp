@@ -31,6 +31,8 @@ void RenderFrameJob::execute()
     {
         const auto lastFrame = listener.getLatestFrame();
 
+        cv::flip(lastFrame, lastFrame, 0);
+
         if (!lastFrame.empty())
         {
             const auto size = lastFrame.size();
@@ -41,8 +43,6 @@ void RenderFrameJob::execute()
     }
 
     m_params.renderer->getBackgroundRenderComponent().setBackgroundTexture(m_params.backgroundTexture);
-
-    m_params.renderer->getCamera().setPosition({ 0.f, 0.f, -5.f });
 
     m_params.renderer->render();
 

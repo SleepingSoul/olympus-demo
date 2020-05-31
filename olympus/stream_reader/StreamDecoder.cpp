@@ -58,13 +58,7 @@ namespace stream_decoder
     {
         EASY_FUNCTION("size=%zu", jpegData.size(), profiler::colors::Green);
 
-        auto result = cv::imdecode(cv::Mat{ jpegData }, cv::IMREAD_COLOR);
-
-        const int vertFlip = 0;
-
-        cv::flip(result, result, vertFlip);
-
-        return result;
+        return cv::imdecode(cv::Mat{ jpegData }, cv::IMREAD_COLOR);
     }
 
 }

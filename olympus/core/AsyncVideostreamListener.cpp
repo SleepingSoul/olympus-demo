@@ -66,7 +66,7 @@ cv::Mat AsyncVideostreamListener::getLatestFrame() const
 {
     std::lock_guard lg(m_mutex);
 
-    return m_latestFrame;
+    return m_latestFrame.clone();
 }
 
 AsyncVideostreamListener::FrameID AsyncVideostreamListener::getLatestFrameID() const
