@@ -18,13 +18,13 @@
     <ClInclude Include="StreamReader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="StreamDecoder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="marker_detector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MarkerOptions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stream_decoder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -32,13 +32,13 @@
     <ClCompile Include="StreamReader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StreamDecoder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="marker_detector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MarkerOptions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stream_decoder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

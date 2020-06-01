@@ -2,7 +2,7 @@
 
 #include <opencv2/opencv.hpp>
 
-#include <StreamDecoder.h>
+#include <stream_decoder.h>
 
 #include <Job.h>
 

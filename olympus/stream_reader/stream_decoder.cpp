@@ -1,4 +1,4 @@
-#include "StreamDecoder.h"
+#include "stream_decoder.h"
 
 #include <array>
 #include <algorithm>

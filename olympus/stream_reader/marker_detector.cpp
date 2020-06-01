@@ -1,6 +1,7 @@
 #include "marker_detector.h"
 
 #include <array>
+#include <optional>
 
 #include <easy/profiler.h>
 
@@ -17,10 +18,15 @@ namespace markers
     {
         EASY_FUNCTION(profiler::colors::DarkGreen);
 
+        cv::Mat undistorted;
+
+        cv::undistort(frame, undistorted, options.getParameters().CameraMatrix, options.getParameters().Distorsion);
+
         std::vector<aruco::Marker> markers;
+
         try
         {
-            options.getDetector().detect(frame, markers, options.getParameters(), 0.178f);
+            options.getDetector().detect(undistorted, markers, options.getParameters(), 0.178f);
         }
         catch (std::exception& e)
         {
@@ -35,7 +41,7 @@ namespace markers
 
         if (markers.size() > 1)
         {
-            logging::warning("[marker_detector] Found 2 markers. Only first will be used.");
+            logging::warning("[marker_detector] Found more then 1 marker. Only first will be used.");
         }
 
         auto& marker = markers.front();
@@ -51,7 +57,8 @@ namespace markers
         glModelView.convertTo(glModelView, CV_32F);
 
         cv::Mat glProjection(4, 4, CV_64F);
-        options.getParameters().glGetProjectionMatrix(frame.size(), frame.size(), &glProjection.at<double>(0), 0.1, 100);
+        options.getParameters().glGetProjectionMatrix(frame.size(), frame.size(), &glProjection.at<double>(0),
+            options.getNearDistance(), options.getFarDistance());
         glProjection.convertTo(glProjection, CV_32F);
 
         return DetectResult{ glModelView, glProjection };

@@ -11,6 +11,7 @@ namespace
 namespace markers
 {
     MarkerRecognitionOptions::MarkerRecognitionOptions(const cv::String& pathToOptions, const cv::Size& frameSize)
+        : m_frameSize(frameSize)
     {
         cv::FileStorage storage(pathToOptions, cv::FileStorage::READ);
 

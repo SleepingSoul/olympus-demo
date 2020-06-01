@@ -2,7 +2,7 @@
 
 #include <MarkerOptions.h>
 #include <marker_detector.h>
-#include <StreamDecoder.h>
+#include <stream_decoder.h>
 
 #include <Job.h>
 

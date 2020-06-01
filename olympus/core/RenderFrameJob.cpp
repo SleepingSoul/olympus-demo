@@ -31,13 +31,29 @@ void RenderFrameJob::execute()
     {
         const auto lastFrame = listener.getLatestFrame();
 
-        cv::flip(lastFrame, lastFrame, 0);
+        const auto& camera = m_params.renderer->getCamera();
 
-        if (!lastFrame.empty())
+        EASY_BLOCK("Undistort + flip", profiler::colors::Red50);
+
+        const auto cameraMatrix = camera.getCameraMatrix();
+        const auto distortionMatrix = camera.getDistortionMatrix();
+
+        cv::Mat distorted = lastFrame.clone();
+
+        if (!cameraMatrix.empty() && !distortionMatrix.empty())
         {
-            const auto size = lastFrame.size();
+            cv::undistort(lastFrame, distorted, cameraMatrix, distortionMatrix);
+        }
+
+        cv::flip(distorted, distorted, 0);
+
+        EASY_END_BLOCK;
+
+        if (!distorted.empty())
+        {
+            const auto size = distorted.size();
             EASY_BLOCK("Resetting the texture", profiler::colors::DarkRed);
-            m_params.backgroundTexture->hotReset(lastFrame.ptr(), size.width, size.height, GL_BGR);
+            m_params.backgroundTexture->hotReset(distorted.ptr(), size.width, size.height, GL_BGR);
             EASY_END_BLOCK;
         }
     }

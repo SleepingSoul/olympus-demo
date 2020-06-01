@@ -43,18 +43,25 @@ void BaseRecognitionSubsystem::update()
     auto& renderer = m_engine.getRenderer();
 
     Cube cube;
-    cube.edgeSize = 0.2f;
+    cube.edgeSize = 0.1f;
     cube.position = { 0, 0, 0 };
     cube.face = m_engine.getTextureStorage().getTexture(TextureID::Crate);
 
-    auto cube2 = cube;
-    cube2.position.x = 0.2f;
+    std::vector<Cube> cubes(6, cube);
 
-    renderer.getCubeRenderComponent().renderCubes(std::vector{ cube, cube2 });
+    cubes[1].position.y = 0.1f;
+    cubes[2].position.y = -0.1f;
+    cubes[3].position.z = 0.1f;
+    cubes[4].position.z = -0.1f;
+    cubes[5].position.x = 0.3f;
+
+    renderer.getCubeRenderComponent().renderCubes(std::move(cubes));
 
     std::lock_guard lg(m_mutex);
     renderer.getCamera().setARModelViewMatrix(m_detectResult.modelviewMatrix);
     renderer.getCamera().setARProjectionMatrix(m_detectResult.projectionMatrix);
+    renderer.getCamera().setCameraMatrix(m_markerOptions.getParameters().CameraMatrix);
+    renderer.getCamera().setDistortionMatrix(m_markerOptions.getParameters().Distorsion);
 }
 
 EndNamespaceOlympus

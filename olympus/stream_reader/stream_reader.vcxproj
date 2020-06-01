@@ -156,13 +156,13 @@
   <ItemGroup>
     <ClInclude Include="marker_detector.h" />
     <ClInclude Include="MarkerOptions.h" />
-    <ClInclude Include="StreamDecoder.h" />
+    <ClInclude Include="stream_decoder.h" />
     <ClInclude Include="StreamReader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MarkerOptions.cpp" />
     <ClCompile Include="marker_detector.cpp" />
-    <ClCompile Include="StreamDecoder.cpp" />
+    <ClCompile Include="stream_decoder.cpp" />
     <ClCompile Include="StreamReader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

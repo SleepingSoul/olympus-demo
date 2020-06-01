@@ -57,13 +57,53 @@ public:
     float getZoom() const { return m_zoom; }
     void setZoom(float zoom) { m_zoom = zoom; }
 
-    void setARModelViewMatrix(const cv::Mat& matrix) { m_ARmodelView = matrix; }
+    void setARModelViewMatrix(const cv::Mat& matrix)
+    {
+        std::lock_guard lg(m_modelViewMutex);
+        m_ARmodelView = matrix;
+    }
 
-    cv::Mat getARModelViewMatrix() const { return m_ARmodelView.clone(); }
+    cv::Mat getARModelViewMatrix() const
+    {
+        std::lock_guard lg(m_modelViewMutex);
+        return m_ARmodelView.clone();
+    }
 
-    void setARProjectionMatrix(const cv::Mat& matrix) { m_ARprojection = matrix; }
+    void setARProjectionMatrix(const cv::Mat& matrix)
+    {
+        std::lock_guard lg(m_projectionMutex);
+        m_ARprojection = matrix;
+    }
 
-    cv::Mat getARProjectionMatrix() const { return m_ARprojection.clone(); }
+    cv::Mat getARProjectionMatrix() const
+    {
+        std::lock_guard lg(m_projectionMutex);
+        return m_ARprojection.clone();
+    }
+
+    void setDistortionMatrix(const cv::Mat& distortion)
+    {
+        std::lock_guard lg(m_distortionMutex);
+        m_distortionMatrix = distortion;
+    }
+
+    cv::Mat getDistortionMatrix() const
+    {
+        std::lock_guard lg(m_distortionMutex);
+        return m_distortionMatrix.clone();
+    }
+
+    void setCameraMatrix(const cv::Mat& camera)
+    {
+        std::lock_guard lg(m_cameraMutex);
+        m_cameraMatrix = camera;
+    }
+
+    cv::Mat getCameraMatrix() const
+    {
+        std::lock_guard lg(m_cameraMutex);
+        return m_cameraMatrix.clone();
+    }
 
     glm::mat4 getViewMatrix() const
     {
@@ -143,8 +183,15 @@ private:
     float m_mouseSensitivity{ 0.1f };
     float m_zoom{ 45.f };
 
+    mutable std::mutex m_modelViewMutex;
+    mutable std::mutex m_projectionMutex;
+    mutable std::mutex m_distortionMutex;
+    mutable std::mutex m_cameraMutex;
+
     cv::Mat m_ARmodelView;
     cv::Mat m_ARprojection;
+    cv::Mat m_distortionMatrix;
+    cv::Mat m_cameraMatrix;
 };
 
 EndNamespaceOlympus

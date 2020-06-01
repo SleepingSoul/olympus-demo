@@ -7,7 +7,7 @@
 
 #include <utils/macros.h>
 
-#include <StreamDecoder.h>
+#include <stream_decoder.h>
 
 BeginNamespaceOlympus
 
