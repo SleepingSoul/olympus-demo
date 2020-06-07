@@ -18,7 +18,7 @@ RecognizeBaseJob::RecognizeBaseJob(cv::Mat&& frame, markers::MarkerRecognitionOp
 
 void RecognizeBaseJob::execute()
 {
-    m_outputFunctor(markers::detectMarker(m_options, m_frame));
+    m_outputFunctor(markers::detectMarkers(m_options, m_frame));
 }
 
 EndNamespaceOlympus

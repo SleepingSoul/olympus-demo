@@ -21,7 +21,7 @@ private:
     AsyncVideostreamListener::FrameID m_lastFrameID{ 0 };
 
     std::mutex m_mutex;
-    markers::DetectResult m_detectResult;
+    std::vector<markers::DetectResult> m_detectResult;
 
     markers::MarkerRecognitionOptions m_markerOptions;
 

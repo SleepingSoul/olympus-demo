@@ -4,6 +4,7 @@
 
 #include <OpenGLGLFWContext.h>
 #include <OpenGLRenderer.h>
+#include <marker_detector.h>
 #include <TextureStorage.h>
 #include <JobSystem.h>
 #include <AsyncVideostreamListener.h>
@@ -31,10 +32,15 @@ public:
 
     double getTimeFromStart() const;
 
+    void setMarkers(std::vector<markers::DetectResult>&& markers) { m_markers = std::move(markers); }
+    const auto& getMarkers() const { return m_markers; }
+
     int run();
 
 private:
     std::vector<std::unique_ptr<EngineSubsystem>> m_subsystems;
+
+    std::vector<markers::DetectResult> m_markers;
 
     void registerCallbacksAndDebugText();
 

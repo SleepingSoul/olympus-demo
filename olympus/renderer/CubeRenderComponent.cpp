@@ -117,78 +117,70 @@ void CubeRenderComponent::render(const Camera& camera)
 {
     EASY_FUNCTION(profiler::colors::Red);
 
-    const auto modelView = camera.getARModelViewMatrix();
-    const auto projection = camera.getARProjectionMatrix();
-
-    if (modelView.size() != cv::Size(4, 4) || modelView.type() != CV_32F || projection.size() != cv::Size(4, 4) || projection.type() != CV_32F)
-    {
-        logging::warning("[CubeRendererComponent] Cannot perform render operation because input parameters are invalid.");
-        return;
-    }
+    glBindVertexArray(m_vertexArrayID);
+    glEnable(GL_DEPTH_TEST);
 
     auto& shader = m_debugMode ? m_debugShader : m_shader;
 
     shader.use();
-
-    shader.setMatrix4f(View, &modelView.at<float>(0));
 
     std::array<GLint, 4> viewport;
     glGetIntegerv(GL_VIEWPORT, viewport.data());
     const auto viewportWidth = viewport[2];
     const auto viewportHeight = viewport[3];
 
-    //auto projection = glm::perspectiveFov(
-    //    glm::radians(51.f),
-    //    static_cast<float>(viewportWidth),
-    //    static_cast<float>(viewportHeight),
-    //    0.1f,
-    //    10.f);
-
-    //auto projection = glm::identity<glm::mat4>();
-
-    //const auto projection = glm::ortho(-1.f, 1.f, -1.f, 1.f, 0.f, 100.f);
-
-    shader.setMatrix4f(Projection, &projection.at<float>(0));
-
-    glBindVertexArray(m_vertexArrayID);
-
-    glEnable(GL_DEPTH_TEST);
-
-    for (const Cube& cube : m_cubes.backBuffer())
+    for (const auto& cubeWorld : m_cubeWorlds.backBuffer())
     {
-        auto model = glm::identity<glm::mat4>();
-        model = glm::translate(model, cube.position);
-        model = glm::rotate(model, cube.rotationValueRad, cube.rotationAxis);
-        model = glm::scale(model, glm::vec3(cube.edgeSize));
+        const auto& modelView = cubeWorld.modelViewMatrix;
+        const auto& projection = cubeWorld.projectionMatrix;
+        const auto& cubes = cubeWorld.cubes;
 
-        shader.setMatrix4f(Model, glm::value_ptr(model));
-
-        if (m_debugMode)
+        if (modelView.size() != cv::Size(4, 4) || modelView.type() != CV_32F || projection.size() != cv::Size(4, 4) || projection.type() != CV_32F)
         {
-            shader.setVec4f(Color, DebugColor);
-
-            for (GLuint i = 0; i < NumVertices; i += 3)
-            {
-                glDrawArrays(GL_LINE_LOOP, i, 3);
-            }
-
-            glPointSize(5.f);
-            glDrawArrays(GL_POINTS, 0, NumVertices);
+            logging::warning("[CubeRendererComponent] Cannot perform render operation because input parameters are invalid.");
+            return;
         }
-        else
+
+        shader.setMatrix4f(View, &modelView.at<float>(0));
+
+        shader.setMatrix4f(Projection, &projection.at<float>(0));
+
+        for (const Cube& cube : cubes)
         {
-            if (!cube.face)
+            auto model = glm::identity<glm::mat4>();
+            model = glm::translate(model, cube.position);
+            model = glm::rotate(model, cube.rotationValueRad, cube.rotationAxis);
+            model = glm::scale(model, glm::vec3(cube.edgeSize));
+
+            shader.setMatrix4f(Model, glm::value_ptr(model));
+
+            if (m_debugMode)
             {
-                logging::warning("[CubeRenderComponent] No face specified for cube. Render skipped.");
-                continue;
+                shader.setVec4f(Color, DebugColor);
+
+                for (GLuint i = 0; i < NumVertices; i += 3)
+                {
+                    glDrawArrays(GL_LINE_LOOP, i, 3);
+                }
+
+                glPointSize(5.f);
+                glDrawArrays(GL_POINTS, 0, NumVertices);
             }
+            else
+            {
+                if (!cube.face)
+                {
+                    logging::warning("[CubeRenderComponent] No face specified for cube. Render skipped.");
+                    continue;
+                }
 
-            glActiveTexture(GL_TEXTURE0);
-            shader.setInt(TextureName, 0);
-            
-            glBindTexture(GL_TEXTURE_2D, cube.face->getID());
+                glActiveTexture(GL_TEXTURE0);
+                shader.setInt(TextureName, 0);
 
-            glDrawArrays(GL_TRIANGLES, 0, 36);
+                glBindTexture(GL_TEXTURE_2D, cube.face->getID());
+
+                glDrawArrays(GL_TRIANGLES, 0, 36);
+            }
         }
     }
 

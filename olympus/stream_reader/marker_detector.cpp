@@ -14,10 +14,11 @@ BeginNamespaceOlympus
 
 namespace markers
 {
-    std::optional<DetectResult> detectMarker(MarkerRecognitionOptions& options, cv::Mat frame)
+    std::vector<DetectResult> detectMarkers(MarkerRecognitionOptions& options, cv::Mat frame)
     {
         EASY_FUNCTION(profiler::colors::DarkGreen);
 
+        std::vector<DetectResult> result;
         std::vector<aruco::Marker> markers;
 
         try
@@ -27,37 +28,32 @@ namespace markers
         catch (std::exception& e)
         {
             olyError("[marker_detector] Exception on detect: {}", e.what());
-            return std::nullopt;
+            return result;
         }
-        
-        if (markers.empty())
+
+        for (auto& marker : markers)
         {
-            return std::nullopt;
+            EASY_BLOCK("Marker gl transformations", profiler::colors::Green900);
+
+            if (!marker.isPoseValid())
+            {
+                logging::info("[marker_detector] Pose not valid.");
+                continue;
+            }
+
+            cv::Mat glModelView(4, 4, CV_64F);
+            marker.glGetModelViewMatrix(&glModelView.at<double>(0));
+            glModelView.convertTo(glModelView, CV_32F);
+
+            cv::Mat glProjection(4, 4, CV_64F);
+            options.getParameters().glGetProjectionMatrix(frame.size(), frame.size(), &glProjection.at<double>(0),
+                options.getNearDistance(), options.getFarDistance());
+            glProjection.convertTo(glProjection, CV_32F);
+
+            result.emplace_back(DetectResult{ marker.id, glModelView, glProjection });
         }
 
-        if (markers.size() > 1)
-        {
-            logging::warning("[marker_detector] Found more then 1 marker. Only first will be used.");
-        }
-
-        auto& marker = markers.front();
-
-        if (!marker.isPoseValid())
-        {
-            logging::info("[marker_detector] Pose not valid.");
-            return std::nullopt;
-        }
-
-        cv::Mat glModelView(4, 4, CV_64F);
-        marker.glGetModelViewMatrix(&glModelView.at<double>(0));
-        glModelView.convertTo(glModelView, CV_32F);
-
-        cv::Mat glProjection(4, 4, CV_64F);
-        options.getParameters().glGetProjectionMatrix(frame.size(), frame.size(), &glProjection.at<double>(0),
-            options.getNearDistance(), options.getFarDistance());
-        glProjection.convertTo(glProjection, CV_32F);
-
-        return DetectResult{ glModelView, glProjection };
+        return result;
     }
 }
 

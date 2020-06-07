@@ -12,7 +12,7 @@ class RecognizeBaseJob : public Job
 {
 public:
     using Base = Job;
-    using ThreadSafeOutputFunctor = std::function<void(std::optional<markers::DetectResult>&&)>;
+    using ThreadSafeOutputFunctor = std::function<void(std::vector<markers::DetectResult>&&)>;
 
     RecognizeBaseJob(cv::Mat&& frame, markers::MarkerRecognitionOptions& options, ThreadSafeOutputFunctor outputFunctor);
 

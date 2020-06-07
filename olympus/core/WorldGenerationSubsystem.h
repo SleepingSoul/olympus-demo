@@ -1,5 +1,7 @@
 #pragma once
 
+#include <OpenGLRenderer.h>
+
 #include <EngineSubsystem.h>
 
 BeginNamespaceOlympus
@@ -12,6 +14,10 @@ public:
     WorldGenerationSubsystem(EngineImpl& engine);
 
     void update() override;
+
+private:
+    std::vector<Cube> m_world;
+    std::vector<float> m_heightMap;
 };
 
 EndNamespaceOlympus

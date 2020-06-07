@@ -10,3 +10,6 @@
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/microsoft/vcpkg
+[submodule "olympus/common/external/PerlinNoise"]
+	path = olympus/common/external/PerlinNoise
+	url = https://github.com/Reputeless/PerlinNoise

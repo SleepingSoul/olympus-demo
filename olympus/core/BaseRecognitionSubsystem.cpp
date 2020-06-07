@@ -37,7 +37,7 @@ void BaseRecognitionSubsystem::update()
     {
         m_lastFrameID = latestFrameID;
         m_isRecognizing.store(true);
-        jobSystem.addJob(std::make_unique<RecognizeBaseJob>(listener.getLatestFrame(), m_markerOptions, [this](std::optional<markers::DetectResult>&& result)
+        jobSystem.addJob(std::make_unique<RecognizeBaseJob>(listener.getLatestFrame(), m_markerOptions, [this](std::vector<markers::DetectResult>&& result)
         {
             std::lock_guard lg(m_mutex);
 
@@ -46,23 +46,17 @@ void BaseRecognitionSubsystem::update()
 
             m_normalizedFPS.store(std::accumulate(m_latestFPS.begin(), m_latestFPS.end(), 0u) / static_cast<unsigned>(m_latestFPS.size()));
 
-            if (result)
-            {
-                m_detectResult = std::move(*result);
-            }
+            m_detectResult = std::move(result);
 
             m_isRecognizing.store(false);
         }));
     }
 
-    auto& windowContext = m_engine.getWindowContext();
-    auto& renderer = m_engine.getRenderer();
-
     std::lock_guard lg(m_mutex);
-    renderer.getCamera().setARModelViewMatrix(m_detectResult.modelviewMatrix);
-    renderer.getCamera().setARProjectionMatrix(m_detectResult.projectionMatrix);
-    renderer.getCamera().setCameraMatrix(m_markerOptions.getParameters().CameraMatrix);
-    renderer.getCamera().setDistortionMatrix(m_markerOptions.getParameters().Distorsion);
+    if (!m_detectResult.empty())
+    {
+        m_engine.setMarkers(std::move(m_detectResult));
+    }
 }
 
 EndNamespaceOlympus

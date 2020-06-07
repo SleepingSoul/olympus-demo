@@ -1,6 +1,6 @@
 #pragma once
 
-#include <optional>
+#include <vector>
 
 #include <utils/macros.h>
 
@@ -12,11 +12,14 @@ namespace markers
 {
     struct DetectResult
     {
+        using MarkerID = int;
+
+        MarkerID markerID;
         cv::Mat modelviewMatrix;
         cv::Mat projectionMatrix;
     };
 
-    std::optional<DetectResult> detectMarker(MarkerRecognitionOptions& options, cv::Mat frame);
+    std::vector<DetectResult> detectMarkers(MarkerRecognitionOptions& options, cv::Mat frame);
 }
 
 EndNamespaceOlympus
