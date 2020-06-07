@@ -39,21 +39,11 @@ void EngineImpl::initialize()
     initGLFWContext();
     EASY_END_BLOCK;
 
-    m_listener.start();
-
     m_openGLGLFWContext->setThreadContext(true);
 
     m_openGLRenderer = std::make_shared<OpenGLRenderer>();
 
-    m_openGLGLFWContext->addKeyboardPressCallback(GLFW_KEY_F2, [this]
-    {
-        m_isDebugMode = !m_isDebugMode;
-    });
-
-    m_openGLGLFWContext->addImGuiDebugOutputFunctor([this]
-    {
-        ImGui::Text("Camera FPS: %u", m_listener.getStreamFPS());
-    });
+    registerCallbacksAndDebugText();
 
     EASY_BLOCK("Textures preload");
     m_texStorage.preloadAllTextures();
@@ -73,6 +63,8 @@ double EngineImpl::getTimeFromStart() const
 
 int EngineImpl::run()
 {
+    m_listener.start();
+
     std::future<void> renderFinishedFuture;
 
     while (m_openGLGLFWContext->windowShoudNotClose())
@@ -124,6 +116,36 @@ int EngineImpl::run()
     }
 
     return 0;
+}
+
+void EngineImpl::registerCallbacksAndDebugText()
+{
+    m_openGLGLFWContext->addKeyboardPressCallback(GLFW_KEY_F2, [this]
+    {
+        m_isDebugMode = !m_isDebugMode;
+    });
+
+    m_openGLGLFWContext->addKeyboardPressCallback(GLFW_KEY_F3, [this]
+    {
+        m_listener.setUndistortFrame(!m_listener.getUnfistortFrame());
+    });
+
+    m_openGLGLFWContext->addImGuiDebugOutputFunctor([this]
+    {
+        ImGui::Text("Camera FPS: %u", m_listener.getStreamFPS());
+    });
+
+    m_openGLGLFWContext->addImGuiDebugOutputFunctor([this]
+    {
+        ImGui::Text("Lens undistortion: %s", m_listener.getUnfistortFrame() ? "on" : "off");
+    });
+
+    m_openGLGLFWContext->addImGuiDebugOutputFunctor([this]
+    {
+        ImGui::Text("[F1] - toggle this debug menu;");
+        ImGui::Text("[F2] - toggle engine debug mode;");
+        ImGui::Text("[F3] - on/off lens undistortion");
+    });
 }
 
 void EngineImpl::initGLFWContext()

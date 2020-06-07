@@ -14,12 +14,15 @@ public:
     using Base = Job;
     using ThreadSafeOutputFunctor = std::function<void(cv::Mat&&)>;
 
-    DecodeFrameJob(stream_decoder::Buffer&& frame, ThreadSafeOutputFunctor outputFunctor);
+    DecodeFrameJob(stream_decoder::Buffer&& frame, cv::Mat&& cameraMatrix, cv::Mat&& distortionMatrix, ThreadSafeOutputFunctor outputFunctor);
 
     void execute() override;
 
 private:
     stream_decoder::Buffer m_frame;
+
+    cv::Mat m_cameraMatrix;
+    cv::Mat m_distortionMatrix;
 
     ThreadSafeOutputFunctor m_outputFunctor;
 };

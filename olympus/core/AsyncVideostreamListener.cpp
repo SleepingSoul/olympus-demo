@@ -2,6 +2,7 @@
 #include "AsyncVideostreamListener.h"
 
 #include <stream_decoder.h>
+#include <OpenGLRenderer.h>
 
 #include <Engine.h>
 #include <JobSystem.h>
@@ -84,8 +85,7 @@ unsigned AsyncVideostreamListener::getStreamFPS() const
 void AsyncVideostreamListener::updateStreamFPS()
 {
     const auto currentTime = olyEngine.getTimeFromStart();
-    m_streamFPS.push_back(static_cast<unsigned>(1. / (currentTime - m_lastTimeStamp)));
-    m_lastTimeStamp = currentTime;
+    m_streamFPS.push_back(static_cast<unsigned>(1. / (currentTime - std::exchange(m_lastTimeStamp, currentTime))));
 
     m_normalizedStreamFPS.store(std::accumulate(m_streamFPS.begin(), m_streamFPS.end(), 0u) / static_cast<unsigned>(m_streamFPS.size()));
 }
@@ -94,7 +94,18 @@ void AsyncVideostreamListener::onFrameReady(Buffer&& frame)
 {
     updateStreamFPS();
 
-    auto decodeFrameJob = std::make_unique<DecodeFrameJob>(std::move(frame), [this](cv::Mat&& result)
+    cv::Mat cameraMatrix, distortionMatrix;
+
+    if (m_undistortFrame)
+    {
+        const auto& camera = olyEngine.getRenderer().getCamera();
+
+        cameraMatrix = camera.getCameraMatrix();
+        distortionMatrix = camera.getDistortionMatrix();
+    }
+
+    auto decodeFrameJob = std::make_unique<DecodeFrameJob>(std::move(frame), std::move(cameraMatrix), std::move(distortionMatrix),
+        [this](cv::Mat&& result)
     {
         std::lock_guard lg(m_mutex);
         m_latestFrame = std::move(result);

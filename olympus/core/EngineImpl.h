@@ -36,6 +36,8 @@ public:
 private:
     std::vector<std::unique_ptr<EngineSubsystem>> m_subsystems;
 
+    void registerCallbacksAndDebugText();
+
     void initGLFWContext();
     [[nodiscard]] std::future<void> prepeareAndSendRenderFrameJob();
 

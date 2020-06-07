@@ -36,6 +36,11 @@ OpenGLGLFWContext& Engine::getWindowContext()
     return m_impl->getWindowContext();
 }
 
+OpenGLRenderer& Engine::getRenderer()
+{
+    return m_impl->getRenderer();
+}
+
 double Engine::getTimeFromStart() const
 {
     return m_impl->getTimeFromStart();

@@ -42,7 +42,7 @@ void RenderFrameJob::execute()
 
         if (!cameraMatrix.empty() && !distortionMatrix.empty())
         {
-            cv::undistort(lastFrame, distorted, cameraMatrix, distortionMatrix);
+            //cv::undistort(lastFrame, distorted, cameraMatrix, distortionMatrix);
         }
 
         cv::flip(distorted, distorted, 0);

@@ -27,6 +27,9 @@ public:
 
     unsigned getStreamFPS() const;
 
+    bool getUnfistortFrame() const { return m_undistortFrame; }
+    void setUndistortFrame(bool shouldUndistort) { m_undistortFrame = shouldUndistort; }
+
 private:
     void updateStreamFPS();
 
@@ -45,6 +48,8 @@ private:
     boost::circular_buffer<unsigned> m_streamFPS;
     std::atomic_uint m_normalizedStreamFPS{ 0u };
     double m_lastTimeStamp{ 0. };
+
+    bool m_undistortFrame{ false };
 };
 
 EndNamespaceOlympus

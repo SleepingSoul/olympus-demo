@@ -2,6 +2,7 @@
 #include"BaseRecognitionSubsystem.h"
 
 #include <opencv2/opencv.hpp>
+#include <imgui/imgui.h>
 
 #include <managers/CommandLineManager.h>
 
@@ -13,7 +14,13 @@ BaseRecognitionSubsystem::BaseRecognitionSubsystem(EngineImpl& engine)
     : Base(engine)
     , m_markerOptions("data/calibration3.yml",
         cv::Size(*olyCommandLineManager.getLong(CommandLineOptions::Width), *olyCommandLineManager.getLong(CommandLineOptions::Height)))
-{}
+    , m_latestFPS(60)
+{
+    engine.getWindowContext().addImGuiDebugOutputFunctor([this]
+    {
+        ImGui::Text("Computer vision FPS: %u", m_normalizedFPS.load());
+    });
+}
 
 void BaseRecognitionSubsystem::update()
 {
@@ -29,6 +36,11 @@ void BaseRecognitionSubsystem::update()
         jobSystem.addJob(std::make_unique<RecognizeBaseJob>(listener.getLatestFrame(), m_markerOptions, [this](std::optional <markers::DetectResult>&& result)
         {
             std::lock_guard lg(m_mutex);
+
+            const double currentTime = m_engine.getTimeFromStart();
+            m_latestFPS.push_back(static_cast<unsigned>(1. / (currentTime - std::exchange(m_lastTimestamp, currentTime))));
+
+            m_normalizedFPS.store(std::accumulate(m_latestFPS.begin(), m_latestFPS.end(), 0u) / static_cast<unsigned>(m_latestFPS.size()));
 
             if (result)
             {
@@ -49,11 +61,11 @@ void BaseRecognitionSubsystem::update()
 
     std::vector<Cube> cubes(6, cube);
 
-    cubes[1].position.y = 0.1f;
-    cubes[2].position.y = -0.1f;
-    cubes[3].position.z = 0.1f;
-    cubes[4].position.z = -0.1f;
-    cubes[5].position.x = 0.3f;
+    cubes[1].position.x = 0.1f;
+    cubes[2].position.x = -0.1f;
+    cubes[3].position.y = 0.1f;
+    cubes[4].position.y = -0.1f;
+    cubes[5].position.x = 0.2f;
 
     renderer.getCubeRenderComponent().renderCubes(std::move(cubes));
 

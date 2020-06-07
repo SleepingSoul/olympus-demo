@@ -18,15 +18,11 @@ namespace markers
     {
         EASY_FUNCTION(profiler::colors::DarkGreen);
 
-        cv::Mat undistorted;
-
-        cv::undistort(frame, undistorted, options.getParameters().CameraMatrix, options.getParameters().Distorsion);
-
         std::vector<aruco::Marker> markers;
 
         try
         {
-            options.getDetector().detect(undistorted, markers, options.getParameters(), 0.178f);
+            options.getDetector().detect(frame, markers, options.getParameters(), 0.178f);
         }
         catch (std::exception& e)
         {
