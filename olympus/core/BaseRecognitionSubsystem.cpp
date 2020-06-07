@@ -29,11 +29,15 @@ void BaseRecognitionSubsystem::update()
     auto& listener = m_engine.getAsyncVideostreamListener();
     auto& jobSystem = m_engine.getJobSystem();
 
-    if (const auto latestFrameID = listener.getLatestFrameID(); !m_isRecognizing.load() && latestFrameID != m_lastFrameID)
+    const auto latestFrameID = listener.getLatestFrameID();
+
+    const bool shouldStartRecognitionJob = !m_isRecognizing.load() && latestFrameID != m_lastFrameID;
+
+    if (shouldStartRecognitionJob)
     {
         m_lastFrameID = latestFrameID;
         m_isRecognizing.store(true);
-        jobSystem.addJob(std::make_unique<RecognizeBaseJob>(listener.getLatestFrame(), m_markerOptions, [this](std::optional <markers::DetectResult>&& result)
+        jobSystem.addJob(std::make_unique<RecognizeBaseJob>(listener.getLatestFrame(), m_markerOptions, [this](std::optional<markers::DetectResult>&& result)
         {
             std::lock_guard lg(m_mutex);
 
@@ -53,21 +57,6 @@ void BaseRecognitionSubsystem::update()
 
     auto& windowContext = m_engine.getWindowContext();
     auto& renderer = m_engine.getRenderer();
-
-    Cube cube;
-    cube.edgeSize = 0.1f;
-    cube.position = { 0, 0, 0 };
-    cube.face = m_engine.getTextureStorage().getTexture(TextureID::Crate);
-
-    std::vector<Cube> cubes(6, cube);
-
-    cubes[1].position.x = 0.1f;
-    cubes[2].position.x = -0.1f;
-    cubes[3].position.y = 0.1f;
-    cubes[4].position.y = -0.1f;
-    cubes[5].position.x = 0.2f;
-
-    renderer.getCubeRenderComponent().renderCubes(std::move(cubes));
 
     std::lock_guard lg(m_mutex);
     renderer.getCamera().setARModelViewMatrix(m_detectResult.modelviewMatrix);

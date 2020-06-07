@@ -72,6 +72,9 @@
     <ClCompile Include="BaseRecognitionSubsystem.cpp">
       <Filter>Source Files\Subsystem</Filter>
     </ClCompile>
+    <ClCompile Include="WorldGenerationSubsystem.cpp">
+      <Filter>Source Files\Subsystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -120,6 +123,9 @@
       <Filter>Header Files\Subsystem</Filter>
     </ClInclude>
     <ClInclude Include="BaseRecognitionSubsystem.h">
+      <Filter>Header Files\Subsystem</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldGenerationSubsystem.h">
       <Filter>Header Files\Subsystem</Filter>
     </ClInclude>
   </ItemGroup>

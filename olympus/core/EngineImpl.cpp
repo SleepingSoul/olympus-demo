@@ -8,7 +8,9 @@
 #include <DelegateJob.h>
 #include <RenderFrameJob.h>
 #include <RecognizeBaseJob.h>
+
 #include <BaseRecognitionSubsystem.h>
+#include <WorldGenerationSubsystem.h>
 
 BeginNamespaceOlympus
 
@@ -52,6 +54,7 @@ void EngineImpl::initialize()
     m_openGLGLFWContext->setThreadContext(false);
 
     m_subsystems.emplace_back(std::make_unique<BaseRecognitionSubsystem>(*this));
+    m_subsystems.emplace_back(std::make_unique<WorldGenerationSubsystem>(*this));
 
     m_successfulInitialization = true;
 }

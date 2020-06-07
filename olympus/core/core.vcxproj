@@ -187,6 +187,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     </ClCompile>
     <ClCompile Include="RecognizeBaseJob.cpp" />
     <ClCompile Include="RenderFrameJob.cpp" />
+    <ClCompile Include="WorldGenerationSubsystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AsyncVideostreamListener.h" />
@@ -205,6 +206,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     <ClInclude Include="pch.h" />
     <ClInclude Include="RecognizeBaseJob.h" />
     <ClInclude Include="RenderFrameJob.h" />
+    <ClInclude Include="WorldGenerationSubsystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
