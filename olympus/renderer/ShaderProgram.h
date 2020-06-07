@@ -52,6 +52,11 @@ public:
         glUniform2i(glGetUniformLocation(m_ID, name.data()), value.x, value.y);
     }
 
+    void setVec3f(const std::string_view& name, const glm::vec3& value)
+    {
+        glUniform3f(glGetUniformLocation(m_ID, name.data()), value.x, value.y, value.z);
+    }
+
     void setVec4f(const std::string_view& name, const glm::vec4& value)
     {
         glUniform4f(glGetUniformLocation(m_ID, name.data()), value.r, value.g, value.b, value.a);

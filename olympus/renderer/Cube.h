@@ -18,6 +18,8 @@ struct Cube
     float edgeSize{ 1.f };
 
     Texture* face{ nullptr };
+
+    glm::vec3 diffuse{ 1.f, 1.f, 1.f };
 };
 
 EndNamespaceOlympus

@@ -11,6 +11,7 @@ namespace oly
     {
           Crate = 0
         , NoSignal
+        , Water
     };
 }
 

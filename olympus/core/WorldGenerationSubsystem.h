@@ -16,8 +16,7 @@ public:
     void update() override;
 
 private:
-    std::vector<Cube> m_world;
-    std::vector<float> m_heightMap;
+    std::vector<Cube> generateWorld(std::uint32_t seed);
 };
 
 EndNamespaceOlympus
