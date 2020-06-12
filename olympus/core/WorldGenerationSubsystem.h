@@ -16,7 +16,7 @@ public:
     void update() override;
 
 private:
-    std::vector<Cube> generateWorld(std::uint32_t seed);
+    std::vector<Cube> generateWorld(std::uint32_t seed, const glm::vec3& eyePosition);
 };
 
 EndNamespaceOlympus

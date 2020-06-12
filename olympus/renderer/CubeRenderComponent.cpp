@@ -122,7 +122,10 @@ void CubeRenderComponent::render(const Camera& camera)
     EASY_FUNCTION(profiler::colors::Red);
 
     glBindVertexArray(m_vertexArrayID);
+
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     auto& shader = m_debugMode ? m_debugShader : m_shader;
 
@@ -193,6 +196,7 @@ void CubeRenderComponent::render(const Camera& camera)
     }
 
     glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
 
     shader.unuse();
 

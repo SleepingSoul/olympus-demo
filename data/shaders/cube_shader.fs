@@ -11,6 +11,13 @@ uniform vec3 diffuse;
 
 void main()
 {
+	vec4 texColor = texture(faceTexture, TexCoord);
+
+	if (texColor.a < 0.1)
+	{
+        discard;
+	}
+
 	vec3 lightColor = vec3(1.0, 0.9, 0.9);
 	float ambientStrength = 0.5;
 	vec3 ambient = ambientStrength * lightColor;
@@ -21,5 +28,5 @@ void main()
 	float diff = max(dot(norm, lightDir), 0.0);
 	vec3 diffusePart = diffuse * diff * lightColor;
 
-	FragColor = vec4(ambient + diffusePart, 1.0) * texture(faceTexture, TexCoord);
+	FragColor = vec4(ambient + diffusePart, 1.0) * texColor;
 }

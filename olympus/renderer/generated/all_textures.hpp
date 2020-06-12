@@ -9,9 +9,11 @@ namespace oly
 {
     enum class TextureID : unsigned
     {
-          Crate = 0
+          Cloud = 0
+        , Crate
         , NoSignal
         , Water
+        , WaterTransparent
     };
 }
 
