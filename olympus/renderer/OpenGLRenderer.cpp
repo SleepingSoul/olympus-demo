@@ -18,7 +18,7 @@ extern "C"
 {
     // Request high performance graphics (discrete GPU) on Laptops with AMD and Nvidia GPUs
 
-    __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x0000'0001;
+    //__declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x0000'0001;
     __declspec(dllexport) DWORD NvOptimusEnablement = 0x0000'0001;
 }
 

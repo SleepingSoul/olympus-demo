@@ -12,7 +12,7 @@ EngineSubsystem::EngineSubsystem(EngineImpl& engine)
 
 void EngineSubsystem::update()
 {
-    if (!threading::isMainThread)
+    if (!threading::isMainThread())
     {
         olyError("[EngineSubsystem] Subsystem is being updated from the wrong thread.");
     }

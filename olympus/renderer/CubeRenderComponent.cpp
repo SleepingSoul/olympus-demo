@@ -1,6 +1,7 @@
 #include "CubeRenderComponent.h"
 
 #include <unordered_set>
+#include <numeric>
 
 #include <easy/profiler.h>
 #include <easy/arbitrary_value.h>
@@ -129,6 +130,8 @@ CubeRenderComponent::~CubeRenderComponent()
 
 void CubeRenderComponent::render(const Camera& camera)
 {
+    // TODO: refactor this function, looks very spaghetti-like... but still works
+
     EASY_FUNCTION(profiler::colors::Red);
 
     glBindVertexArray(m_vertexArrayID);
@@ -146,6 +149,12 @@ void CubeRenderComponent::render(const Camera& camera)
     glGetIntegerv(GL_VIEWPORT, viewport.data());
     const auto viewportWidth = viewport[2];
     const auto viewportHeight = viewport[3];
+
+    EASY_VALUE("All frame cubes", std::accumulate(m_cubeWorlds.backBuffer().cbegin(), m_cubeWorlds.backBuffer().cend(), size_t(0),
+        [](const size_t sum, const CubeWorld& world)
+        {
+            return sum + world.cubes.size();
+        }));
 
     for (auto& cubeWorld : m_cubeWorlds.backBuffer())
     {

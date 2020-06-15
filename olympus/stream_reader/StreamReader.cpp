@@ -101,6 +101,28 @@ void StreamReader::readStream()
 
     m_stopToken.store(false);
 
+#ifdef OLY_BENCHMARK
+    {
+        auto staticFrame = cv::imread("data/benchmark/bench_photo.jpg");
+        std::vector<unsigned char> buff;
+        cv::imencode(".jpg", staticFrame, buff);
+
+        std::vector<char> result(buff.cbegin(), buff.cend());
+
+        while (!m_stopToken.load())
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(30)); // ~30 fps
+
+            if (m_clientData.onFrameReady)
+            {
+                m_clientData.onFrameReady(std::vector<char>(buff.cbegin(), buff.cend()));
+            }
+        }
+
+        return;
+    }
+#else
+
     const auto streamURL = olyCommandLineManager.getString(CommandLineOptions::StreamURL);
     const auto credentials = olyCommandLineManager.getString(CommandLineOptions::StreamCredentials);
 
@@ -156,6 +178,7 @@ void StreamReader::readStream()
     {
         olyError("[StreamReader] URL stream read operation ended with error. Code: {}", result);
     }
+#endif
 }
 
 void StreamReader::setOnFrameReady(OnFrameReadyCallback callback)
