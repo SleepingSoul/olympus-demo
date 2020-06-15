@@ -43,6 +43,23 @@ ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath, cons
     glDeleteShader(fragmentID);
 }
 
+ShaderProgram::ShaderProgram(const InitParameters& initParams)
+    : ShaderProgram(initParams.vsPath, initParams.fsPath)
+{
+    glGenBuffers(1, &m_uniformBufferID);
+
+    const GLuint bindingPoint = 1;
+    const GLuint blockIndex = glGetUniformBlockIndex(m_ID, initParams.vertexUniformBlockName.data());
+    glUniformBlockBinding(m_ID, blockIndex, bindingPoint);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBufferID);
+    glBufferData(GL_UNIFORM_BUFFER, initParams.vertexUniformBlockCapacityBytes, NULL, GL_DYNAMIC_DRAW);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, m_uniformBufferID);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, 0);
+}
+
 void ShaderProgram::validateShader(GLuint ID)
 {
     GLint success = 0;

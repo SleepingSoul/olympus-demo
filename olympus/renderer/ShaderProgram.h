@@ -22,10 +22,30 @@ public:
     using ErrorInfoBuffer = std::array<char, 1024>;
 
     ShaderProgram() = default;
+
     ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath);
+
+    struct InitParameters
+    {
+        std::filesystem::path vsPath;
+        std::string vertexUniformBlockName;
+        size_t vertexUniformBlockCapacityBytes;
+        std::filesystem::path fsPath;
+    };
+
+    ShaderProgram(const InitParameters& initParams);
 
     void use() noexcept { glUseProgram(m_ID); }
     void unuse() noexcept { glUseProgram(0); }
+
+    void setVertexUniformBufferSub(size_t index, const void* data, size_t size)
+    {
+        glBindBuffer(GL_UNIFORM_BUFFER, m_uniformBufferID);
+
+        glBufferSubData(GL_UNIFORM_BUFFER, index, size, data);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, 0);
+    }
 
     void setBool(const std::string_view& name, bool value) noexcept
     {
@@ -79,6 +99,7 @@ public:
 
 private:
     GLuint m_ID{ 0 };
+    GLuint m_uniformBufferID{ 0 };
 
     std::string m_errorInfo;
 

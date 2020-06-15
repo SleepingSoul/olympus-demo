@@ -1,6 +1,9 @@
 #include "CubeRenderComponent.h"
 
+#include <unordered_set>
+
 #include <easy/profiler.h>
+#include <easy/arbitrary_value.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -64,6 +67,11 @@ namespace
 
     const size_t NumVertices = sizeof(CubeVertices) / sizeof(decltype(*CubeVertices)) / 5;
 
+    constexpr size_t MaxCubesBatch = 2000;
+    constexpr size_t UniformBufferCapacity = MaxCubesBatch * 16 * 4 + MaxCubesBatch * 4 * 4;
+    constexpr size_t ModelsOffset = 0;
+    constexpr size_t DiffusesOffset = ModelsOffset + MaxCubesBatch * 16 * 4;
+
     const char* const DebugCubeVS = "data/shaders/cube_shader_d.vs";
     const char* const DebugCubeFS = "data/shaders/cube_shader_d.fs";
 
@@ -74,15 +82,17 @@ namespace
     const char* const View = "view";
     const char* const Projection = "projection";
     const char* const Color = "color";
-    const char* const TextureName = "textureID";
-    const char* const DiffuseName = "diffuse";
+    const char* const TextureName = "faceTexture";
+    const char* const ModelsNameFormat = "models[%zu]";
+    const char* const DiffuseNameFormat = "diffuses[%zu]";
+    const char* const BatchName = "batch";
 
     const glm::vec4 DebugColor{ 0.f, 1.f, 0.f, 1.f };
 }
 
 CubeRenderComponent::CubeRenderComponent()
     : m_debugShader(DebugCubeVS, DebugCubeFS)
-    , m_shader(CubeVS, CubeFS)
+    , m_shader(ShaderProgram::InitParameters{ CubeVS, "BatchBlock", UniformBufferCapacity, CubeFS })
 {
     glGenVertexArrays(1, &m_vertexArrayID);
 
@@ -125,6 +135,7 @@ void CubeRenderComponent::render(const Camera& camera)
 
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
+    glEnable(GL_SHADER_STORAGE_BLOCK);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     auto& shader = m_debugMode ? m_debugShader : m_shader;
@@ -136,13 +147,15 @@ void CubeRenderComponent::render(const Camera& camera)
     const auto viewportWidth = viewport[2];
     const auto viewportHeight = viewport[3];
 
-    for (const auto& cubeWorld : m_cubeWorlds.backBuffer())
+    for (auto& cubeWorld : m_cubeWorlds.backBuffer())
     {
         EASY_BLOCK("Cube world render", profiler::colors::Red600);
 
+        EASY_VALUE("NumCubes", cubeWorld.cubes.size());
+
         const auto& modelView = cubeWorld.modelViewMatrix;
         const auto& projection = cubeWorld.projectionMatrix;
-        const auto& cubes = cubeWorld.cubes;
+        auto& cubes = cubeWorld.cubes;
 
         if (modelView.size() != cv::Size(4, 4) || modelView.type() != CV_32F || projection.size() != cv::Size(4, 4) || projection.type() != CV_32F)
         {
@@ -154,19 +167,98 @@ void CubeRenderComponent::render(const Camera& camera)
 
         shader.setMatrix4f(Projection, &projection.at<float>(0));
 
-        for (const Cube& cube : cubes)
+        if (!m_debugMode)
         {
-            shader.setVec3f(DiffuseName, cube.diffuse);
+            const auto removeIt = std::remove_if(cubes.begin(), cubes.end(), [](const Cube& cube) { return !cube.face; });
+            cubes.erase(removeIt, cubes.end());
 
-            auto model = glm::identity<glm::mat4>();
-            model = glm::translate(model, cube.position);
-            model = glm::rotate(model, cube.rotationValueRad, cube.rotationAxis);
-            model = glm::scale(model, glm::vec3(cube.edgeSize));
-
-            shader.setMatrix4f(Model, glm::value_ptr(model));
-
-            if (m_debugMode)
+            std::sort(cubes.begin(), cubes.end(), [](const Cube& left, const Cube& right)
             {
+                return left.face->getID() < right.face->getID();
+            });
+
+            auto batchIt = cubes.cbegin();
+            auto batchEnd = std::find_if(batchIt, cubes.cend(), [currentBatchTexID = batchIt->face->getID()](const Cube& cube)
+            {
+                return cube.face->getID() != currentBatchTexID;
+            });
+
+            if (std::distance(batchIt, batchEnd) > MaxCubesBatch)
+            {
+                batchEnd = std::next(batchIt, MaxCubesBatch);
+            }
+
+            std::vector<float> models(MaxCubesBatch * 16, 0.f);
+            std::vector<float> diffuses(MaxCubesBatch * 4, 0.f);
+
+            while (true)
+            {
+                glActiveTexture(GL_TEXTURE0);
+                glBindTexture(GL_TEXTURE_2D, batchIt->face->getID());
+                shader.setInt(TextureName, 0);
+
+                size_t index = 0;
+
+
+                EASY_BLOCK("Transfer batch data to shader", profiler::colors::RedA400);
+                for (; batchIt != batchEnd && std::distance(batchIt, batchEnd) <= MaxCubesBatch; ++batchIt)
+                {
+                    const auto& cube = *batchIt;
+
+                    std::copy(glm::value_ptr(cube.diffuse), glm::value_ptr(cube.diffuse) + 3, diffuses.begin() + index * 4);
+
+                    std::array<char, 32> buffer = { '\0' };
+
+                    auto model = glm::identity<glm::mat4>();
+                    model = glm::translate(model, cube.position);
+                    model = glm::rotate(model, cube.rotationValueRad, cube.rotationAxis);
+                    model = glm::scale(model, glm::vec3(cube.edgeSize));
+
+                    std::copy(glm::value_ptr(model), glm::value_ptr(model) + 16, models.begin() + index * 16);
+
+                    ++index;
+                }
+
+                m_shader.setInt(TextureName, 0);
+                m_shader.setVertexUniformBufferSub(ModelsOffset, models.data(), models.size() * 4);
+                m_shader.setVertexUniformBufferSub(DiffusesOffset, diffuses.data(), diffuses.size() * 4);
+
+                EASY_END_BLOCK;
+
+                EASY_BLOCK("Render batch", profiler::colors::RedA700);
+                EASY_VALUE("Batch size", index);
+                glDrawArraysInstanced(GL_TRIANGLES, 0, 36, index);
+                EASY_END_BLOCK;
+
+                batchIt = batchEnd;
+
+                if (batchIt == cubes.cend())
+                {
+                    break;
+                }
+
+                batchEnd = std::find_if(batchIt, cubes.cend(), [batchTexID = batchIt->face->getID()](const Cube& cube)
+                {
+                    return cube.face->getID() != batchTexID;
+                });
+
+                if (std::distance(batchIt, batchEnd) > MaxCubesBatch)
+                {
+                    batchEnd = std::next(batchIt, MaxCubesBatch);
+                }
+            }
+        }
+        else
+        {
+            for (const Cube& cube : cubes)
+            {
+                auto model = glm::identity<glm::mat4>();
+                model = glm::translate(model, cube.position);
+                model = glm::rotate(model, cube.rotationValueRad, cube.rotationAxis);
+                model = glm::scale(model, glm::vec3(cube.edgeSize));
+
+                shader.setMatrix4f(Model, glm::value_ptr(model));
+
                 shader.setVec4f(Color, DebugColor);
 
                 for (GLuint i = 0; i < NumVertices; i += 3)
@@ -176,25 +268,12 @@ void CubeRenderComponent::render(const Camera& camera)
 
                 glPointSize(5.f);
                 glDrawArrays(GL_POINTS, 0, NumVertices);
-            }
-            else
-            {
-                if (!cube.face)
-                {
-                    logging::warning("[CubeRenderComponent] No face specified for cube. Render skipped.");
-                    continue;
-                }
 
-                glActiveTexture(GL_TEXTURE0);
-                shader.setInt(TextureName, 0);
-
-                glBindTexture(GL_TEXTURE_2D, cube.face->getID());
-
-                glDrawArrays(GL_TRIANGLES, 0, 36);
             }
         }
     }
 
+    glDisable(GL_SHADER_STORAGE_BLOCK);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
 

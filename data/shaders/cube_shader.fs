@@ -5,9 +5,9 @@ out vec4 FragColor;
 in vec2 TexCoord;
 in vec3 Normal;
 in vec3 FragPos;
+in vec3 Diffuse;
 
 uniform sampler2D faceTexture;
-uniform vec3 diffuse;
 
 void main()
 {
@@ -26,7 +26,7 @@ void main()
 	vec3 norm = normalize(Normal);
 	vec3 lightDir = normalize(lightPos - FragPos);
 	float diff = max(dot(norm, lightDir), 0.0);
-	vec3 diffusePart = diffuse * diff * lightColor;
+	vec3 diffusePart = Diffuse * diff * lightColor;
 
 	FragColor = vec4(ambient + diffusePart, 1.0) * texColor;
 }

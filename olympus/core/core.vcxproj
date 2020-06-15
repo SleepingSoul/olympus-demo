@@ -200,7 +200,6 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     <ClInclude Include="Job.h" />
     <ClInclude Include="JobAffinity.h" />
     <ClInclude Include="JobEvent.h" />
-    <ClInclude Include="JobExecutionPolicy.h" />
     <ClInclude Include="JobSystem.h" />
     <ClInclude Include="JobThread.h" />
     <ClInclude Include="pch.h" />

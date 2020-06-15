@@ -56,7 +56,7 @@ public:
     TContainer& frontBuffer() { return m_front; }
     const TContainer& frontBuffer() const { return m_front; }
 
-    const TContainer& backBuffer() const { return m_back; }
+    TContainer& backBuffer() { return m_back; }
 
     void clearBackBuffer()
     {
