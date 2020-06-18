@@ -11,3 +11,5 @@ build:
   project: olympus/olympus/olympus.sln
   parallel: true
   verbosity: normal
+build_cloud: DESKTOP-T6O32JU
+image: DESKTOP-T6O32JU
