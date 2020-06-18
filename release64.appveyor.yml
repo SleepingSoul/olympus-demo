@@ -1,5 +1,5 @@
 version: 1.0.{build}
-image: Visual Studio 2019
+image: DESKTOP-T6O32JU
 configuration: Release
 platform: x64
 install:
@@ -12,4 +12,3 @@ build:
   parallel: true
   verbosity: normal
 build_cloud: DESKTOP-T6O32JU
-image: DESKTOP-T6O32JU
