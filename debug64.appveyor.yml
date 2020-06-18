@@ -1,5 +1,5 @@
 version: 1.0.{build}
-image: DESKTOP-T6O32JU
+image: Visual Studio 2019
 configuration: Debug
 platform: x64
 install:
