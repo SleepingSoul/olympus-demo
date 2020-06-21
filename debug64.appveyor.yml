@@ -1,15 +1,13 @@
 version: 1.0.{build}
-image: Visual Studio 2019
+image: Windows
 configuration: Debug
 platform: x64
 install:
 - cmd: >-
-    call olympus/buildmachine/install_dependencies_d.bat
+    call olympus/buildmachine/install_dependencies.bat
 clone_script:
 - cmd: git clone --recursive https://github.com/SleepingSoul/olympus
 build:
   project: olympus/olympus/olympus.sln
   parallel: true
   verbosity: normal
-cache:
-  #- olympus/vcpkg -> install_dependencies.bat
