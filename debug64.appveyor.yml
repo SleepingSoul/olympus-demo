@@ -11,3 +11,5 @@ build:
   project: olympus/olympus/olympus.sln
   parallel: true
   verbosity: normal
+cache:
+  #- olympus/vcpkg -> install_dependencies.bat
