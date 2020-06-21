@@ -4,12 +4,10 @@ configuration: Debug
 platform: x64
 install:
 - cmd: >-
-    call olympus/install_dependencies.bat
+    call olympus/buildmachine/install_dependencies_d.bat
 clone_script:
 - cmd: git clone --recursive https://github.com/SleepingSoul/olympus
 build:
   project: olympus/olympus/olympus.sln
   parallel: true
   verbosity: normal
-cache:
-  - olympus/vcpkg -> install_dependencies.bat
