@@ -119,7 +119,7 @@
     </Link>
     <PostBuildEvent>
       <Command>xcopy  /s /y $(SolutionDir)..\vcpkg\installed\x64-windows\debug\bin $(OutDir)
-for /R $(SolutionDir)external_binaries\debug %%f in (*.dll) do copy %%f $(OutDir)
+for /R $(SolutionDir)external_binaries\debug_bins %%f in (*.dll) do copy %%f $(OutDir)
 del /s /q $(OutDir)data
 mkdir $(OutDir)data
 xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
@@ -164,7 +164,7 @@ xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
     </Link>
     <PostBuildEvent>
       <Command>xcopy  /s /y $(SolutionDir)..\vcpkg\installed\x64-windows\bin $(OutDir)
-for /R $(SolutionDir)external_binaries\release %%f in (*.dll) do copy %%f $(OutDir)
+for /R $(SolutionDir)external_binaries\release_bins %%f in (*.dll) do copy %%f $(OutDir)
 del /s /q $(OutDir)data
 mkdir $(OutDir)data
 xcopy  /s /y $(SolutionDir)..\data $(OutDir)data</Command>
