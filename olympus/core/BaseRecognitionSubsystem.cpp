@@ -46,6 +46,8 @@ void BaseRecognitionSubsystem::update()
 
             m_normalizedFPS.store(std::accumulate(m_latestFPS.begin(), m_latestFPS.end(), 0u) / static_cast<unsigned>(m_latestFPS.size()));
 
+            m_detected = !result.empty();
+
             m_detectResult = std::move(result);
 
             m_isRecognizing.store(false);
@@ -56,6 +58,10 @@ void BaseRecognitionSubsystem::update()
     if (!m_detectResult.empty())
     {
         m_engine.setMarkers(std::move(m_detectResult));
+    }
+    else if (!m_detected)
+    {
+        m_engine.setMarkers(std::vector<markers::DetectResult>{});
     }
 }
 

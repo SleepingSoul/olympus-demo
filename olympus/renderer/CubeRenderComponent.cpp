@@ -68,7 +68,7 @@ namespace
 
     const size_t NumVertices = sizeof(CubeVertices) / sizeof(decltype(*CubeVertices)) / 5;
 
-    constexpr size_t MaxCubesBatch = 2000;
+    constexpr size_t MaxCubesBatch = 500;
     constexpr size_t UniformBufferCapacity = MaxCubesBatch * 16 * 4 + MaxCubesBatch * 4 * 4;
     constexpr size_t ModelsOffset = 0;
     constexpr size_t DiffusesOffset = ModelsOffset + MaxCubesBatch * 16 * 4;

@@ -22,6 +22,7 @@ private:
 
     std::mutex m_mutex;
     std::vector<markers::DetectResult> m_detectResult;
+    bool m_detected{ false };
 
     markers::MarkerRecognitionOptions m_markerOptions;
 
