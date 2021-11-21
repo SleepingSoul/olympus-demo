@@ -1,3 +1,4 @@
+pyproject.toml
 setup.py
 sleep_generator.egg-info/PKG-INFO
 sleep_generator.egg-info/SOURCES.txt
