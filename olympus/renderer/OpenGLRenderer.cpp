@@ -42,7 +42,11 @@ void OpenGLRenderer::render()
     EASY_END_BLOCK;
 
     EASY_BLOCK("Render cubes", profiler::colors::Red200);
-    m_cubeRenderComponent.render(m_camera);
+    //m_cubeRenderComponent.render(m_camera);
+    EASY_END_BLOCK;
+
+    EASY_BLOCK("Render models");
+    m_anyModelRenderComponent.render(m_camera);
     EASY_END_BLOCK;
 
     EASY_BLOCK("Render 2D points");

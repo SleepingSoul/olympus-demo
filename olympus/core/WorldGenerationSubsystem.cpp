@@ -41,6 +41,10 @@ void WorldGenerationSubsystem::update()
         cubeWorld.cubes = m_worldBuffer;
 
         renderer.getCubeRenderComponent().renderCubes(std::move(cubeWorld));
+
+        logging::info("[WGS] Setting modelview/projection matrices");
+        renderer.getAnyModelRenderComponent().setProjection(marker.projectionMatrix.clone());
+        renderer.getAnyModelRenderComponent().setModelview(marker.modelviewMatrix.clone());
     }
 }
 

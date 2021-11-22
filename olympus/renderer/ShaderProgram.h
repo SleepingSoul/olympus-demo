@@ -35,6 +35,8 @@ public:
 
     ShaderProgram(const InitParameters& initParams);
 
+    GLuint getID() const { return m_ID; }
+
     void use() noexcept { glUseProgram(m_ID); }
     void unuse() noexcept { glUseProgram(0); }
 

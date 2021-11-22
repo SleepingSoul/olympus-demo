@@ -28,6 +28,24 @@ namespace
     }
 }
 
+std::string_view Texture::TexTypeToString(TexType texType)
+{
+    switch (texType)
+    {
+    case TexType::DiffuseType:
+        return "texture_diffuse";
+    case TexType::SpecularType:
+        return "texture_specular";
+    case TexType::NormalType:
+        return "texture_normal";
+    case TexType::HeightType:
+        return "texture_height";
+    default:
+        olyError("Undefined tex type: {}", texType);
+        return "";
+    }
+}
+
 Texture::Texture(const std::filesystem::path& textureFile)
 {
     glGenTextures(1, &m_id);
@@ -69,9 +87,39 @@ Texture::Texture(const std::filesystem::path& textureFile)
     m_loadSuccess = true;
 }
 
+Texture::Texture(Texture&& other)
+    : m_id(other.m_id)
+    , m_format(other.m_format)
+    , m_height(other.m_height)
+    , m_width(other.m_width)
+    , m_loadSuccess(other.m_loadSuccess)
+    , m_path(std::move(other.m_path))
+    , m_texType(other.m_texType)
+{
+    other.m_id = 0;
+    other.m_texType = TexType::Undefined;
+    other.m_loadSuccess = false;
+}
+
+Texture& Texture::operator =(Texture&& other)
+{
+    m_id = std::exchange(other.m_id, 0);
+    m_format = other.m_format;
+    m_height = other.m_height;
+    m_width = other.m_width;
+    m_loadSuccess = std::exchange(other.m_loadSuccess, false);
+    m_path = std::move(other.m_path);
+    m_texType = std::exchange(other.m_texType, TexType::Undefined);
+
+    return *this;
+}
+
 Texture::~Texture()
 {
-    glDeleteTextures(1, &m_id);
+    if (m_loadSuccess)
+    {
+        glDeleteTextures(1, &m_id);
+    }
 }
 
 void Texture::hotReset(const void* data, GLsizei width, GLsizei height, GLenum format)
@@ -88,6 +136,31 @@ void Texture::hotReset(const void* data, GLsizei width, GLsizei height, GLenum f
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, format, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void Texture::setTexTypeByName(std::string_view name)
+{
+    if (name == "texture_diffuse")
+    {
+        m_texType = TexType::DiffuseType;
+    }
+    else if (name == "texture_specular")
+    {
+        m_texType = TexType::SpecularType;
+    }
+    else if (name == "texture_normal")
+    {
+        m_texType = TexType::NormalType;
+    }
+    else if (name == "texture_height")
+    {
+        m_texType = TexType::HeightType;
+    }
+    else
+    {
+        olyError("Undefined name for texture: {}", name);
+        m_texType = TexType::Undefined;
+    }
 }
 
 EndNamespaceOlympus

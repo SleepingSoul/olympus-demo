@@ -60,6 +60,15 @@
     <ClInclude Include="SimpleShapeRenderComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AnyModelRendererComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="OpenGLGLFWContext.cpp">
@@ -87,6 +96,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SimpleShapeRenderComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AnyModelRendererComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

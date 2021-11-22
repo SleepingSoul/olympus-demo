@@ -1,12 +1,15 @@
 #include "ShaderProgram.h"
 #include <iterator>
 
+#include <utils/olyerror.h>
+
 BeginNamespaceOlympus
 
 ShaderProgram::ShaderProgram(const std::filesystem::path& vertexShaderPath, const std::filesystem::path& fragmentShaderPath)
 {
     if (!std::filesystem::exists(vertexShaderPath) || !std::filesystem::exists(fragmentShaderPath))
     {
+        olyError("Shader init failure: path doesn't exist: {}, {}", vertexShaderPath.string(), fragmentShaderPath.string());
         return;
     }
 

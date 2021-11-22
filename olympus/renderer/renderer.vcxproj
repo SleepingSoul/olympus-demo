@@ -19,12 +19,15 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AnyModelRendererComponent.h" />
     <ClInclude Include="BackgroundRenderComponent.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Cube.h" />
     <ClInclude Include="CubeRenderComponent.h" />
     <ClInclude Include="DrawCall.h" />
     <ClInclude Include="generated\all_textures.hpp" />
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="OpenGLGLFWContext.h" />
     <ClInclude Include="OpenGLRenderer.h" />
     <ClInclude Include="Point.h" />
@@ -36,8 +39,11 @@
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnyModelRendererComponent.cpp" />
     <ClCompile Include="BackgroundRenderComponent.cpp" />
     <ClCompile Include="CubeRenderComponent.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="OpenGLGLFWContext.cpp" />
     <ClCompile Include="OpenGLRenderer.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
@@ -129,6 +135,7 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,7 +144,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>easy_profiler.lib;fmt.lib;glad.lib;glfw3dll.lib;GlU32.Lib;imgui.lib;OpenGL32.Lib</AdditionalDependencies>
+      <AdditionalDependencies>easy_profiler.lib;fmt.lib;glad.lib;glfw3dll.lib;GlU32.Lib;imgui.lib;OpenGL32.Lib;assimp-vc141-mt.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -160,13 +167,14 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <DisableSpecificWarnings>4275</DisableSpecificWarnings>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>fmtd.lib;glad.lib;glfw3dll.lib;GlU32.Lib;imgui.lib;OpenGL32.Lib</AdditionalDependencies>
+      <AdditionalDependencies>fmtd.lib;glad.lib;glfw3dll.lib;GlU32.Lib;imgui.lib;OpenGL32.Lib;assimp-vc141-mtd.lib</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
