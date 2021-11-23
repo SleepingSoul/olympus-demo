@@ -3,6 +3,7 @@
 #include <opencv2/core/mat.hpp>
 
 #include <utils/macros.h>
+#include <utils/forward.h>
 
 #include <containers/DoubleBuffer.h>
 
@@ -15,19 +16,28 @@ BeginNamespaceOlympus
 class AnyModelRendererComponent
 {
 public:
+    struct WorldModel
+    {
+        Model* model;
+        glm::vec3 position{ 0.f, 0.f, 0.f };
+        cv::Mat modelView;
+        cv::Mat projection;
+    };
+
     AnyModelRendererComponent();
+
+    OlyPerfectForwardInContainer(renderModels, m_models.frontBuffer())
 
     void render(const Camera& camera);
 
-    void setProjection(const cv::Mat& projection) { m_projection = projection; }
-    void setModelview(const cv::Mat& modelView) { m_modelView = modelView; }
+    void swapBuffers() { m_models.swapBuffersSafe(); }
+
+    void clearBackBuffer() { m_models.clearBackBuffer(); }
 
 private:
     ShaderProgram m_modelShader;
-    Model m_model;
 
-    cv::Mat m_projection;
-    cv::Mat m_modelView;
+    DoubleBuffer<std::vector<WorldModel>> m_models;
 };
 
 EndNamespaceOlympus

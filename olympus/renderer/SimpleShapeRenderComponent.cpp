@@ -16,6 +16,7 @@ namespace
     const char* const ColorNameFormat = "colors[%zu]";
     const char* const PositionNameFormat = "positions[%zu]";
     const char* const SizeNameFormat = "sizes[%zu]";
+    const char* const ViewNameFormat = "view[%zu]";
     const char* const FBSizeName = "FramebufferSize";
 }
 
@@ -68,10 +69,20 @@ void SimpleShapeRenderComponent::render()
         m_2DpointsShader.setVec4f(buffer.data(), point.color);
         
         std::sprintf(buffer.data(), PositionNameFormat, i);
-        m_2DpointsShader.setVec2f(buffer.data(), point.position);
+        m_2DpointsShader.setVec3f(buffer.data(), point.position);
 
         std::sprintf(buffer.data(), SizeNameFormat, i);
         m_2DpointsShader.setFloat(buffer.data(), point.size);
+
+        if (&point.viewmodel.at<float>(0)) [[likely]]
+        {
+            std::sprintf(buffer.data(), ViewNameFormat, i);
+            m_2DpointsShader.setMatrix4f(buffer.data(), &point.viewmodel.at<float>(0));
+        }
+        else [[unlikely]]
+        {
+            logging::error("[SimpleShapeRenderComponent] View Model matrix is invalid, skipping shader update.");
+        }
     }
     EASY_END_BLOCK;
 

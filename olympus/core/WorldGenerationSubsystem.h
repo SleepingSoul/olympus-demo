@@ -16,10 +16,7 @@ public:
     void update() override;
 
 private:
-    void generateWorldToBuffer(std::uint32_t seed, const glm::vec3& eyePosition);
-    void makeWaterIfNeeded(Cube& cube, size_t index);
-
-    std::vector<Cube> m_worldBuffer;
+    Model m_sylv;
 };
 
 EndNamespaceOlympus

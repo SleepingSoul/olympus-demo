@@ -51,10 +51,12 @@ void EngineImpl::initialize()
     m_texStorage.preloadAllTextures();
     EASY_END_BLOCK;
 
-    m_openGLGLFWContext->setThreadContext(false);
-
+    // subsystems might preload some resources that use graphics
+    // TODO: consider changing this?
     m_subsystems.emplace_back(std::make_unique<BaseRecognitionSubsystem>(*this));
     m_subsystems.emplace_back(std::make_unique<WorldGenerationSubsystem>(*this));
+
+    m_openGLGLFWContext->setThreadContext(false);
 
     m_successfulInitialization = true;
 }

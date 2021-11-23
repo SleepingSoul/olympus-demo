@@ -49,9 +49,9 @@ void OpenGLRenderer::render()
     m_anyModelRenderComponent.render(m_camera);
     EASY_END_BLOCK;
 
-    EASY_BLOCK("Render 2D points");
+    //EASY_BLOCK("Render 2D points");
     //m_simpleShapeRenderComponent.render();
-    EASY_END_BLOCK;
+    //EASY_END_BLOCK;
 }
 
 void OpenGLRenderer::swapBuffers()
@@ -61,6 +61,7 @@ void OpenGLRenderer::swapBuffers()
         olyError("[OpenGLRenderer] Potentialy unsafe operation: swapping buffers from the secondary thread.");
     }
 
+    m_anyModelRenderComponent.swapBuffers();
     m_cubeRenderComponent.swapBuffers();
     m_simpleShapeRenderComponent.swapBuffers();
 }
@@ -72,6 +73,7 @@ void OpenGLRenderer::clearBackBuffers()
         olyError("[OpenGLRenderer] Potentialy unsafe operation: clearing render buffers from the secondary thread.");
     }
 
+    m_anyModelRenderComponent.clearBackBuffer();
     m_cubeRenderComponent.clearBackBuffer();
     m_simpleShapeRenderComponent.clearBackBuffers();
 }
