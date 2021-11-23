@@ -19,8 +19,8 @@ public:
 
     void render(const Camera& camera);
 
-    void setProjection(cv::Mat projection) { m_projection = projection; }
-    void setModelview(cv::Mat modelView) { m_modelView = modelView; }
+    void setProjection(const cv::Mat& projection) { m_projection = projection; }
+    void setModelview(const cv::Mat& modelView) { m_modelView = modelView; }
 
 private:
     ShaderProgram m_modelShader;

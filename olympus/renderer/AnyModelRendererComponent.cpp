@@ -24,6 +24,7 @@ void AnyModelRendererComponent::render(const Camera& camera)
 
     glEnable(GL_DEPTH_TEST);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+    glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     if (m_modelView.size() != cv::Size(4, 4) || m_modelView.type() != CV_32F || m_projection.size() != cv::Size(4, 4) || m_projection.type() != CV_32F)
     {
@@ -33,13 +34,18 @@ void AnyModelRendererComponent::render(const Camera& camera)
 
     m_modelShader.use();
 
-    logging::critical("Modelview: {} {} {} {} {} {} {} {} {}", m_modelView.at<float>(0), m_modelView.at<float>(1), m_modelView.at<float>(2),
-        m_modelView.at<float>(3), m_modelView.at<float>(4), m_modelView.at<float>(5),
-        m_modelView.at<float>(6), m_modelView.at<float>(7), m_modelView.at<float>(8));
+    glm::vec3 defaultLight = { 0.5f, 0.5f, 0.5f };
+
+    m_modelShader.setVec3f("dlight.ambient", defaultLight);
+    m_modelShader.setVec3f("dlight.diffuse", defaultLight);
+    m_modelShader.setVec3f("dlight.specular", defaultLight);
+    m_modelShader.setVec3f("dlight.direction", defaultLight);
 
     m_modelShader.setMatrix4f(View, &m_modelView.at<float>(0));
 
     glm::mat4 defaultModel = glm::identity<glm::mat4>();
+    defaultModel = glm::scale(defaultModel, { 0.2f, 0.2f, 0.2f });
+    defaultModel = glm::rotate(defaultModel, glm::radians(90.f), { 1.f, 0.f, 0.f });
 
     m_modelShader.setMatrix4f(ModelName, &defaultModel[0][0]);
     m_modelShader.setMatrix4f(Projection, &m_projection.at<float>(0));

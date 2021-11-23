@@ -46,13 +46,14 @@ std::string_view Texture::TexTypeToString(TexType texType)
     }
 }
 
-Texture::Texture(const std::filesystem::path& textureFile)
+Texture::Texture(const std::filesystem::path& textureFile, bool flip)
+    : m_path(textureFile)
 {
     glGenTextures(1, &m_id);
 
     glBindTexture(GL_TEXTURE_2D, m_id);
 
-    stbi_set_flip_vertically_on_load(true);
+    stbi_set_flip_vertically_on_load(flip);
 
     int numChannels = 0;
 

@@ -2,9 +2,11 @@
 
 #include <string>
 
+#include <logging/logging.h>
+
 BeginNamespaceOlympus
 
-Mesh::Mesh(std::vector<Vertex> init_vertices, std::vector<unsigned> init_indices, std::vector<Texture*> init_textures)
+Mesh::Mesh(std::vector<Vertex> init_vertices, std::vector<unsigned> init_indices, std::vector<const Texture*> init_textures)
     : m_vertices(std::move(init_vertices))
     , m_indices(std::move(init_indices))
     , m_textures(std::move(init_textures))
@@ -47,7 +49,7 @@ void Mesh::draw(ShaderProgram& shader) const
         }
 
         glUniform1i(glGetUniformLocation(shader.getID(), ("material." + name + number).c_str()), i);
-        glBindTexture(GL_TEXTURE_2D, m_textures[i]->getID());   // is it needed?!!!!!!!
+        glBindTexture(GL_TEXTURE_2D, m_textures[i]->getID());
     }
 
     // draw mesh

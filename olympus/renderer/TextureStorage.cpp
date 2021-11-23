@@ -35,7 +35,7 @@ void TextureStogare::preloadAllTextures()
     for (const auto& kv : mapping.items())
     {
         logging::info("[TextureStorage] Loading texture '{}'.", kv.value());
-        m_mapping.emplace(static_cast<TextureID>(std::stoi(kv.key())), std::make_unique<Texture>(kv.value().get<std::string>()));
+        m_mapping.emplace(static_cast<TextureID>(std::stoi(kv.key())), std::make_unique<Texture>(kv.value().get<std::string>(), true));
     }
 }
 

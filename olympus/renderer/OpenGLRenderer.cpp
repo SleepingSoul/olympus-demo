@@ -50,7 +50,7 @@ void OpenGLRenderer::render()
     EASY_END_BLOCK;
 
     EASY_BLOCK("Render 2D points");
-    m_simpleShapeRenderComponent.render();
+    //m_simpleShapeRenderComponent.render();
     EASY_END_BLOCK;
 }
 

@@ -22,7 +22,7 @@ public:
     void draw(ShaderProgram& shader) const;
 
 private:
-    std::vector<Texture> m_textures;
+    std::vector<std::unique_ptr<Texture>> m_textures;
     std::vector<Mesh> m_meshes;
     std::filesystem::path m_directory;
     bool m_gamma_correction;
@@ -41,7 +41,7 @@ private:
 
     // checks all material textures of a given type and loads the textures if they're not loaded yet.
     // the required info is returned as a Texture struct.
-    std::vector<Texture*> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string type_name);
+    std::vector<const Texture*> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string type_name);
 };
 
 EndNamespaceOlympus

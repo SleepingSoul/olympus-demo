@@ -25,7 +25,7 @@ public:
     static std::string_view TexTypeToString(TexType texType);
 
     // Will load the texture from the given file
-    Texture(const std::filesystem::path& textureFile);
+    Texture(const std::filesystem::path& textureFile, bool flip = false);
 
     Texture(Texture&& other);
     Texture& operator =(Texture&& other);

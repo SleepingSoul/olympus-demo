@@ -73,7 +73,7 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     // data to fill
     std::vector<Vertex> vertices;
     std::vector<unsigned> indices;
-    std::vector<Texture*> textures;
+    std::vector<const Texture*> textures;
 
     // Walk through each of the mesh's vertices
     for (unsigned i = 0; i < mesh->mNumVertices; ++i)
@@ -124,28 +124,28 @@ Mesh Model::processMesh(aiMesh* mesh, const aiScene* scene)
     // all this samplers are members of struct Material material.
 
     // 1. diffuse maps
-    std::vector<Texture*> diffuse_maps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+    std::vector<const Texture*> diffuse_maps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
     textures.insert(textures.end(), diffuse_maps.cbegin(), diffuse_maps.cend());
 
     // 2. specular maps
-    std::vector<Texture*> specular_maps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+    std::vector<const Texture*> specular_maps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
     textures.insert(textures.end(), specular_maps.cbegin(), specular_maps.cend());
 
     // 3. normal maps
-    std::vector<Texture*> normal_maps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+    std::vector<const Texture*> normal_maps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
     textures.insert(textures.end(), normal_maps.cbegin(), normal_maps.cend());
 
     // 4. height maps
-    std::vector<Texture*> height_maps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+    std::vector<const Texture*> height_maps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
     textures.insert(textures.end(), height_maps.cbegin(), height_maps.cend());
 
     // return a mesh object created from the extracted mesh data
     return Mesh(std::move(vertices), std::move(indices), std::move(textures));
 }
 
-std::vector<Texture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string type_name)
+std::vector<const Texture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string type_name)
 {
-    std::vector<Texture*> textures;
+    std::vector<const Texture*> textures;
 
     for (unsigned i = 0; i < mat->GetTextureCount(type); ++i)
     {
@@ -155,11 +155,12 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType
         // check if texture was loaded before and if so, continue to next iteration:
         // skip loading a new texture
         bool skip = false;
-        for (Texture& texture : m_textures)
+
+        for (const auto& texture : m_textures)
         {
-            if (texture.getPath().string() != str.C_Str())
+            if (texture->getPath().filename().string() == str.C_Str())
             {
-                textures.push_back(&texture);
+                textures.push_back(texture.get());
 
                 // a texture with the same filepath has already been loaded,
                 // continue to next one. (optimization)
@@ -171,8 +172,9 @@ std::vector<Texture*> Model::loadMaterialTextures(aiMaterial* mat, aiTextureType
         if (!skip)
         {
             // if texture hasn't been loaded already, load it
-            Texture texture{ m_directory / str.C_Str() };
-            texture.setTexTypeByName(type_name);
+            auto texture = std::make_unique<Texture>(m_directory / str.C_Str());
+            texture->setTexTypeByName(type_name);
+            textures.push_back(texture.get());
             m_textures.emplace_back(std::move(texture));
         }
     }
