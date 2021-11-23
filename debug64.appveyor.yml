@@ -1,5 +1,5 @@
 version: 1.0.{build}
-image: DESKTOP-T6O32JU Docker
+image: Windows
 configuration: Debug
 platform: x64
 install:
@@ -11,4 +11,3 @@ build:
   project: olympus/olympus/olympus.sln
   parallel: true
   verbosity: normal
-build_cloud: DESKTOP-T6O32JU Docker
