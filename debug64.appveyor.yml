@@ -1,5 +1,5 @@
 version: 1.0.{build}
-image: Windows
+image: Visual Studio 2019
 configuration: Debug
 platform: x64
 install:
