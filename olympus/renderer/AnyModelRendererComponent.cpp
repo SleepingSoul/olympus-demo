@@ -31,7 +31,12 @@ void AnyModelRendererComponent::render(const Camera& camera)
 
     for (const auto& worldModel : m_models.backBuffer())
     {
-        if (worldModel.modelView.size() != cv::Size(4, 4) || worldModel.modelView.type() != CV_32F || worldModel.projection.size() != cv::Size(4, 4) || worldModel.projection.type() != CV_32F)
+        if (!worldModel.model)
+        {
+            logging::warning("[AnyModelRendererComponent] Cannot perform render operation because model is nullptr.");
+            return;
+        }
+        else if (worldModel.modelView.size() != cv::Size(4, 4) || worldModel.modelView.type() != CV_32F || worldModel.projection.size() != cv::Size(4, 4) || worldModel.projection.type() != CV_32F)
         {
             logging::warning("[AnyModelRendererComponent] Cannot perform render operation because input parameters are invalid.");
             return;
@@ -54,8 +59,9 @@ void AnyModelRendererComponent::render(const Camera& camera)
         }
 
         glm::mat4 defaultModel = glm::identity<glm::mat4>();
-        defaultModel = glm::scale(defaultModel, { 0.2f, 0.2f, 0.2f });
-        defaultModel = glm::rotate(defaultModel, glm::radians(90.f), { 1.f, 0.f, 0.f });
+        defaultModel = glm::translate(defaultModel, worldModel.position);
+        defaultModel = glm::scale(defaultModel, worldModel.scale);
+        defaultModel = glm::rotate(defaultModel, worldModel.rotationValueRad , worldModel.rotationAxis);
 
         m_modelShader.setMatrix4f(ModelName, &defaultModel[0][0]);
 
@@ -71,14 +77,7 @@ void AnyModelRendererComponent::render(const Camera& camera)
         m_modelShader.setVec3f("viewer_pos", glm::vec3(0.f, 0.f, 0.f));
         m_modelShader.setFloat("material.shininess", 8.f);
 
-        if (worldModel.model)
-        {
-            worldModel.model->draw(m_modelShader);
-        }
-        else
-        {
-            logging::error("[AnyModelRendererComponent] Cannot draw model because it is nullptr.");
-        }
+        worldModel.model->draw(m_modelShader);
     }
 
     m_modelShader.unuse();

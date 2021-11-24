@@ -1,7 +1,9 @@
 #include "Texture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
+#define STBI_FAILURE_USERMSG
 #include <stb_image.h>
+#undef STBI_FAILURE_USERMSG
 #undef STB_IMAGE_IMPLEMENTATION
 
 #include <utils/olyerror.h>
@@ -61,7 +63,7 @@ Texture::Texture(const std::filesystem::path& textureFile, bool flip)
 
     if (!data)
     {
-        olyError("[Texture] texture load failed (path is: '{}')", textureFile);
+        olyError("[Texture] texture load failed (path is: '{}'). Error string: {}", textureFile, stbi_failure_reason());
         return;
     }
 

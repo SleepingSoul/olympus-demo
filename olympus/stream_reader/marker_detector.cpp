@@ -53,6 +53,8 @@ namespace markers
             result.emplace_back(DetectResult{ marker.id, glModelView, glProjection });
         }
 
+        logging::debug("[markers::detectMarkers] Returning {} recognized markers.", result.size());
+
         return result;
     }
 }

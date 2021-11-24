@@ -249,6 +249,66 @@ void OpenGLGLFWContext::renderDebugInfo()
         ImGui::EndCombo();
     }
 
+    ImGui::Separator();
+
+    ImGui::Text("Editor");
+
+    const char* markers[] = { "120 (model: 'sylvanas.obj')", "10 (model: 'Genji.obj')", "18 (model: 'Genji.obj')" };
+    static const char* currentMarker = markers[0];
+
+    if (ImGui::BeginCombo("Current marker", currentMarker))
+    {
+        for (int i = 0; i < IM_ARRAYSIZE(markers); ++i)
+        {
+            const bool isSelected = (currentMarker == markers[i]);
+
+            if (ImGui::Selectable(markers[i], isSelected))
+            {
+                m_selectedMarker = std::atoi(markers[i]);
+                currentMarker = markers[i];
+            }
+
+            if (isSelected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    const char* ops[] = { "Move", "Scale", "Rotate"};
+    static const char* currentOp = ops[0];
+
+    if (ImGui::BeginCombo("Selected operation", currentOp))
+    {
+        for (int i = 0; i < IM_ARRAYSIZE(ops); ++i)
+        {
+            const bool isSelected = (currentOp == ops[i]);
+
+            if (ImGui::Selectable(ops[i], isSelected))
+            {
+                m_selectedOp = ops[i];
+                currentOp = ops[i];
+            }
+
+            if (isSelected)
+            {
+                ImGui::SetItemDefaultFocus();
+            }
+        }
+        ImGui::EndCombo();
+    }
+
+    ImGui::Button("Duplicate for other markers");
+    ImGui::Button("Patch model texture");
+    ImGui::Button("Reload model");
+
+    std::string r;
+
+    ImGui::InputTextWithHint("Models directory", "default: 'data/models'", r.data(), 20);
+
+    ImGui::Separator();
+
     std::for_each(m_imGUIDebugOutputFunctors.cbegin(), m_imGUIDebugOutputFunctors.cend(), [](const auto& outputFunc) { outputFunc(); });
 
     ImGui::End();

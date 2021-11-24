@@ -26,7 +26,64 @@ namespace
 WorldGenerationSubsystem::WorldGenerationSubsystem(EngineImpl& engine)
     : Base(engine)
     , m_sylv("data/models/sylvanas.obj")
-{}
+    , m_mercy("data/models/genji/source/Genji_1.fbx")
+{
+    engine.getWindowContext().addKeyboardPressCallback(GLFW_KEY_LEFT, [this]
+        {
+            const auto markerID = m_engine.getWindowContext().getSelectedMarker();
+
+            if (markerID == 120)
+            {
+                if (m_engine.getWindowContext().getSelectedOperation() == "Move")
+                {
+                    sylvPos.x += 0.05f;
+                }
+                else if (m_engine.getWindowContext().getSelectedOperation() == "Scale")
+                {
+                    sylvScale += 0.1f;
+                }
+            }
+            else if (markerID == 10)
+            {
+                if (m_engine.getWindowContext().getSelectedOperation() == "Move")
+                {
+                    gengPos.x += 0.05f;
+                }
+                else if (m_engine.getWindowContext().getSelectedOperation() == "Scale")
+                {
+                    gengScale += 0.1f;
+                }
+            }
+        });
+
+    engine.getWindowContext().addKeyboardPressCallback(GLFW_KEY_RIGHT, [this]
+        {
+            const auto markerID = m_engine.getWindowContext().getSelectedMarker();
+
+            if (markerID == 120)
+            {
+                if (m_engine.getWindowContext().getSelectedOperation() == "Move")
+                {
+                    sylvPos.x -= 0.05f;
+                }
+                else if (m_engine.getWindowContext().getSelectedOperation() == "Scale")
+                {
+                    sylvScale -= 0.1f;
+                }
+            }
+            else if (markerID == 10)
+            {
+                if (m_engine.getWindowContext().getSelectedOperation() == "Move")
+                {
+                    gengPos.x -= 0.05f;
+                }
+                else if (m_engine.getWindowContext().getSelectedOperation() == "Scale")
+                {
+                    gengScale -= 0.1f;
+                }
+            }
+        });
+}
 
 void WorldGenerationSubsystem::update()
 {
@@ -47,7 +104,25 @@ void WorldGenerationSubsystem::update()
         markers[i].projectionMatrix.copyTo(model.projection);
         markers[i].modelviewMatrix.copyTo(model.modelView);
 
-        model.model = &m_sylv;
+        if (markers[i].markerID == 120)
+        {
+            model.model = &m_sylv;
+            model.rotationAxis = sylvRotAxis;
+            model.rotationValueRad = sylvRotation;
+            model.scale = sylvScale;
+            model.position = sylvPos;
+        }
+        else if (markers[i].markerID == 18)
+        {
+            model.model = &m_mercy;
+            model.scale = gengScale;
+            model.position = gengPos;
+        }
+        else
+        {
+            model.model = &m_mercy;
+            model.scale = { 0.1f, 0.1f, 0.1f };
+        }
 
         renderer.getAnyModelRenderComponent().renderModels(std::move(model));
     }

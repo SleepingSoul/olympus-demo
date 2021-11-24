@@ -63,6 +63,10 @@ public:
 
     void addImGuiDebugOutputFunctor(std::function<void()> outputFunctor);
 
+    // TODO: refactor!!!
+    int getSelectedMarker() const { return m_selectedMarker; }
+    const std::string& getSelectedOperation() const { return m_selectedOp; }
+
 private:
     void ensureMainThread(const char* funcName) const;
     void updateFPS();
@@ -74,6 +78,11 @@ private:
 
     std::multimap<int, GLFWKeyCallback> m_keysMapping;
     std::vector<std::function<void()>> m_imGUIDebugOutputFunctors;
+
+    // TODO: refactor
+    std::vector<int> m_markers;
+    int m_selectedMarker{ 120 };
+    std::string m_selectedOp{ "Move"};
 
     GLFWwindow* m_window;
     std::string m_title;
