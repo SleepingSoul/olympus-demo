@@ -7,7 +7,7 @@ Platform: x64 Windows
 [![Build status](https://ci.appveyor.com/api/projects/status/8g60bsb1gl7i1va5?svg=true)](https://ci.appveyor.com/project/SleepingSoul/olympus) | Visual Studio 2019 Release x64
 
 ## How to install and run
-0) Visual Studio 2019 is required
+0) Visual Studio 2019 or later is required. (I am planning to fully move to VS2022, so it is reccomended)
 1) git clone --recursive https://github.com/SleepingSoul/olympus
 2) Run "install_dependencies.bat" script
 3) Open solution in Visual Studio 2019
