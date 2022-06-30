@@ -10,8 +10,5 @@ Platform: x64 Windows
 0) Visual Studio 2019 or later is required. (I am planning to fully move to VS2022, so it is reccomended)
 1) git clone --recursive https://github.com/SleepingSoul/olympus
 2) Run "install_dependencies.bat" script
-3) Open solution in Visual Studio 2019
+3) Open solution in Visual Studio
 4) Compile and run!
-
-Part of diploma project of Tihran Katolikian,
-Igor Sykorsky Kyiv Polytechnic Institure, FICT, IK-62
